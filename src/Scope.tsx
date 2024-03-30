@@ -1,15 +1,22 @@
-import { createContext, PropsWithChildren, useContext, useMemo } from 'react';
-import { IContainer } from 'ts-ioc-container';
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react';
+import { by, IContainer, inject } from 'ts-ioc-container';
+import { parseTags } from './utils.ts';
+import { IErrorBus, IErrorBusKey } from './ErrorBus.ts';
+import { IAsyncCommand } from './IAsyncCommand.ts';
 
 export const ScopeContext = createContext<IContainer | undefined>(undefined);
 
-const parseTags = (tags: string) =>
-  tags
-    .split(',')
-    .map((v) => v.trim())
-    .filter(Boolean);
+export class ScopeMediator {
+  constructor(
+    @inject(by.aliases((aliases) => aliases.includes('IStartCommand'))) private startCommands: IAsyncCommand[],
+  ) {}
 
-const createScope = (tags: string[], scope: IContainer): IContainer => scope.createScope(...tags);
+  async start(): Promise<void> {
+    for (const command of this.startCommands) {
+      await command.execute();
+    }
+  }
+}
 
 export const Scope = ({
   fallback,
@@ -22,13 +29,21 @@ export const Scope = ({
   const current = useContext(ScopeContext);
   const tagsArr = useMemo(() => parseTags(tags), [tags]);
   const scope = useMemo(
-    () => (current ? createScope(tagsArr, current) : fallback?.(tagsArr)),
+    () => (current ? current.createScope(...tagsArr) : fallback?.(tagsArr)),
     [current, tagsArr, fallback],
   );
 
   if (scope === undefined) {
     throw new Error('Scope is not defined');
   }
+
+  const mediator = useMemo(() => scope.resolve(ScopeMediator), [scope]);
+  const errorBus$ = useMemo(() => scope.resolve<IErrorBus>(IErrorBusKey), [scope]);
+
+  useEffect(() => {
+    mediator.start().catch((e) => errorBus$.next(e));
+    return () => scope.dispose();
+  }, [scope, mediator, errorBus$]);
 
   return <ScopeContext.Provider value={scope}>{children}</ScopeContext.Provider>;
 };
