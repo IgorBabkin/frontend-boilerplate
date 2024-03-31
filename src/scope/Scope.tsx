@@ -25,7 +25,7 @@ export const Scope = ({
     throw new Error('Scope is not defined');
   }
 
-  const mediator = useMemo(() => scope.resolve(ScopeMediator, tags), [scope, tags]);
+  const mediator = useMemo(() => scope.resolve(ScopeMediator, { args: [tags] }), [scope, tags]);
   const errorBus$ = useMemo(() => scope.resolve<IErrorBus>(IErrorBusKey), [scope]);
 
   useEffect(() => {
