@@ -1,7 +1,7 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react';
 import { IContainer } from 'ts-ioc-container';
-import { parseTags } from './utils.ts';
-import { IErrorBus, IErrorBusKey } from './ErrorBus.ts';
+import { parseTags } from '../utils.ts';
+import { IErrorBus, IErrorBusKey } from '../ErrorBus.ts';
 import { ScopeMediator } from './ScopeMediator.ts';
 
 export const ScopeContext = createContext<IContainer | undefined>(undefined);
@@ -25,7 +25,7 @@ export const Scope = ({
     throw new Error('Scope is not defined');
   }
 
-  const mediator = useMemo(() => scope.resolve(ScopeMediator), [scope]);
+  const mediator = useMemo(() => scope.resolve(ScopeMediator, tags), [scope, tags]);
   const errorBus$ = useMemo(() => scope.resolve<IErrorBus>(IErrorBusKey), [scope]);
 
   useEffect(() => {
