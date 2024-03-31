@@ -1,4 +1,4 @@
-import { by, IContainer, Tag, Tagged } from 'ts-ioc-container';
+import { alias, by, IContainer, register, Tag, Tagged, visible } from 'ts-ioc-container';
 
 export const hasTags = {
   some:
@@ -23,3 +23,7 @@ export const byAliases = {
     (c: IContainer) =>
       by.aliases((aliases) => values.every((v) => aliases.includes(v)))(c),
 };
+
+export const hideFromChildren = visible(({ isParent }) => isParent);
+
+export const onMount = register(alias('onMount'));

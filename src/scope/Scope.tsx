@@ -1,10 +1,19 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react';
-import { IContainer } from 'ts-ioc-container';
+import { IContainer, InjectionToken } from 'ts-ioc-container';
 import { parseTags } from '../utils.ts';
 import { IErrorBus, IErrorBusKey } from '../ErrorBus.ts';
 import { ScopeMediator } from './ScopeMediator.ts';
+import { ScopeNotFoundError } from './ScopeNotFoundError.ts';
 
 export const ScopeContext = createContext<IContainer | undefined>(undefined);
+
+export const useDependency = <T,>(token: InjectionToken<T>) => {
+  const scope = useContext(ScopeContext);
+  if (scope === undefined) {
+    throw new ScopeNotFoundError('Scope is not defined');
+  }
+  return useMemo(() => scope.resolve(token), [scope, token]);
+};
 
 export const Scope = ({
   fallback,
@@ -22,7 +31,7 @@ export const Scope = ({
   );
 
   if (scope === undefined) {
-    throw new Error('Scope is not defined');
+    throw new ScopeNotFoundError('Scope is not defined');
   }
 
   const mediator = useMemo(() => scope.resolve(ScopeMediator, { args: [tags] }), [scope, tags]);

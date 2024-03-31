@@ -1,10 +1,10 @@
 import { IAsyncCommand } from '../IAsyncCommand.ts';
-import { alias, setVisibility, provider, register, scope } from 'ts-ioc-container';
+import { provider, scope } from 'ts-ioc-container';
 import { sleep } from '../utils.ts';
-import { hasTags } from '../scope/container.ts';
+import { hasTags, hideFromChildren, onMount } from '../scope/container.ts';
 
-@register(alias('onMount'))
-@provider(scope(hasTags.every('application')), setVisibility((parent, child) => parent === child))
+@onMount
+@provider(scope(hasTags.every('application')), hideFromChildren)
 export class LoadConfigCommand implements IAsyncCommand {
   async execute(...args: unknown[]): Promise<void> {
     await sleep(2000);

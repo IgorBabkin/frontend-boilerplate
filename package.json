@@ -22,9 +22,10 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
+    "reactivex-react": "^6.0.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "ts-ioc-container": "^30.3.1"
+    "ts-ioc-container": "^30.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.2.1",

@@ -1,5 +1,15 @@
+import TodoListWidget from '../widgets/todoList/TodoListWidget.tsx';
+import { Scope } from '../scope/Scope.tsx';
+
 function HomePage() {
-  return <div>Home</div>;
+  return (
+    <div>
+      <h3>Home</h3>
+      <Scope tags="widget,todoList">
+        <TodoListWidget />
+      </Scope>
+    </div>
+  );
 }
 
 export default HomePage;
