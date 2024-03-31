@@ -1,8 +1,18 @@
-import { BehaviorSubject } from 'rxjs';
-import { key, provider, register, scope, singleton } from 'ts-ioc-container';
+import { key, register } from 'ts-ioc-container';
+import { ObservableList } from '../../observable/ObservableList.ts';
+import { Observable } from 'rxjs';
+import { perApplication } from '../../scope/container.ts';
 
+@perApplication
 @register(key('ITodoStore'))
-@provider(singleton(), scope((c) => c.hasTag('application')))
 export class TodoStore {
-  items$ = new BehaviorSubject<string[]>([]);
+  private list$ = new ObservableList<string>([]);
+
+  getList$(): Observable<string[]> {
+    return this.list$.asObservable();
+  }
+
+  setList(list: string[]): void {
+    this.list$.setList(list);
+  }
 }

@@ -5,7 +5,7 @@ function HomePage() {
   return (
     <div>
       <h3>Home</h3>
-      <Scope tags="widget,todoList">
+      <Scope tags="widget,TodoListWidget">
         <TodoListWidget />
       </Scope>
     </div>

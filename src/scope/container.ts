@@ -1,4 +1,4 @@
-import { alias, by, IContainer, register, Tag, Tagged, visible } from 'ts-ioc-container';
+import { alias, by, IContainer, provider, register, scope, singleton, Tag, Tagged, visible } from 'ts-ioc-container';
 
 export const hasTags = {
   some:
@@ -27,3 +27,10 @@ export const byAliases = {
 export const hideFromChildren = visible(({ isParent }) => isParent);
 
 export const onMount = register(alias('onMount'));
+
+export const perWidget = (...tags: string[]) => provider(scope(hasTags.every('widget', ...tags)), hideFromChildren);
+
+export const perApplication = provider(
+  singleton(),
+  scope((c) => c.hasTag('application')),
+);

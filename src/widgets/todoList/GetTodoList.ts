@@ -7,6 +7,6 @@ export class GetTodoList implements IQuery<string[]> {
   constructor(@inject(by.key('ITodoStore')) private todoStore: TodoStore) {}
 
   execute(): Observable<string[]> {
-    return this.todoStore.items$.asObservable();
+    return this.todoStore.getList$();
   }
 }
