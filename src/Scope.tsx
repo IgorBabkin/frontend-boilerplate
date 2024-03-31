@@ -1,22 +1,10 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react';
-import { by, IContainer, inject } from 'ts-ioc-container';
+import { IContainer } from 'ts-ioc-container';
 import { parseTags } from './utils.ts';
 import { IErrorBus, IErrorBusKey } from './ErrorBus.ts';
-import { IAsyncCommand } from './IAsyncCommand.ts';
+import { ScopeMediator } from './ScopeMediator.ts';
 
 export const ScopeContext = createContext<IContainer | undefined>(undefined);
-
-export class ScopeMediator {
-  constructor(
-    @inject(by.aliases((aliases) => aliases.includes('IStartCommand'))) private startCommands: IAsyncCommand[],
-  ) {}
-
-  async start(): Promise<void> {
-    for (const command of this.startCommands) {
-      await command.execute();
-    }
-  }
-}
 
 export const Scope = ({
   fallback,
