@@ -1,3 +1,3 @@
 export interface IAsyncCommand {
-  execute(): Promise<void>;
+  execute(...args: unknown[]): Promise<void>;
 }

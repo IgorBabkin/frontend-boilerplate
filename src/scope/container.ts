@@ -1,5 +1,4 @@
-import { by, IContainer, Tag } from 'ts-ioc-container';
-import { Tagged } from 'ts-ioc-container/typings/container/IContainer';
+import { by, IContainer, Tag, Tagged } from 'ts-ioc-container';
 
 export const hasTags = {
   some:

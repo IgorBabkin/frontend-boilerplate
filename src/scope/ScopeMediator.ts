@@ -9,9 +9,8 @@ export class ScopeMediator {
   ) {}
 
   async start(): Promise<void> {
-    console.log('onMount', this.tags);
     for (const command of this.startCommands) {
-      await command.execute();
+      await command.execute(this.tags);
     }
   }
 }
