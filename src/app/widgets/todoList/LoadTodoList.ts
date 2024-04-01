@@ -1,5 +1,5 @@
 import { IAsyncCommand } from '../../../lib/scope/IAsyncCommand.ts';
-import { sleep } from '../../../utils.ts';
+import { sleep } from '../../../lib/utils.ts';
 import { TodoStore } from '../../domain/TodoStore.ts';
 import { by, inject } from 'ts-ioc-container';
 import { onMount, perWidget } from '../../../lib/scope/container.ts';

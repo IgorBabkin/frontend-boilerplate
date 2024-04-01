@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
-import './index.css';
+import './main.css';
 import Scope from './lib/scope/Scope.tsx';
 import { Container, MetadataInjector } from 'ts-ioc-container';
 import { Common } from './app/env/Common.ts';

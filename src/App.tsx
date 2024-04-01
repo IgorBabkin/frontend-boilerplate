@@ -1,6 +1,6 @@
 import './App.css';
 import { RouterProvider } from 'react-router-dom';
-import { router } from './router.tsx';
+import { router } from './app/router.tsx';
 import { useQuery } from './lib/scope/useQuery.tsx';
 import { GetConfig } from './app/widgets/config/GetConfig.ts';
 

@@ -1,6 +1,6 @@
 import { PropsWithChildren, useContext, useEffect, useMemo } from 'react';
 import { IContainer } from 'ts-ioc-container';
-import { parseTags } from '../../utils.ts';
+import { parseTags } from '../utils.ts';
 import { IErrorBus, IErrorBusKey } from '../../app/domain/ErrorBus.ts';
 import { ScopeMediator } from './ScopeMediator.ts';
 import { ScopeNotFoundError } from './ScopeNotFoundError.ts';
