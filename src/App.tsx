@@ -1,7 +1,7 @@
 import './App.css';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './app/router.tsx';
-import { useQuery } from './lib/scope/useQuery.tsx';
+import { useQuery } from './lib/scope/useQuery.ts';
 import { GetConfig } from './app/widgets/config/GetConfig.ts';
 
 function App() {

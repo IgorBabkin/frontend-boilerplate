@@ -1,5 +1,5 @@
 import { GetTodoList } from './GetTodoList.ts';
-import { useQuery } from '../../../lib/scope/useQuery.tsx';
+import { useQuery } from '../../../lib/scope/useQuery.ts';
 
 function TodoListWidget() {
   const list = useQuery(GetTodoList, []);
