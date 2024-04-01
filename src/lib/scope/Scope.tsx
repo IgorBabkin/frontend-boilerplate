@@ -1,28 +1,19 @@
-import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react';
-import { IContainer, InjectionToken } from 'ts-ioc-container';
-import { parseTags } from '../utils.ts';
-import { IErrorBus, IErrorBusKey } from '../ErrorBus.ts';
+import { PropsWithChildren, useContext, useEffect, useMemo } from 'react';
+import { IContainer } from 'ts-ioc-container';
+import { parseTags } from '../../utils.ts';
+import { IErrorBus, IErrorBusKey } from '../../app/domain/ErrorBus.ts';
 import { ScopeMediator } from './ScopeMediator.ts';
 import { ScopeNotFoundError } from './ScopeNotFoundError.ts';
+import { ScopeContext } from './ScopeContext.ts';
 
-export const ScopeContext = createContext<IContainer | undefined>(undefined);
-
-export const useDependency = <T,>(token: InjectionToken<T>) => {
-  const scope = useContext(ScopeContext);
-  if (scope === undefined) {
-    throw new ScopeNotFoundError('Scope is not defined');
-  }
-  return useMemo(() => scope.resolve(token), [scope, token]);
-};
-
-export const Scope = ({
+function Scope({
   fallback,
   tags = '',
   children,
 }: PropsWithChildren<{
   fallback?: (tags: string[]) => IContainer;
   tags?: string;
-}>) => {
+}>) {
   const current = useContext(ScopeContext);
   const tagsArr = useMemo(() => parseTags(tags), [tags]);
   const scope = useMemo(
@@ -43,4 +34,6 @@ export const Scope = ({
   }, [scope, mediator, errorBus$]);
 
   return <ScopeContext.Provider value={scope}>{children}</ScopeContext.Provider>;
-};
+}
+
+export default Scope;

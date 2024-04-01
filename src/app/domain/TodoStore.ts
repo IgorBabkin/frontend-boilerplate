@@ -1,7 +1,7 @@
 import { key, register } from 'ts-ioc-container';
-import { ObservableList } from '../../observable/ObservableList.ts';
+import { ObservableList } from '../../lib/observable/ObservableList.ts';
 import { Observable } from 'rxjs';
-import { perApplication } from '../../scope/container.ts';
+import { perApplication } from '../../lib/scope/container.ts';
 
 @perApplication
 @register(key('ITodoStore'))

@@ -1,6 +1,6 @@
-import { ObservableStore } from './observable/ObservableStore.ts';
+import { ObservableStore } from '../../lib/observable/ObservableStore.ts';
 import { IConfig } from './IConfig.ts';
-import { perApplication } from './scope/container.ts';
+import { perApplication } from '../../lib/scope/container.ts';
 import { key, register } from 'ts-ioc-container';
 
 @perApplication

@@ -1,8 +1,8 @@
 import './App.css';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './router.tsx';
-import { useQuery } from './scope/useQuery.tsx';
-import { GetConfig } from './GetConfig.ts';
+import { useQuery } from './lib/scope/useQuery.tsx';
+import { GetConfig } from './app/widgets/config/GetConfig.ts';
 
 function App() {
   const config = useQuery(GetConfig, undefined);

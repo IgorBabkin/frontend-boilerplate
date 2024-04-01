@@ -1,5 +1,5 @@
 import { inject } from 'ts-ioc-container';
-import { IAsyncCommand } from '../IAsyncCommand.ts';
+import { IAsyncCommand } from './IAsyncCommand.ts';
 import { byAliases } from './container.ts';
 
 export class ScopeMediator {

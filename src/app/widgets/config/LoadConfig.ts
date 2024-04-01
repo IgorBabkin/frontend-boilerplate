@@ -1,8 +1,8 @@
-import { IAsyncCommand } from './IAsyncCommand.ts';
-import { sleep } from './utils.ts';
-import { onMount, perWidget } from './scope/container.ts';
+import { IAsyncCommand } from '../../../lib/scope/IAsyncCommand.ts';
+import { sleep } from '../../../utils.ts';
+import { onMount, perWidget } from '../../../lib/scope/container.ts';
 import { by, inject } from 'ts-ioc-container';
-import { ConfigStore } from './ConfigStore.ts';
+import { ConfigStore } from '../../domain/ConfigStore.ts';
 
 @onMount
 @perWidget('application')

@@ -1,9 +1,9 @@
 import { IContainer, IContainerModule, Registration as R, scope, singleton } from 'ts-ioc-container';
-import { createErrorBus, IErrorBusKey } from '../ErrorBus.ts';
-import { LoadConfig } from '../LoadConfig.ts';
-import { TodoStore } from '../widgets/todoList/TodoStore.ts';
+import { createErrorBus, IErrorBusKey } from '../domain/ErrorBus.ts';
+import { LoadConfig } from '../widgets/config/LoadConfig.ts';
+import { TodoStore } from '../domain/TodoStore.ts';
 import { LoadTodoList } from '../widgets/todoList/LoadTodoList.ts';
-import { ConfigStore } from '../ConfigStore.ts';
+import { ConfigStore } from '../domain/ConfigStore.ts';
 
 export class Common implements IContainerModule {
   applyTo(container: IContainer): void {
