@@ -10,7 +10,7 @@ export class LoadTodoList implements IAsyncCommand {
   constructor(@inject(by.key('ITodoStore')) private todoStore: TodoStore) {}
 
   async execute(): Promise<void> {
-    await sleep(3000);
+    await sleep(1000);
     this.todoStore.setList(['todo 1', 'todo 2', 'todo 3']);
   }
 }

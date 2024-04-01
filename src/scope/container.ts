@@ -28,7 +28,7 @@ export const hideFromChildren = visible(({ isParent }) => isParent);
 
 export const onMount = register(alias('onMount'));
 
-export const perWidget = (...tags: string[]) => provider(scope(hasTags.every('widget', ...tags)), hideFromChildren);
+export const perWidget = (...tags: string[]) => provider(scope(hasTags.every(...tags)), hideFromChildren);
 
 export const perApplication = provider(
   singleton(),
