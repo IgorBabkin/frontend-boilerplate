@@ -5,6 +5,7 @@ import { TodoStore } from '../domain/TodoStore.ts';
 import { LoadTodoList } from '../widgets/todoList/LoadTodoList.ts';
 import { ConfigStore } from '../domain/ConfigStore.ts';
 import { Subject } from 'rxjs';
+import { CommandMediator } from '../../lib/mediator/CommandMediator.ts';
 
 export class Common implements IContainerModule {
   applyTo(container: IContainer): void {
@@ -12,7 +13,8 @@ export class Common implements IContainerModule {
       .use(R.fromValue(new Subject()).to(IErrorBusKey))
       .use(R.fromClass(TodoStore))
       .use(R.fromClass(ConfigStore))
-      .use(R.fromClass(LoadTodoList))
-      .use(R.fromClass(LoadConfig));
+      .use(R.fromClass(CommandMediator))
+      .use(R.fromValue(LoadTodoList))
+      .use(R.fromValue(LoadConfig));
   }
 }

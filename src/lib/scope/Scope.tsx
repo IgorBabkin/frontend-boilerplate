@@ -29,7 +29,7 @@ function Scope({
   const errorBus$ = useMemo(() => scope.resolve<IErrorBus>(IErrorBusKey), [scope]);
 
   useEffect(() => {
-    mediator.start().catch((e) => errorBus$.next(e));
+    mediator.start();
     return () => scope.dispose();
   }, [scope, mediator, errorBus$]);
 
