@@ -11,6 +11,10 @@ export class ObservableList<T> {
     this.list$.map(() => values);
   }
 
+  add(value: T): void {
+    this.list$.map((values) => values.concat(value));
+  }
+
   asObservable() {
     return this.list$.asObservable();
   }

@@ -15,4 +15,8 @@ export class TodoStore {
   setList(list: string[]): void {
     this.list$.setList(list);
   }
+
+  addTodo(payload: string): void {
+    this.list$.add(payload);
+  }
 }

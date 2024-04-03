@@ -1,18 +1,27 @@
+import { Observable } from 'rxjs';
 import { IMediator } from './IMediator.ts';
-import { SimpleMediator } from './SimpleMediator.ts';
-import { ScopedMediator } from './ScopedMediator.ts';
-import { by, type IContainer, inject, key, provider, register, singleton } from 'ts-ioc-container';
+import { IObservableQuery, ICommand, IAsyncCommand } from './ICommand.ts';
+import { by, inject, key, provider, register, singleton } from 'ts-ioc-container';
+import { type IErrorBus, IErrorBusKey } from '../../app/domain/ErrorBus.ts';
 
 @register(key('ICommandMediator'))
 @provider(singleton())
-export class CommandMediator extends ScopedMediator {
-  protected scopes: string[] = ['request'];
+export class CommandMediator implements IMediator {
+  constructor(@inject(by.key(IErrorBusKey)) private errorBus: IErrorBus) {}
 
-  constructor(@inject(by.scope.current) scope: IContainer) {
-    super(scope);
+  sendAsync<TPayload>(command: IAsyncCommand<TPayload>, payload: TPayload): void {
+    command.executeAsync(payload).catch((e) => this.errorBus.next(e as Error));
   }
 
-  protected createMediator(scope: IContainer): IMediator {
-    return new SimpleMediator(scope);
+  send$<TPayload, TResponse>(query: IObservableQuery<TPayload, TResponse>, payload: TPayload): Observable<TResponse> {
+    return query.create(payload);
+  }
+
+  send<TPayload>(command: ICommand<TPayload>, payload: TPayload): void {
+    try {
+      command.execute(payload);
+    } catch (e) {
+      this.errorBus.next(e as Error);
+    }
   }
 }

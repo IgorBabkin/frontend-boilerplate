@@ -1,16 +1,9 @@
 import 'reflect-metadata';
 import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
 import './main.css';
-import Scope from './lib/scope/Scope.tsx';
-import { Container, MetadataInjector } from 'ts-ioc-container';
-import { Common } from './app/env/Common.ts';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './router.tsx';
 
 const el = document.getElementById('root')!;
-const createContainer = (tags: string[]) => new Container(new MetadataInjector(), { tags }).use(new Common());
 
-ReactDOM.createRoot(el).render(
-  <Scope fallback={createContainer} tags="application">
-    <App />
-  </Scope>,
-);
+ReactDOM.createRoot(el).render(<RouterProvider router={router} />);

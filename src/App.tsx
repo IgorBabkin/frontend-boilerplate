@@ -1,15 +1,13 @@
 import './App.css';
-import { RouterProvider } from 'react-router-dom';
-import { router } from './app/router.tsx';
-import { useQuery } from './lib/scope/useQuery.ts';
-import { GetConfig } from './app/widgets/config/GetConfig.ts';
+import { Link, Outlet } from 'react-router-dom';
 
 function App() {
-  const config = useQuery(GetConfig, undefined, undefined);
   return (
     <div>
       <h1>App</h1>
-      {config && <RouterProvider router={router} />}
+      <Link to="/">Home</Link>&nbsp;|&nbsp;
+      <Link to="/add-todo">Create Todo</Link>
+      <Outlet />
     </div>
   );
 }

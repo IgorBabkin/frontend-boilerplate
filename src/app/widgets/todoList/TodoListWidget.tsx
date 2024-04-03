@@ -1,4 +1,4 @@
-import { GetTodoList } from './GetTodoList.ts';
+import { GetTodoList } from './operations/GetTodoList.ts';
 import { useQuery } from '../../../lib/scope/useQuery.ts';
 
 function TodoListWidget() {

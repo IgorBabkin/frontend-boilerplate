@@ -1,12 +1,10 @@
-import { IObservableQueryHandler, IQueryHandler } from './IQueryHandler.ts';
-import { constructor } from 'ts-ioc-container';
+import { IObservableQuery, ICommand, IAsyncCommand } from './ICommand.ts';
 import { Observable } from 'rxjs';
 
 export interface IMediator {
-  send<TQuery>(QueryHandler: constructor<IQueryHandler<TQuery>>, query: TQuery): Promise<void>;
+  send<TPayload>(command: ICommand<TPayload>, payload: TPayload): void;
 
-  send$<TQuery, TResponse>(
-    QueryHandler: constructor<IObservableQueryHandler<TQuery, TResponse>>,
-    query: TQuery,
-  ): Observable<TResponse>;
+  sendAsync<TPayload>(command: IAsyncCommand<TPayload>, payload: TPayload): void;
+
+  send$<TPayload, TResponse>(query: IObservableQuery<TPayload, TResponse>, payload: TPayload): Observable<TResponse>;
 }
