@@ -1,4 +1,4 @@
-import { alias, by, provider, register, scope, singleton, Tag, Tagged } from 'ts-ioc-container';
+import { alias, by, register, scope, Tag, Tagged } from 'ts-ioc-container';
 
 export const hasTags = {
   every:
@@ -20,6 +20,5 @@ export const perScope = {
   page: scope(hasTags.every('page')),
 };
 
-export const perApplication = provider(singleton(), perScope.application);
 export const onMount = register(alias('onMount'));
 export const loaderPredicate = register(alias('loader-predicate'));

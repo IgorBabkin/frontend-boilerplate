@@ -1,12 +1,12 @@
 import { ObservableStore } from '../../../lib/observable/ObservableStore.ts';
 import { IConfig } from './IConfig.ts';
-import { perApplication } from '../../../lib/scope/container.ts';
-import { key, register } from 'ts-ioc-container';
+import { perScope } from '../../../lib/scope/container.ts';
+import { key, provider, register, singleton } from 'ts-ioc-container';
 
 export const IConfigStoreKey = Symbol('IConfigStore');
 
-@perApplication
 @register(key(IConfigStoreKey))
+@provider(perScope.application, singleton())
 export class ConfigStore {
   private config = new ObservableStore<IConfig | undefined>(undefined);
 
