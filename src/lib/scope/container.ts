@@ -1,11 +1,6 @@
-import { alias, by, IContainer, provider, register, scope, singleton, Tag, Tagged, visible } from 'ts-ioc-container';
+import { alias, by, provider, register, scope, singleton, Tag, Tagged } from 'ts-ioc-container';
 
 export const hasTags = {
-  some:
-    (...values: Tag[]) =>
-    (c: Tagged) =>
-      values.some((v) => c.hasTag(v)),
-
   every:
     (...values: Tag[]) =>
     (c: Tagged) =>
@@ -13,25 +8,18 @@ export const hasTags = {
 };
 
 export const byAliases = {
-  some:
-    (...values: string[]) =>
-    (c: IContainer) =>
-      by.aliases((aliases) => values.some((v) => aliases.includes(v)))(c),
+  loaderPredicate: by.aliases((aliases) => aliases.includes('loader-predicate')),
 
-  every:
-    (...values: string[]) =>
-    (c: IContainer) =>
-      by.aliases((aliases) => values.every((v) => aliases.includes(v)))(c),
+  onMount: by.aliases((aliases) => aliases.includes('onMount')),
 };
 
-export const hideFromChildren = visible(({ isParent }) => isParent);
+export const parentOnly = ({ isParent }: { isParent: boolean }) => !isParent;
 
-export const onMount = register(alias('onMount'));
-export const Scope = {
+export const perScope = {
   application: scope(hasTags.every('application')),
+  page: scope(hasTags.every('page')),
 };
 
-export const perApplication = provider(
-  singleton(),
-  scope((c) => c.hasTag('application')),
-);
+export const perApplication = provider(singleton(), perScope.application);
+export const onMount = register(alias('onMount'));
+export const loaderPredicate = register(alias('loader-predicate'));

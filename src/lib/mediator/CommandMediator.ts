@@ -4,7 +4,9 @@ import { IObservableQuery, ICommand, IAsyncCommand } from './ICommand.ts';
 import { by, inject, key, provider, register, singleton } from 'ts-ioc-container';
 import { type IErrorBus, IErrorBusKey } from '../../app/domain/ErrorBus.ts';
 
-@register(key('ICommandMediator'))
+export const ICommandMediatorKey = Symbol('ICommandMediator');
+
+@register(key(ICommandMediatorKey))
 @provider(singleton())
 export class CommandMediator implements IMediator {
   constructor(@inject(by.key(IErrorBusKey)) private errorBus: IErrorBus) {}

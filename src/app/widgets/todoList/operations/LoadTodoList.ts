@@ -1,11 +1,11 @@
 import { sleep } from '../../../../lib/utils.ts';
 import { TodoStore } from '../../../domain/TodoStore.ts';
-import { by, inject, provider } from 'ts-ioc-container';
-import { hideFromChildren, onMount, Scope } from '../../../../lib/scope/container.ts';
+import { by, inject, provider, visible } from 'ts-ioc-container';
+import { onMount, parentOnly, perScope } from '../../../../lib/scope/container.ts';
 import { IAsyncCommand } from '../../../../lib/mediator/ICommand.ts';
 
 @onMount
-@provider(Scope.application, hideFromChildren)
+@provider(perScope.application, visible(parentOnly))
 export class LoadTodoList implements IAsyncCommand {
   constructor(@inject(by.key('ITodoStore')) private todoStore: TodoStore) {}
 
