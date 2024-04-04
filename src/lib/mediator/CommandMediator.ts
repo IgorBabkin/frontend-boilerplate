@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { IMediator } from './IMediator.ts';
 import { IObservableQuery, ICommand, IAsyncCommand } from './ICommand.ts';
 import { by, inject, key, provider, register, singleton } from 'ts-ioc-container';
-import { type IErrorBus, IErrorBusKey } from '../../app/domain/ErrorBus.ts';
+import { type IErrorBus, IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
 
 export const ICommandMediatorKey = Symbol('ICommandMediator');
 

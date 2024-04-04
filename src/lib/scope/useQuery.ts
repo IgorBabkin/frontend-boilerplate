@@ -2,7 +2,7 @@ import { constructor } from 'ts-ioc-container';
 import { useCallback, useMemo } from 'react';
 import { useObservable } from '../observable/observable.tsx';
 import { useDependency } from './ScopeContext.ts';
-import { IErrorBus, IErrorBusKey } from '../../app/domain/ErrorBus.ts';
+import { IErrorBus, IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
 import { IMediator } from '../mediator/IMediator.ts';
 import { IObservableQuery, ICommand, IAsyncCommand } from '../mediator/ICommand.ts';
 import { ICommandMediatorKey } from '../mediator/CommandMediator.ts';

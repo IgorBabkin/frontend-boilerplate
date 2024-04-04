@@ -1,5 +1,5 @@
 import { map, Observable } from 'rxjs';
-import { ConfigStore, IConfigStoreKey } from '../../domain/ConfigStore.ts';
+import { ConfigStore, IConfigStoreKey } from '../../domain/config/ConfigStore.ts';
 import { by, inject, provider, visible } from 'ts-ioc-container';
 import { IObservableQuery } from '../../../lib/mediator/ICommand.ts';
 import { loaderPredicate, parentOnly, perScope } from '../../../lib/scope/container.ts';

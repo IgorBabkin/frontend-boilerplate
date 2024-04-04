@@ -1,9 +1,9 @@
 import { IContainer, IContainerModule, Registration as R } from 'ts-ioc-container';
-import { IErrorBusKey } from '../app/domain/ErrorBus.ts';
+import { IErrorBusKey } from '../app/domain/errors/ErrorBus.ts';
 import { LoadConfig } from '../app/widgets/config/LoadConfig.ts';
-import { TodoStore } from '../app/domain/TodoStore.ts';
+import { TodoStore } from '../app/domain/todo/TodoStore.ts';
 import { LoadTodoList } from '../app/widgets/todoList/operations/LoadTodoList.ts';
-import { ConfigStore } from '../app/domain/ConfigStore.ts';
+import { ConfigStore } from '../app/domain/config/ConfigStore.ts';
 import { Subject } from 'rxjs';
 import { CommandMediator } from '../lib/mediator/CommandMediator.ts';
 import { IsConfigLoaded } from '../app/widgets/config/IsConfigLoaded.ts';
