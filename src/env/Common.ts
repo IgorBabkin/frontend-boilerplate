@@ -5,7 +5,6 @@ import { TodoStore } from '../app/domain/todo/TodoStore.ts';
 import { ConfigStore } from '../app/domain/config/ConfigStore.ts';
 import { Subject } from 'rxjs';
 import { CommandMediator } from '../lib/mediator/CommandMediator.ts';
-import { IsConfigLoaded } from '../app/widgets/config/IsConfigLoaded.ts';
 import { LoadTodoList } from '../app/widgets/todo/operations/LoadTodoList.ts';
 
 export class Common implements IContainerModule {
@@ -16,7 +15,6 @@ export class Common implements IContainerModule {
       .use(R.fromClass(ConfigStore))
       .use(R.fromClass(CommandMediator))
       .use(R.fromClass(LoadTodoList))
-      .use(R.fromClass(IsConfigLoaded))
       .use(R.fromClass(LoadConfig));
   }
 }

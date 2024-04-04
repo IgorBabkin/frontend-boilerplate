@@ -8,8 +8,6 @@ export const hasTags = {
 };
 
 export const byAliases = {
-  loaderPredicate: by.aliases((aliases) => aliases.includes('loader-predicate')),
-
   onMount: by.aliases((aliases) => aliases.includes('onMount')),
 };
 
@@ -21,4 +19,3 @@ export const perScope = {
 };
 
 export const onMount = register(alias('onMount'));
-export const loaderPredicate = register(alias('loader-predicate'));
