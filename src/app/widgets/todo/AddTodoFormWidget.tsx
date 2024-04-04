@@ -1,25 +1,27 @@
 import { useCommand } from '../../../lib/scope/useQuery.ts';
 import { AddTodo } from './operations/AddTodo.ts';
 import { FormEvent, useCallback, useState } from 'react';
+import Button from '../../ui/Button.tsx';
+import TextField from '../../ui/TextField.tsx';
 
 function AddTodoFormWidget() {
   const addTodo = useCommand(AddTodo);
-  const [todo, setTodo] = useState('');
-  const resetForm = useCallback(() => setTodo(''), []);
+  const [title, setTitle] = useState('');
+  const resetForm = useCallback(() => setTitle(''), []);
 
   const submit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
-      addTodo(todo);
+      addTodo(title);
       resetForm();
     },
-    [addTodo, resetForm, todo],
+    [addTodo, resetForm, title],
   );
 
   return (
     <form onSubmit={submit}>
-      <input type="text" value={todo} onChange={(e) => setTodo(e.target.value)} />
-      <button type="submit">Add</button>
+      <TextField value={title} onChange={setTitle} />
+      <Button type="submit">Add</Button>
     </form>
   );
 }
