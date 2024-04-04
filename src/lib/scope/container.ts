@@ -13,7 +13,7 @@ export const byAliases = {
   onMount: by.aliases((aliases) => aliases.includes('onMount')),
 };
 
-export const parentOnly = ({ isParent }: { isParent: boolean }) => !isParent;
+export const parentOnly = ({ isParent }: { isParent: boolean }) => isParent;
 
 export const perScope = {
   application: scope(hasTags.every('application')),

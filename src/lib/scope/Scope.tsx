@@ -30,7 +30,6 @@ function Scope({
     mediator.start();
     return () => {
       scope.dispose();
-      console.log('disposed');
     };
   }, [scope, mediator]);
 
