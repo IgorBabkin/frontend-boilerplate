@@ -6,6 +6,6 @@ export class AddTodo implements ICommand<string> {
   constructor(@inject(by.key('ITodoStore')) private todoStore: TodoStore) {}
 
   execute(payload: string): void {
-    this.todoStore.addTodo(payload);
+    this.todoStore.addTodo({ id: Date.now().toString(), title: payload });
   }
 }

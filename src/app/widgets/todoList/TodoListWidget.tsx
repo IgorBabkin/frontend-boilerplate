@@ -7,7 +7,7 @@ function TodoListWidget() {
   return (
     <ul>
       {list.map((it) => (
-        <li key={it}>{it}</li>
+        <li key={it.id}>{it.title}</li>
       ))}
     </ul>
   );

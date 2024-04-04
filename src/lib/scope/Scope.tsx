@@ -1,7 +1,6 @@
 import { PropsWithChildren, useContext, useEffect, useMemo } from 'react';
 import { IContainer } from 'ts-ioc-container';
 import { parseTags } from '../utils.ts';
-import { IErrorBus, IErrorBusKey } from '../../app/domain/ErrorBus.ts';
 import { ScopeMediator } from './ScopeMediator.ts';
 import { ScopeNotFoundError } from './ScopeNotFoundError.ts';
 import { ScopeContext } from './ScopeContext.ts';
@@ -26,12 +25,14 @@ function Scope({
   }
 
   const mediator = useMemo(() => scope.resolve(ScopeMediator, { args: [tags] }), [scope, tags]);
-  const errorBus$ = useMemo(() => scope.resolve<IErrorBus>(IErrorBusKey), [scope]);
 
   useEffect(() => {
     mediator.start();
-    return () => scope.dispose();
-  }, [scope, mediator, errorBus$]);
+    return () => {
+      scope.dispose();
+      console.log('disposed');
+    };
+  }, [scope, mediator]);
 
   return <ScopeContext.Provider value={scope}>{children}</ScopeContext.Provider>;
 }

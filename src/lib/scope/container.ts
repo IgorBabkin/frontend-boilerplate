@@ -27,8 +27,9 @@ export const byAliases = {
 export const hideFromChildren = visible(({ isParent }) => isParent);
 
 export const onMount = register(alias('onMount'));
-
-export const perScope = (...tags: string[]) => provider(scope(hasTags.every(...tags)), hideFromChildren);
+export const Scope = {
+  application: scope(hasTags.every('application')),
+};
 
 export const perApplication = provider(
   singleton(),
