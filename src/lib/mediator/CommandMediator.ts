@@ -19,18 +19,15 @@ export class CommandMediator implements IMediator {
   sendAsync<TPayload>(command: IAsyncCommand<TPayload>, payload: TPayload): void {
     const Condition = getCondition(command);
     if (Condition === undefined) {
-      command.executeAsync(payload).catch((e) => this.errorBus.next(e as Error));
-      return;
+      return this.asyncExecute(() => command.executeAsync(payload));
     }
-    const condition = this.scope.resolve(Condition);
-    condition
-      .isTrue()
-      .then((isTrue) => {
-        if (isTrue) {
-          return command.executeAsync(payload);
-        }
-      })
-      .catch((e) => this.errorBus.next(e as Error));
+
+    return this.asyncExecute(async () => {
+      const condition = this.scope.resolve(Condition);
+      if (await condition.isTrue()) {
+        return command.executeAsync(payload);
+      }
+    });
   }
 
   send$<TPayload, TResponse>(query: IObservableQuery<TPayload, TResponse>, payload: TPayload): Observable<TResponse> {
@@ -43,5 +40,9 @@ export class CommandMediator implements IMediator {
     } catch (e) {
       this.errorBus.next(e as Error);
     }
+  }
+
+  private asyncExecute(fn: () => Promise<unknown>): void {
+    fn().catch((e) => this.errorBus.next(e as Error));
   }
 }
