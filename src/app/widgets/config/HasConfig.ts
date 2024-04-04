@@ -1,6 +1,6 @@
-import { IAsyncCondition } from '../../../../lib/mediator/IAsyncCondition.ts';
+import { IAsyncCondition } from '../../../lib/mediator/IAsyncCondition.ts';
 import { by, inject } from 'ts-ioc-container';
-import { ConfigStore, IConfigStoreKey } from '../../../domain/config/ConfigStore.ts';
+import { ConfigStore, IConfigStoreKey } from '../../domain/config/ConfigStore.ts';
 import { filter, firstValueFrom, map } from 'rxjs';
 
 export class HasConfig implements IAsyncCondition {
