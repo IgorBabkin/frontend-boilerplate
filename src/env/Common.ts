@@ -2,11 +2,11 @@ import { IContainer, IContainerModule, Registration as R } from 'ts-ioc-containe
 import { IErrorBusKey } from '../app/domain/errors/ErrorBus.ts';
 import { LoadConfig } from '../app/widgets/config/LoadConfig.ts';
 import { TodoStore } from '../app/domain/todo/TodoStore.ts';
-import { LoadTodoList } from '../app/widgets/todoList/operations/LoadTodoList.ts';
 import { ConfigStore } from '../app/domain/config/ConfigStore.ts';
 import { Subject } from 'rxjs';
 import { CommandMediator } from '../lib/mediator/CommandMediator.ts';
 import { IsConfigLoaded } from '../app/widgets/config/IsConfigLoaded.ts';
+import { LoadTodoList } from '../app/widgets/todo/operations/LoadTodoList.ts';
 
 export class Common implements IContainerModule {
   applyTo(container: IContainer): void {

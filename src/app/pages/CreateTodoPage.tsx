@@ -1,5 +1,5 @@
 import Scope from '../../lib/scope/Scope.tsx';
-import AddTodoFormWidget from '../widgets/todoList/AddTodoFormWidget.tsx';
+import AddTodoFormWidget from '../widgets/todo/AddTodoFormWidget.tsx';
 
 function CreateTodoPage() {
   return (
