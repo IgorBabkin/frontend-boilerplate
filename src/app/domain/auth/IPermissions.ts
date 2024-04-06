@@ -16,3 +16,11 @@ export function checkPermission(permissions: IPermissions, { resource, permissio
     `Permission denied for ${resource} ${permission}`,
   );
 }
+
+export class UserPermissions {
+  constructor(private permissions: IPermissions) {}
+
+  hasRight(resource: string, permission: Permission) {
+    return hasPermission(this.permissions, resource, permission);
+  }
+}
