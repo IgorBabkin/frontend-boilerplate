@@ -3,7 +3,7 @@ import { AddTodo } from './operations/AddTodo.ts';
 import { FormEvent, useCallback, useState } from 'react';
 import Button from '../../ui/button/Button.tsx';
 import TextField from '../../ui/textField/TextField.tsx';
-import { IErrorHandler, IErrorHandlerKey } from './IErrorHandler.tsx';
+import { IErrorHandler, IErrorHandlerKey } from '../../domain/errors/IErrorHandler.ts';
 import { useDependency } from '../../../lib/scope/ScopeContext.ts';
 
 function AddTodoFormWidget() {

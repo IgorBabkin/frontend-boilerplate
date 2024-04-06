@@ -1,6 +1,6 @@
 import { by, inject, key, provider, register, singleton } from 'ts-ioc-container';
 import { perScope } from '../../../lib/scope/container.ts';
-import { type IErrorBus, IErrorBusKey } from '../../domain/errors/ErrorBus.ts';
+import { type IErrorBus, IErrorBusKey } from './ErrorBus.ts';
 
 export const IErrorHandlerKey = Symbol('IErrorHandler');
 

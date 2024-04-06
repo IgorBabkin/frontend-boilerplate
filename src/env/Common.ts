@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 import { CommandMediator } from '../lib/mediator/CommandMediator.ts';
 import { LoadTodoList } from '../app/widgets/todo/operations/LoadTodoList.ts';
 import { CheckPermission } from '../app/widgets/auth/CheckPermission.ts';
-import { ErrorHandler } from '../app/widgets/todo/IErrorHandler.tsx';
+import { ErrorHandler } from '../app/domain/errors/IErrorHandler.ts';
 
 export class Common implements IContainerModule {
   applyTo(container: IContainer): void {
