@@ -1,4 +1,4 @@
-import { by, scope, Tag, Tagged } from 'ts-ioc-container';
+import { by, Tag, Tagged } from 'ts-ioc-container';
 
 export const hasTags = {
   every:
@@ -12,7 +12,6 @@ export enum ComponentAlias {
 }
 
 export enum CommandAlias {
-  onConstruct = 'onCommandConstruct',
   onBeforeExecution = 'onCommandBeforeExecution',
 }
 
@@ -21,13 +20,12 @@ export const byComponentAliases = {
 };
 
 export const byCommandAliases = {
-  onConstruct: by.aliases((aliases) => aliases.includes(CommandAlias.onConstruct)),
   onBeforeExecution: by.aliases((aliases) => aliases.includes(CommandAlias.onBeforeExecution)),
 };
 
 export const parentOnly = ({ isParent }: { isParent: boolean }) => isParent;
 
-export const perScope = {
-  application: scope(hasTags.every('application')),
-  page: scope(hasTags.every('page')),
+export const Scope = {
+  application: hasTags.every('application'),
+  page: hasTags.every('page'),
 };

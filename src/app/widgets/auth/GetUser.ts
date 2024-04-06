@@ -1,13 +1,13 @@
 import { Observable } from 'rxjs';
-import { AuthStore, IAuthStoreKey } from '../../domain/auth/AuthStore.ts';
+import { IUserStoreKey, UserStore } from '../../domain/user/UserStore.ts';
 import { by, inject } from 'ts-ioc-container';
 import { IObservableQuery } from '../../../lib/mediator/ICommand.ts';
-import { IUser } from '../../domain/auth/IUser.ts';
+import { IUser } from '../../domain/user/IUser.ts';
 
 export class GetUser implements IObservableQuery<void, IUser | undefined> {
-  constructor(@inject(by.key(IAuthStoreKey)) private authStore: AuthStore) {}
+  constructor(@inject(by.key(IUserStoreKey)) private userStore: UserStore) {}
 
   create(): Observable<IUser | undefined> {
-    return this.authStore.getUser$();
+    return this.userStore.getUser$();
   }
 }

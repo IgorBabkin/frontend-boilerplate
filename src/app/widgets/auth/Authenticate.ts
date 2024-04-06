@@ -1,18 +1,17 @@
-import { sleep } from '../../../lib/utils.ts';
-import { ComponentAlias, parentOnly, perScope } from '../../../lib/scope/container.ts';
-import { alias, by, inject, provider, register, visible } from 'ts-ioc-container';
-import { AuthStore, IAuthStoreKey } from '../../domain/auth/AuthStore.ts';
+import { by, inject } from 'ts-ioc-container';
 import { ICommand } from '../../../lib/mediator/ICommand.ts';
+import { AuthService, IAuthServiceKey } from '../../domain/auth/AuthService.ts';
+import { Context } from '../../../lib/scope/Context.ts';
+import { ApiClient, IApiClientKey } from '../../api/ApiClient.ts';
 
-@register(alias(ComponentAlias.onMount))
-@provider(perScope.application, visible(parentOnly))
 export class Authenticate implements ICommand {
-  constructor(@inject(by.key(IAuthStoreKey)) private authStore: AuthStore) {}
+  constructor(
+    @inject(by.key(IAuthServiceKey)) private authService: AuthService,
+    @inject(by.key(IApiClientKey)) private apiClientContext: Context<ApiClient>,
+  ) {}
 
   async execute(): Promise<void> {
-    await sleep(1000);
-    this.authStore.setToken('123456');
-    this.authStore.setUser({ nickname: 'ironman' });
-    this.authStore.setPermissions({ todo: ['read', 'write'] });
+    const token = await this.authService.login('ironman@marvel.com', '12345');
+    this.apiClientContext.setValue(new ApiClient(token));
   }
 }

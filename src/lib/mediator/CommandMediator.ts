@@ -15,15 +15,9 @@ export class CommandMediator implements IMediator {
 
   constructor(
     @inject(by.scope.current) scope: IContainer,
-    @inject(byCommandAliases.onConstruct) private initCommands: ICommand[],
     @inject(byCommandAliases.onBeforeExecution) private beforeCommands: ICommand[],
   ) {
     this.mediator = new SimpleMediator(scope);
-  }
-
-  async initialize<TPayload>(command: ICommand<TPayload>): Promise<void> {
-    await this.runBeforeCommands(command, this.initCommands);
-    await this.mediator.initialize(command);
   }
 
   send$<TPayload, TResponse>(query: IObservableQuery<TPayload, TResponse>, payload: TPayload): Observable<TResponse> {

@@ -1,18 +1,10 @@
 import { Observable, Subject } from 'rxjs';
 import { IMediator } from './IMediator.ts';
-import { getBeforeExecution, getCommandInitHooks, ICommand, IObservableQuery, matchPayload } from './ICommand.ts';
+import { getBeforeExecution, ICommand, IObservableQuery, matchPayload } from './ICommand.ts';
 import { type IContainer } from 'ts-ioc-container';
 
 export class SimpleMediator implements IMediator {
   constructor(private scope: IContainer) {}
-
-  async initialize<TPayload>(command: ICommand<TPayload>): Promise<void> {
-    for (const methodName of getCommandInitHooks(command)) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      await useCase[methodName](query);
-    }
-  }
 
   send$<TPayload, TResponse>(query: IObservableQuery<TPayload, TResponse>, payload: TPayload): Observable<TResponse> {
     const result$ = new Subject<TResponse>();

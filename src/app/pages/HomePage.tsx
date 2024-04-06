@@ -4,13 +4,15 @@ import { useQuery } from '../../lib/scope/useQuery.ts';
 import { GetUser } from '../widgets/auth/GetUser.ts';
 
 function HomePage() {
-  const config = useQuery(GetUser, undefined, undefined);
+  const user = useQuery(GetUser, undefined, undefined);
   return (
     <div>
-      <h3>Home {config?.nickname}</h3>
-      <Scope tags="TodoListWidget">
-        <TodoListWidget />
-      </Scope>
+      <h3>Home {user?.nickname}</h3>
+      {user && (
+        <Scope tags="TodoListWidget">
+          <TodoListWidget />
+        </Scope>
+      )}
     </div>
   );
 }

@@ -1,25 +1,21 @@
-import { sleep } from '../../../../lib/utils.ts';
 import { ITodoStoreKey, TodoStore } from '../../../domain/todo/TodoStore.ts';
-import { alias, by, inject, provider, register, visible } from 'ts-ioc-container';
-import { ComponentAlias, parentOnly, perScope } from '../../../../lib/scope/container.ts';
+import { by, inject } from 'ts-ioc-container';
 import { ICommand } from '../../../../lib/mediator/ICommand.ts';
-import { Permission } from '../../../domain/auth/IPermissions.ts';
-import { IResource } from '../../../domain/auth/IResource.ts';
+import { Permission } from '../../../domain/user/IPermissions.ts';
+import { IResource } from '../../../domain/user/IResource.ts';
+import { ITodoRepoKey, TodoRepo } from '../../../domain/todo/TodoRepo.ts';
 
-@register(alias(ComponentAlias.onMount))
-@provider(perScope.application, visible(parentOnly))
 export class LoadTodoList implements ICommand, IResource {
   resource = 'todo';
   permission: Permission = 'read';
 
-  constructor(@inject(by.key(ITodoStoreKey)) private todoStore: TodoStore) {}
+  constructor(
+    @inject(by.key(ITodoStoreKey)) private todoStore: TodoStore,
+    @inject(by.key(ITodoRepoKey)) private todoRepo: TodoRepo,
+  ) {}
 
   async execute(): Promise<void> {
-    await sleep(1000);
-    this.todoStore.setList([
-      { id: '1', title: 'todo 1' },
-      { id: '2', title: 'todo 2' },
-      { id: '3', title: 'todo 3' },
-    ]);
+    const todos = await this.todoRepo.fetchTodos();
+    this.todoStore.setList(todos);
   }
 }

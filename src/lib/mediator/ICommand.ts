@@ -1,8 +1,5 @@
 import { Observable } from 'rxjs';
-import { constructor, getHooks, getMetadata, hook, setMetadata } from 'ts-ioc-container';
-
-export const onCommandInit = hook('onCommandInit');
-export const getCommandInitHooks = (command: ICommand) => getHooks(command, 'onCommandInit') ?? [];
+import { constructor, getMetadata, setMetadata } from 'ts-ioc-container';
 
 export interface ICommand<TPayload = unknown> {
   execute(payload: TPayload): Promise<void>;

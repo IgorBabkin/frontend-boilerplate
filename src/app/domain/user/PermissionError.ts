@@ -8,4 +8,10 @@ export class PermissionError extends DomainError {
       throw new PermissionError(failMassage);
     }
   }
+
+  constructor(message?: string) {
+    super(message);
+
+    Object.setPrototypeOf(this, PermissionError.prototype);
+  }
 }

@@ -3,8 +3,8 @@ import { ITodoStoreKey, TodoStore } from '../../../domain/todo/TodoStore.ts';
 import { Observable } from 'rxjs';
 import { IObservableQuery } from '../../../../lib/mediator/ICommand.ts';
 import { ITodo } from '../../../domain/todo/ITodo.ts';
-import { IResource } from '../../../domain/auth/IResource.ts';
-import { Permission } from '../../../domain/auth/IPermissions.ts';
+import { IResource } from '../../../domain/user/IResource.ts';
+import { Permission } from '../../../domain/user/IPermissions.ts';
 
 export class GetTodoList implements IObservableQuery<void, ITodo[]>, IResource {
   resource = 'todo';
