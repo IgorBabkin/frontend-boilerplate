@@ -11,6 +11,10 @@ export class ObservableStore<T> {
     this.value$.next(fn(this.value$.getValue()));
   }
 
+  getValue() {
+    return this.value$.getValue();
+  }
+
   asObservable() {
     return this.value$.asObservable();
   }

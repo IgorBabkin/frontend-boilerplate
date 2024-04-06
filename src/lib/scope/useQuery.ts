@@ -1,10 +1,10 @@
 import { constructor } from 'ts-ioc-container';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useObservable } from '../observable/observable.tsx';
 import { useDependency } from './ScopeContext.ts';
 import { IErrorBus, IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
 import { IMediator } from '../mediator/IMediator.ts';
-import { IObservableQuery, ICommand, IAsyncCommand } from '../mediator/ICommand.ts';
+import { ICommand, IObservableQuery } from '../mediator/ICommand.ts';
 import { ICommandMediatorKey } from '../mediator/CommandMediator.ts';
 
 export const useQuery = <TQuery, Response>(
@@ -23,11 +23,18 @@ export const useQuery = <TQuery, Response>(
 export const useCommand = <TPayload>(token: constructor<ICommand<TPayload>>) => {
   const mediator = useDependency<IMediator>(ICommandMediatorKey);
   const handler = useDependency(token);
+  const errorBus = useDependency<IErrorBus>(IErrorBusKey);
+  useEffect(() => {
+    mediator.initialize(handler).catch((e) => errorBus.next(e));
+  }, [mediator, handler, errorBus]);
   return useCallback((payload: TPayload) => mediator.send(handler, payload), [handler, mediator]);
 };
 
-export const useAsyncCommand = <TPayload>(token: constructor<IAsyncCommand<TPayload>>) => {
+export const useExecCommand = (token: constructor<ICommand<void>>) => {
   const mediator = useDependency<IMediator>(ICommandMediatorKey);
-  const command = useDependency(token);
-  return useCallback((payload: TPayload) => mediator.sendAsync(command, payload), [command, mediator]);
+  const handler = useDependency(token);
+  const errorBus = useDependency<IErrorBus>(IErrorBusKey);
+  useEffect(() => {
+    mediator.send(handler, undefined).catch((e) => errorBus.next(e));
+  }, [mediator, handler, errorBus]);
 };

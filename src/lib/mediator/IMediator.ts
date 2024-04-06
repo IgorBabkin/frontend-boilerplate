@@ -1,10 +1,10 @@
-import { IObservableQuery, ICommand, IAsyncCommand } from './ICommand.ts';
+import { ICommand, IObservableQuery } from './ICommand.ts';
 import { Observable } from 'rxjs';
 
 export interface IMediator {
-  send<TPayload>(command: ICommand<TPayload>, payload: TPayload): void;
-
-  sendAsync<TPayload>(command: IAsyncCommand<TPayload>, payload: TPayload): void;
+  send<TPayload = never>(command: ICommand<TPayload>, payload: TPayload): Promise<void>;
 
   send$<TPayload, TResponse>(query: IObservableQuery<TPayload, TResponse>, payload: TPayload): Observable<TResponse>;
+
+  initialize<TPayload>(handler: ICommand<TPayload>): Promise<void>;
 }

@@ -1,18 +1,20 @@
 import { sleep } from '../../../../lib/utils.ts';
 import { ITodoStoreKey, TodoStore } from '../../../domain/todo/TodoStore.ts';
-import { by, inject, provider, visible } from 'ts-ioc-container';
-import { onMount, parentOnly, perScope } from '../../../../lib/scope/container.ts';
-import { IAsyncCommand } from '../../../../lib/mediator/ICommand.ts';
-import { when } from '../../../../lib/mediator/IAsyncCondition.ts';
-import { HasConfig } from '../../config/HasConfig.ts';
+import { alias, by, inject, provider, register, visible } from 'ts-ioc-container';
+import { ComponentAlias, parentOnly, perScope } from '../../../../lib/scope/container.ts';
+import { ICommand } from '../../../../lib/mediator/ICommand.ts';
+import { Permission } from '../../../domain/auth/IPermissions.ts';
+import { IResource } from '../../../domain/auth/IResource.ts';
 
-@onMount
-@when(HasConfig)
+@register(alias(ComponentAlias.onMount))
 @provider(perScope.application, visible(parentOnly))
-export class LoadTodoList implements IAsyncCommand {
+export class LoadTodoList implements ICommand, IResource {
+  resource = 'todo';
+  permission: Permission = 'read';
+
   constructor(@inject(by.key(ITodoStoreKey)) private todoStore: TodoStore) {}
 
-  async executeAsync(): Promise<void> {
+  async execute(): Promise<void> {
     await sleep(1000);
     this.todoStore.setList([
       { id: '1', title: 'todo 1' },

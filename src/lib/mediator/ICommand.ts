@@ -1,19 +1,23 @@
 import { Observable } from 'rxjs';
+import { constructor, getHooks, getMetadata, hook, setMetadata } from 'ts-ioc-container';
 
-export interface ICommand<TPayload = void> {
-  execute(payload: TPayload): void;
+export const onCommandInit = hook('onCommandInit');
+export const getCommandInitHooks = (command: ICommand) => getHooks(command, 'onCommandInit') ?? [];
+
+export interface ICommand<TPayload = unknown> {
+  execute(payload: TPayload): Promise<void>;
+  match?(payload: unknown): payload is TPayload;
 }
 
-export interface IAsyncCommand<TQuery = void> {
-  executeAsync(payload: TQuery): Promise<void>;
+export function matchPayload<TPayload>(command: ICommand<TPayload>, payload: unknown): payload is TPayload {
+  return command.match ? command.match(payload) : true;
 }
 
-export function isAsyncCommand<TQuery>(
-  command: ICommand<TQuery> | IAsyncCommand<TQuery>,
-): command is IAsyncCommand<TQuery> {
-  return (command as IAsyncCommand<TQuery>).executeAsync !== undefined;
-}
-
-export interface IObservableQuery<TPayload, TResponse> {
+export interface IObservableQuery<TPayload = unknown, TResponse = unknown> {
   create(payload: TPayload): Observable<TResponse>;
 }
+
+export const beforeExecution = (...commands: constructor<ICommand>[]) => setMetadata('beforeExecution', commands);
+
+export const getBeforeExecution = (condition: ICommand | IObservableQuery) =>
+  getMetadata<constructor<ICommand>[]>(condition.constructor, 'beforeExecution') ?? [];

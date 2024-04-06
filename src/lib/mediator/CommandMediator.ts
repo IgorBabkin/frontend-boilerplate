@@ -1,48 +1,52 @@
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { IMediator } from './IMediator.ts';
-import { IAsyncCommand, ICommand, IObservableQuery } from './ICommand.ts';
+import { ICommand, IObservableQuery, matchPayload } from './ICommand.ts';
 import { by, type IContainer, inject, key, provider, register, singleton } from 'ts-ioc-container';
-import { type IErrorBus, IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
 
-import { getCondition } from './IAsyncCondition.ts';
+import { SimpleMediator } from './SimpleMediator.ts';
+import { byCommandAliases } from '../scope/container.ts';
 
 export const ICommandMediatorKey = Symbol('ICommandMediator');
 
 @register(key(ICommandMediatorKey))
 @provider(singleton())
 export class CommandMediator implements IMediator {
+  private mediator: SimpleMediator;
+
   constructor(
-    @inject(by.key(IErrorBusKey)) private errorBus: IErrorBus,
-    @inject(by.scope.current) private scope: IContainer,
-  ) {}
+    @inject(by.scope.current) scope: IContainer,
+    @inject(byCommandAliases.onConstruct) private initCommands: ICommand[],
+    @inject(byCommandAliases.onBeforeExecution) private beforeCommands: ICommand[],
+  ) {
+    this.mediator = new SimpleMediator(scope);
+  }
 
-  sendAsync<TPayload>(command: IAsyncCommand<TPayload>, payload: TPayload): void {
-    const Condition = getCondition(command);
-    if (Condition === undefined) {
-      return this.asyncExecute(() => command.executeAsync(payload));
-    }
-
-    return this.asyncExecute(async () => {
-      const condition = this.scope.resolve(Condition);
-      if (await condition.isTrue()) {
-        return command.executeAsync(payload);
-      }
-    });
+  async initialize<TPayload>(command: ICommand<TPayload>): Promise<void> {
+    await this.runBeforeCommands(command, this.initCommands);
+    await this.mediator.initialize(command);
   }
 
   send$<TPayload, TResponse>(query: IObservableQuery<TPayload, TResponse>, payload: TPayload): Observable<TResponse> {
-    return query.create(payload);
+    const result$ = new Subject<TResponse>();
+    this.runBeforeCommands(query, this.beforeCommands)
+      .then(() => {
+        this.mediator.send$(query, payload).subscribe(result$);
+      })
+      .catch((e: unknown) => {
+        result$.error(e);
+      });
+    return result$.asObservable();
   }
 
-  send<TPayload>(command: ICommand<TPayload>, payload: TPayload): void {
-    try {
-      command.execute(payload);
-    } catch (e) {
-      this.errorBus.next(e as Error);
+  async send<TPayload = never>(command: ICommand<TPayload>, payload: TPayload): Promise<void> {
+    await this.runBeforeCommands(command, this.beforeCommands);
+    await this.mediator.send(command, payload);
+  }
+
+  private async runBeforeCommands(target: IObservableQuery | ICommand, beforeCommands: ICommand[]) {
+    const commands = beforeCommands.filter((c) => matchPayload(c, target));
+    for (const c of commands) {
+      await this.mediator.send(c, target);
     }
-  }
-
-  private asyncExecute(fn: () => Promise<unknown>): void {
-    fn().catch((e) => this.errorBus.next(e as Error));
   }
 }

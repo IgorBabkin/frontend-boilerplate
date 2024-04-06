@@ -1,22 +1,20 @@
 import { by, inject } from 'ts-ioc-container';
-import { byAliases } from './container.ts';
-import { IAsyncCommand, ICommand, isAsyncCommand } from '../mediator/ICommand.ts';
+import { byComponentAliases } from './container.ts';
+import { ICommand } from '../mediator/ICommand.ts';
 import { type IMediator } from '../mediator/IMediator.ts';
 import { ICommandMediatorKey } from '../mediator/CommandMediator.ts';
+import { type IErrorBus, IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
 
 export class ScopeMediator {
   constructor(
-    @inject(byAliases.onMount) private startCommands: (ICommand | IAsyncCommand)[],
+    @inject(byComponentAliases.onMount) private startCommands: ICommand[],
     @inject(by.key(ICommandMediatorKey)) private mediator: IMediator,
+    @inject(by.key(IErrorBusKey)) private errorBus: IErrorBus,
   ) {}
 
   start(): void {
     for (const command of this.startCommands) {
-      if (isAsyncCommand(command)) {
-        this.mediator.sendAsync(command, undefined);
-      } else {
-        this.mediator.send(command, undefined);
-      }
+      this.mediator.send(command, undefined).catch((e) => this.errorBus.next(e));
     }
   }
 }
