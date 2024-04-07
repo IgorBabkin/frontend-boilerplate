@@ -1,14 +1,14 @@
 import Scope from '../../lib/scope/Scope.tsx';
 import TodoListWidget from '../widgets/todo/TodoListWidget.tsx';
-import { IUserControllerKey, UserController } from '../widgets/auth/UserController.ts';
-import { useController } from '../../lib/scope/useQuery.ts';
+import { IUserServiceKey, UserService } from '../widgets/auth/UserService.ts';
+import { useService } from '../../lib/scope/useQuery.ts';
 import { useObservable } from '../../lib/observable/observable.ts';
 import { useMemo } from 'react';
 
 function HomePage() {
-  const userController = useController<UserController>(IUserControllerKey);
+  const userService = useService<UserService>(IUserServiceKey);
   const user = useObservable(
-    useMemo(() => userController.getUser$(), [userController]),
+    useMemo(() => userService.getUser$(), [userService]),
     undefined,
   );
 

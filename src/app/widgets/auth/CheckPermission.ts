@@ -15,13 +15,13 @@ export class CheckPermission implements IGuard {
     return isResource(resource);
   }
 
-  async execute(controller: IResource, method: string): Promise<void> {
-    const permission = getPermission(controller, method);
+  async execute(service: IResource, method: string): Promise<void> {
+    const permission = getPermission(service, method);
     if (permission === undefined) {
       return;
     }
     const permissions = this.userStore.getPermissions();
-    checkPermission(permissions, controller.resource, permission);
+    checkPermission(permissions, service.resource, permission);
   }
 }
 

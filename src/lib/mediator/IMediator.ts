@@ -2,15 +2,15 @@ import { Observable } from 'rxjs';
 import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './myTypes.ts';
 
 export interface IMediator {
-  send<TController extends object, Key extends CommandMethodKeys<TController, CommandMethod>>(
-    controller: TController,
+  send<TService extends object, Key extends CommandMethodKeys<TService, CommandMethod>>(
+    service: TService,
     method: Key,
-    payload: Payload<TController, Key>,
+    payload: Payload<TService, Key>,
   ): Promise<void>;
 
-  send$<TController extends object, Key extends CommandMethodKeys<TController, QueryMethod>>(
-    controller: TController,
+  send$<TService extends object, Key extends CommandMethodKeys<TService, QueryMethod>>(
+    service: TService,
     method: Key,
-    payload: Payload<TController, Key>,
-  ): Observable<Response<TController, Key>>;
+    payload: Payload<TService, Key>,
+  ): Observable<Response<TService, Key>>;
 }

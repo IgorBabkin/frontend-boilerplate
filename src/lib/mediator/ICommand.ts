@@ -8,7 +8,7 @@ export interface ICommand<TPayload = unknown> {
   match?(payload: unknown): payload is TPayload;
 }
 
-export type ControllerInfo = { controller: object; method: string | number | symbol };
+export type ServiceInfo = { service: object; method: string | number | symbol };
 
 export interface IGuard<TPayload = unknown> {
   execute(resource: TPayload, method: string): Promise<void>;

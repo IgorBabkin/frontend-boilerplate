@@ -1,12 +1,12 @@
-import { useController } from '../../../lib/scope/useQuery.ts';
-import { ErrorController, IErrorControllerKey } from './ErrorController.ts';
+import { useService } from '../../../lib/scope/useQuery.ts';
+import { ErrorService, IErrorServiceKey } from './ErrorService.ts';
 import { useObservable } from '../../../lib/observable/observable.ts';
 import { useMemo } from 'react';
 
 function ErrorsWidget() {
-  const errorController = useController<ErrorController>(IErrorControllerKey);
+  const errorService = useService<ErrorService>(IErrorServiceKey);
   const error = useObservable(
-    useMemo(() => errorController.getError$(), [errorController]),
+    useMemo(() => errorService.getError$(), [errorService]),
     undefined,
   );
   return <div>{error?.message}</div>;

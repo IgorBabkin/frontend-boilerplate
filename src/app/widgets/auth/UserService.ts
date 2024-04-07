@@ -7,11 +7,11 @@ import { UserPermissions } from '../../domain/user/IPermissions.ts';
 import { IUser } from '../../domain/user/IUser.ts';
 import { OnInit, onInit, Scope } from '../../../lib/scope/container.ts';
 
-export const IUserControllerKey = Symbol('IUserController');
+export const IUserServiceKey = Symbol('IUserService');
 
-@register(key(IUserControllerKey))
+@register(key(IUserServiceKey))
 @provider(scope(Scope.application), singleton())
-export class UserController implements OnInit {
+export class UserService implements OnInit {
   isInitialized = false;
 
   constructor(

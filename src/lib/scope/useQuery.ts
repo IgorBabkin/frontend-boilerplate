@@ -7,24 +7,15 @@ import { getCommands, getQuery } from '../mediator/ICommand.ts';
 import { ICommandMediatorKey } from '../mediator/CommandMediator.ts';
 import { getOnInitHooks, isInitializable } from './container.ts';
 
-// export const useQuery = <TQuery, Response>(
-//   token: constructor<IObservableQuery<TQuery, Response>>,
-//   payload: TQuery,
-//   initial: Response,
-// ): Response => {
-//   const handler = useDependency<IObservableQuery<TQuery, Response>>(token);
-//   return useObservable(obs$, initial);
-// };
-
-export const useController = <TController extends object>(token: InjectionToken<TController>) => {
-  const controller = useDependency<TController>(token);
+export const useService = <TService extends object>(token: InjectionToken<TService>) => {
+  const service = useDependency<TService>(token);
   const mediator = useDependency<IMediator>(ICommandMediatorKey);
-  const commands = useMemo(() => getCommands(controller), [controller]);
-  const query = useMemo(() => getQuery(controller), [controller]);
+  const commands = useMemo(() => getCommands(service), [service]);
+  const query = useMemo(() => getQuery(service), [service]);
   const errorBus$ = useDependency<IErrorBus>(IErrorBusKey);
-  const pController = useMemo(
+  const pService = useMemo(
     () =>
-      new Proxy(controller, {
+      new Proxy(service, {
         get(target, prop) {
           if (typeof prop === 'string' && prop in target) {
             if (commands.includes(prop)) {
@@ -40,23 +31,23 @@ export const useController = <TController extends object>(token: InjectionToken<
             // @ts-ignore
             return target[prop];
           }
-          throw new Error(`Method ${prop as string} not found on controller`);
+          throw new Error(`Method ${prop as string} not found on service`);
         },
-      }) as TController,
-    [commands, controller, mediator, query],
+      }) as TService,
+    [commands, service, mediator, query],
   );
   useEffect(() => {
-    if (isInitializable(controller) && !controller.isInitialized) {
-      controller.isInitialized = true;
-      for (const h of getOnInitHooks(controller)) {
+    if (isInitializable(service) && !service.isInitialized) {
+      service.isInitialized = true;
+      for (const h of getOnInitHooks(service)) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        const fn = pController[h];
-        fn.call(pController).catch((e: Error) => errorBus$.next(e));
+        const fn = pService[h];
+        fn.call(pService).catch((e: Error) => errorBus$.next(e));
       }
     }
-  }, [controller, errorBus$, pController]);
-  return pController;
+  }, [service, errorBus$, pService]);
+  return pService;
 };
 
 export const useAsyncEffect = (fn: () => Promise<void>, deps: unknown[]) => {

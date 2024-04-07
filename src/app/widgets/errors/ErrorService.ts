@@ -4,11 +4,11 @@ import { Observable } from 'rxjs';
 import { query } from '../../../lib/mediator/ICommand.ts';
 import { Scope } from '../../../lib/scope/container.ts';
 
-export const IErrorControllerKey = Symbol('IErrorController');
+export const IErrorServiceKey = Symbol('IErrorService');
 
-@register(key(IErrorControllerKey))
+@register(key(IErrorServiceKey))
 @provider(scope(Scope.application), singleton())
-export class ErrorController {
+export class ErrorService {
   constructor(@inject(by.key(IErrorBusKey)) private errorBus: IErrorBus) {}
 
   @query

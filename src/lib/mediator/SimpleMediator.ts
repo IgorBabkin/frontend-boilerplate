@@ -3,21 +3,21 @@ import { IMediator } from './IMediator.ts';
 import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './myTypes.ts';
 
 export class SimpleMediator implements IMediator {
-  send$<TController extends object, Key extends CommandMethodKeys<TController, QueryMethod>>(
-    controller: TController,
+  send$<TService extends object, Key extends CommandMethodKeys<TService, QueryMethod>>(
+    service: TService,
     method: Key,
-    payload: Payload<TController, Key>,
-  ): Observable<Response<TController, Key>> {
-    const fn = controller[method] as QueryMethod<Payload<TController, Key>, Response<TController, Key>>;
-    return fn.call(controller, payload);
+    payload: Payload<TService, Key>,
+  ): Observable<Response<TService, Key>> {
+    const fn = service[method] as QueryMethod<Payload<TService, Key>, Response<TService, Key>>;
+    return fn.call(service, payload);
   }
 
-  async send<TController extends object, Key extends CommandMethodKeys<TController, CommandMethod>>(
-    controller: TController,
+  async send<TService extends object, Key extends CommandMethodKeys<TService, CommandMethod>>(
+    service: TService,
     method: Key,
-    payload: Payload<TController, Key>,
+    payload: Payload<TService, Key>,
   ): Promise<void> {
-    const fn = controller[method] as CommandMethod<Payload<TController, Key>>;
-    await fn.call(controller, payload);
+    const fn = service[method] as CommandMethod<Payload<TService, Key>>;
+    await fn.call(service, payload);
   }
 }

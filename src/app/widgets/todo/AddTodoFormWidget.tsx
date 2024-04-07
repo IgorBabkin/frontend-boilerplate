@@ -3,11 +3,11 @@ import Button from '../../ui/button/Button.tsx';
 import TextField from '../../ui/textField/TextField.tsx';
 import { IErrorHandler, IErrorHandlerKey } from '../../domain/errors/IErrorHandler.ts';
 import { useDependency } from '../../../lib/scope/ScopeContext.ts';
-import { useController } from '../../../lib/scope/useQuery.ts';
-import { ITodoControllerKey, TodoController } from './TodoController.ts';
+import { useService } from '../../../lib/scope/useQuery.ts';
+import { ITodoServiceKey, TodoService } from './TodoService.ts';
 
 function AddTodoFormWidget() {
-  const todoController = useController<TodoController>(ITodoControllerKey);
+  const todoService = useService<TodoService>(ITodoServiceKey);
   const errorHandler = useDependency<IErrorHandler>(IErrorHandlerKey);
   const [title, setTitle] = useState('');
   const resetForm = useCallback(() => setTitle(''), []);
@@ -16,11 +16,11 @@ function AddTodoFormWidget() {
     (e: FormEvent) => {
       errorHandler.handle(async () => {
         e.preventDefault();
-        await todoController.addTodo(title);
+        await todoService.addTodo(title);
         resetForm();
       });
     },
-    [errorHandler, resetForm, title, todoController],
+    [errorHandler, resetForm, title, todoService],
   );
 
   return (

@@ -5,7 +5,7 @@ import { SimpleMediator } from './SimpleMediator.ts';
 import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './myTypes.ts';
 import { Observable } from 'rxjs';
 import { byCommandAliases } from '../scope/container.ts';
-import { ControllerInfo, IGuard, matchPayload } from './ICommand.ts';
+import { ServiceInfo, IGuard, matchPayload } from './ICommand.ts';
 
 export const ICommandMediatorKey = Symbol('ICommandMediator');
 
@@ -18,29 +18,27 @@ export class CommandMediator implements IMediator {
     this.mediator = new SimpleMediator();
   }
 
-  send$<TController extends object, Key extends CommandMethodKeys<TController, QueryMethod>>(
-    controller: TController,
+  send$<TService extends object, Key extends CommandMethodKeys<TService, QueryMethod>>(
+    service: TService,
     method: Key,
-    payload: Payload<TController, Key>,
-  ): Observable<Response<TController, Key>> {
-    return this.mediator.send$(controller, method, payload);
+    payload: Payload<TService, Key>,
+  ): Observable<Response<TService, Key>> {
+    return this.mediator.send$(service, method, payload);
   }
 
-  async send<TController extends object, Key extends CommandMethodKeys<TController, CommandMethod>>(
-    controller: TController,
+  async send<TService extends object, Key extends CommandMethodKeys<TService, CommandMethod>>(
+    service: TService,
     method: Key,
-    payload: Payload<TController, Key>,
+    payload: Payload<TService, Key>,
   ): Promise<void> {
-    await this.runBeforeCommands({ controller, method }, this.beforeCommands);
-    await this.mediator.send(controller, method, payload);
+    await this.runBeforeCommands({ service: service, method }, this.beforeCommands);
+    await this.mediator.send(service, method, payload);
   }
 
-  private async runBeforeCommands(target: ControllerInfo, beforeCommands: IGuard[]) {
-    const commands = beforeCommands.filter(
-      (c) => typeof target.method === 'string' && matchPayload(c, target.controller),
-    );
+  private async runBeforeCommands(target: ServiceInfo, beforeCommands: IGuard[]) {
+    const commands = beforeCommands.filter((c) => typeof target.method === 'string' && matchPayload(c, target.service));
     for (const c of commands) {
-      await c.execute(target.controller, target.method as string);
+      await c.execute(target.service, target.method as string);
     }
   }
 }

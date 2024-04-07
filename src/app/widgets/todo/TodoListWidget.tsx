@@ -1,12 +1,12 @@
-import { ITodoControllerKey, TodoController } from './TodoController.ts';
-import { useController } from '../../../lib/scope/useQuery.ts';
+import { ITodoServiceKey, TodoService } from './TodoService.ts';
+import { useService } from '../../../lib/scope/useQuery.ts';
 import { useObservable } from '../../../lib/observable/observable.ts';
 import { useMemo } from 'react';
 
 function TodoListWidget() {
-  const todoController = useController<TodoController>(ITodoControllerKey);
+  const todoService = useService<TodoService>(ITodoServiceKey);
   const list = useObservable(
-    useMemo(() => todoController.getTodoList$(), [todoController]),
+    useMemo(() => todoService.getTodoList$(), [todoService]),
     [],
   );
 

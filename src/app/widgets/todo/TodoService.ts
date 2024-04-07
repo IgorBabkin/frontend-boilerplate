@@ -8,11 +8,11 @@ import { OnInit, onInit, Scope } from '../../../lib/scope/container.ts';
 import { IResource } from '../../domain/user/IResource.ts';
 import { permission } from '../auth/CheckPermission.ts';
 
-export const ITodoControllerKey = Symbol('ITodoController');
+export const ITodoServiceKey = Symbol('ITodoService');
 
-@register(key(ITodoControllerKey))
+@register(key(ITodoServiceKey))
 @provider(scope(Scope.application), singleton())
-export class TodoController implements IResource, OnInit {
+export class TodoService implements IResource, OnInit {
   resource = 'todo';
   isInitialized = false;
 
