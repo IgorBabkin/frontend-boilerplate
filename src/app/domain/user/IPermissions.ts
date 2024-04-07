@@ -17,6 +17,8 @@ export function checkPermission(permissions: IPermissions, resource: string, per
 }
 
 export class UserPermissions {
+  static default = new UserPermissions({});
+
   constructor(private permissions: IPermissions) {}
 
   hasRight(resource: string, permission: Permission) {

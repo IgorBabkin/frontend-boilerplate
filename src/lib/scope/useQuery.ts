@@ -5,6 +5,7 @@ import { IErrorBus, IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
 import { IMediator } from '../mediator/IMediator.ts';
 import { getCommands, getQuery } from '../mediator/ICommand.ts';
 import { ICommandMediatorKey } from '../mediator/CommandMediator.ts';
+import { getConstructHooks, isInitializable } from './container.ts';
 
 // export const useQuery = <TQuery, Response>(
 //   token: constructor<IObservableQuery<TQuery, Response>>,
@@ -20,7 +21,8 @@ export const useController = <TController extends object>(token: InjectionToken<
   const mediator = useDependency<IMediator>(ICommandMediatorKey);
   const commands = useMemo(() => getCommands(controller), [controller]);
   const query = useMemo(() => getQuery(controller), [controller]);
-  return useMemo(
+  const errorBus$ = useDependency<IErrorBus>(IErrorBusKey);
+  const pController = useMemo(
     () =>
       new Proxy(controller, {
         get(target, prop) {
@@ -43,6 +45,21 @@ export const useController = <TController extends object>(token: InjectionToken<
       }) as TController,
     [commands, controller, mediator, query],
   );
+  useEffect(() => {
+    if (isInitializable(controller) && !controller.isInitialized) {
+      for (const h of getConstructHooks(controller)) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const fn = pController[h];
+        fn.call(pController)
+          .then(() => {
+            controller.isInitialized = true;
+          })
+          .catch((e: Error) => errorBus$.next(e));
+      }
+    }
+  }, [controller, errorBus$, pController]);
+  return pController;
 };
 
 export const useAsyncEffect = (fn: () => Promise<void>, deps: unknown[]) => {

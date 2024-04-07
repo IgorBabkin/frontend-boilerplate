@@ -5,7 +5,6 @@ export class DepInjector implements IInjector {
 
   resolve<T>(container: IContainer, Target: constructor<T>, ...args: unknown[]): T {
     const instance = this.injector.resolve(container, Target, ...args);
-
     return instance;
   }
 }

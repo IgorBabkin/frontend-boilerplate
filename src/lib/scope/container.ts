@@ -1,5 +1,5 @@
-import { by, constructor, getMetadata, setMetadata, Tag, Tagged } from 'ts-ioc-container';
-import { ICommand } from '../mediator/ICommand.ts';
+import { by, Tag, Tagged } from 'ts-ioc-container';
+import { getHooks, hook } from '../hook.ts';
 
 export const hasTags = {
   every:
@@ -31,5 +31,13 @@ export const Scope = {
   page: hasTags.every('page'),
 };
 
-export const onConstruct = (...Commands: constructor<ICommand>[]) => setMetadata('onConstruct', Commands);
-export const getOnConstruct = (Target: object): constructor<ICommand>[] => getMetadata(Target, 'onConstruct') ?? [];
+export const onConstruct = hook('onConstruct');
+export const getConstructHooks = (target: object): string[] => getHooks(target, 'onConstruct') ?? [];
+
+export interface Initializable {
+  isInitialized: boolean;
+}
+
+export function isInitializable(target: object): target is Initializable {
+  return (target as Initializable).isInitialized !== undefined;
+}
