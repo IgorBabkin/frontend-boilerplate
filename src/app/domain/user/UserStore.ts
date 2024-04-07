@@ -20,6 +20,7 @@ export class UserStore {
   }
 
   getUser$() {
+    console.log('UserStore.getUser$', this.user.getValue());
     return this.user.asObservable();
   }
 

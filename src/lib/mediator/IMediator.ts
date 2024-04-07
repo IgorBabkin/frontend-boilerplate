@@ -1,8 +1,16 @@
-import { ICommand, IObservableQuery } from './ICommand.ts';
 import { Observable } from 'rxjs';
+import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './myTypes.ts';
 
 export interface IMediator {
-  send<TPayload = never>(command: ICommand<TPayload>, payload: TPayload): Promise<void>;
+  send<TController extends object, Key extends CommandMethodKeys<TController, CommandMethod>>(
+    controller: TController,
+    method: Key,
+    payload: Payload<TController, Key>,
+  ): Promise<void>;
 
-  send$<TPayload, TResponse>(query: IObservableQuery<TPayload, TResponse>, payload: TPayload): Observable<TResponse>;
+  send$<TController extends object, Key extends CommandMethodKeys<TController, QueryMethod>>(
+    controller: TController,
+    method: Key,
+    payload: Payload<TController, Key>,
+  ): Observable<Response<TController, Key>>;
 }

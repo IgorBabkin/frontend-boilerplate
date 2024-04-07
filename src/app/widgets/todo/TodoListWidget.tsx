@@ -1,8 +1,14 @@
-import { GetTodoList } from './operations/GetTodoList.ts';
-import { useQuery } from '../../../lib/scope/useQuery.ts';
+import { TodoController } from './TodoController.ts';
+import { useController } from '../../../lib/scope/useQuery.ts';
+import { useObservable } from '../../../lib/observable/observable.ts';
+import { useMemo } from 'react';
 
 function TodoListWidget() {
-  const list = useQuery(GetTodoList, undefined, []);
+  const todoController = useController(TodoController);
+  const list = useObservable(
+    useMemo(() => todoController.getTodoList$(), [todoController]),
+    [],
+  );
 
   return (
     <ul>

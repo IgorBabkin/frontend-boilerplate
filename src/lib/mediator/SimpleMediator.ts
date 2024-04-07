@@ -1,35 +1,23 @@
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IMediator } from './IMediator.ts';
-import { getBeforeExecution, ICommand, IObservableQuery, matchPayload } from './ICommand.ts';
-import { type IContainer } from 'ts-ioc-container';
+import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './myTypes.ts';
 
 export class SimpleMediator implements IMediator {
-  constructor(private scope: IContainer) {}
-
-  send$<TPayload, TResponse>(query: IObservableQuery<TPayload, TResponse>, payload: TPayload): Observable<TResponse> {
-    const result$ = new Subject<TResponse>();
-    this.runBeforeCommands(query)
-      .then(() => {
-        query.create(payload).subscribe(result$);
-      })
-      .catch((e: unknown) => {
-        result$.error(e);
-      });
-    return result$.asObservable();
+  send$<TController extends object, Key extends CommandMethodKeys<TController, QueryMethod>>(
+    controller: TController,
+    method: Key,
+    payload: Payload<TController, Key>,
+  ): Observable<Response<TController, Key>> {
+    const fn = controller[method] as QueryMethod<Payload<TController, Key>, Response<TController, Key>>;
+    return fn.call(controller, payload);
   }
 
-  async send<TPayload>(command: ICommand<TPayload>, payload: TPayload): Promise<void> {
-    await this.runBeforeCommands(command);
-    await command.execute(payload);
-  }
-
-  private async runBeforeCommands(target: IObservableQuery | ICommand) {
-    const beforeCommands = getBeforeExecution(target)
-      .map((c) => this.scope.resolve(c))
-      .filter((c) => matchPayload(c, target));
-
-    for (const c of beforeCommands) {
-      await c.execute(target);
-    }
+  async send<TController extends object, Key extends CommandMethodKeys<TController, CommandMethod>>(
+    controller: TController,
+    method: Key,
+    payload: Payload<TController, Key>,
+  ): Promise<void> {
+    const fn = controller[method] as CommandMethod<Payload<TController, Key>>;
+    await fn.call(controller, payload);
   }
 }

@@ -1,13 +1,13 @@
-import { useCommand } from '../../../lib/scope/useQuery.ts';
-import { AddTodo } from './operations/AddTodo.ts';
 import { FormEvent, useCallback, useState } from 'react';
 import Button from '../../ui/button/Button.tsx';
 import TextField from '../../ui/textField/TextField.tsx';
 import { IErrorHandler, IErrorHandlerKey } from '../../domain/errors/IErrorHandler.ts';
 import { useDependency } from '../../../lib/scope/ScopeContext.ts';
+import { useController } from '../../../lib/scope/useQuery.ts';
+import { TodoController } from './TodoController.ts';
 
 function AddTodoFormWidget() {
-  const addTodo = useCommand(AddTodo);
+  const todoController = useController(TodoController);
   const errorHandler = useDependency<IErrorHandler>(IErrorHandlerKey);
   const [title, setTitle] = useState('');
   const resetForm = useCallback(() => setTitle(''), []);
@@ -16,11 +16,11 @@ function AddTodoFormWidget() {
     (e: FormEvent) => {
       errorHandler.handle(async () => {
         e.preventDefault();
-        await addTodo(title);
+        await todoController.addTodo(title);
         resetForm();
       });
     },
-    [addTodo, errorHandler, resetForm, title],
+    [errorHandler, resetForm, title, todoController],
   );
 
   return (

@@ -1,4 +1,5 @@
-import { by, Tag, Tagged } from 'ts-ioc-container';
+import { by, constructor, getMetadata, setMetadata, Tag, Tagged } from 'ts-ioc-container';
+import { ICommand } from '../mediator/ICommand.ts';
 
 export const hasTags = {
   every:
@@ -29,3 +30,6 @@ export const Scope = {
   application: hasTags.every('application'),
   page: hasTags.every('page'),
 };
+
+export const onConstruct = (...Commands: constructor<ICommand>[]) => setMetadata('onConstruct', Commands);
+export const getOnConstruct = (Target: object): constructor<ICommand>[] => getMetadata(Target, 'onConstruct') ?? [];

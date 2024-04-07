@@ -1,10 +1,9 @@
-import { Observable, Subject } from 'rxjs';
 import { IMediator } from './IMediator.ts';
-import { ICommand, IObservableQuery, matchPayload } from './ICommand.ts';
-import { by, type IContainer, inject, key, provider, register, singleton } from 'ts-ioc-container';
+import { key, provider, register, singleton } from 'ts-ioc-container';
 
 import { SimpleMediator } from './SimpleMediator.ts';
-import { byCommandAliases } from '../scope/container.ts';
+import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './myTypes.ts';
+import { Observable } from 'rxjs';
 
 export const ICommandMediatorKey = Symbol('ICommandMediator');
 
@@ -13,34 +12,23 @@ export const ICommandMediatorKey = Symbol('ICommandMediator');
 export class CommandMediator implements IMediator {
   private mediator: SimpleMediator;
 
-  constructor(
-    @inject(by.scope.current) scope: IContainer,
-    @inject(byCommandAliases.onBeforeExecution) private beforeCommands: ICommand[],
-  ) {
-    this.mediator = new SimpleMediator(scope);
+  constructor() {
+    this.mediator = new SimpleMediator();
   }
 
-  send$<TPayload, TResponse>(query: IObservableQuery<TPayload, TResponse>, payload: TPayload): Observable<TResponse> {
-    const result$ = new Subject<TResponse>();
-    this.runBeforeCommands(query, this.beforeCommands)
-      .then(() => {
-        this.mediator.send$(query, payload).subscribe(result$);
-      })
-      .catch((e: unknown) => {
-        result$.error(e);
-      });
-    return result$.asObservable();
+  send$<TController extends object, Key extends CommandMethodKeys<TController, QueryMethod>>(
+    controller: TController,
+    method: Key,
+    payload: Payload<TController, Key>,
+  ): Observable<Response<TController, Key>> {
+    return this.mediator.send$(controller, method, payload);
   }
 
-  async send<TPayload = never>(command: ICommand<TPayload>, payload: TPayload): Promise<void> {
-    await this.runBeforeCommands(command, this.beforeCommands);
-    await this.mediator.send(command, payload);
-  }
-
-  private async runBeforeCommands(target: IObservableQuery | ICommand, beforeCommands: ICommand[]) {
-    const commands = beforeCommands.filter((c) => matchPayload(c, target));
-    for (const c of commands) {
-      await this.mediator.send(c, target);
-    }
+  async send<TController extends object, Key extends CommandMethodKeys<TController, CommandMethod>>(
+    controller: TController,
+    method: Key,
+    payload: Payload<TController, Key>,
+  ): Promise<void> {
+    await this.mediator.send(controller, method, payload);
   }
 }

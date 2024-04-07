@@ -1,23 +1,27 @@
 import './App.css';
 import { Outlet } from 'react-router-dom';
-import { useAsyncEffect, useCommand, useQuery } from '../lib/scope/useQuery.ts';
-import { GetPermissions } from './widgets/auth/GetPermissions.ts';
+import { useAsyncEffect, useController } from '../lib/scope/useQuery.ts';
 import NavMenu from './ui/navigation/NavMenu.tsx';
 import NavLink from './ui/navigation/NavLink.tsx';
 import { UserPermissions } from './domain/user/IPermissions.ts';
-import { LoadUser } from './widgets/auth/LoadUser.ts';
-import { LoadTodoList } from './widgets/todo/operations/LoadTodoList.ts';
 import ErrorsWidget from './widgets/errors/ErrorsWidget.tsx';
+import { UserController } from './widgets/auth/UserController.ts';
+import { TodoController } from './widgets/todo/TodoController.ts';
+import { useObservable } from '../lib/observable/observable.ts';
+import { useMemo } from 'react';
 
 function App() {
-  const loadUser = useCommand(LoadUser);
-  const loadTodoList = useCommand(LoadTodoList);
-  const permissions = useQuery(GetPermissions, undefined, new UserPermissions({}));
+  const userController = useController(UserController);
+  const todoController = useController(TodoController);
+  const permissions = useObservable(
+    useMemo(() => userController.getPermissions$(), [userController]),
+    new UserPermissions({}),
+  );
 
   useAsyncEffect(async () => {
-    await loadUser(undefined);
-    await loadTodoList(undefined);
-  }, [loadUser, loadTodoList]);
+    await userController.loadUser();
+    await todoController.loadTodoList();
+  }, [userController, todoController]);
 
   return (
     <div>
