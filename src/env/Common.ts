@@ -13,6 +13,9 @@ import { AuthClient, IAuthClientKey } from '../app/api/AuthClient.ts';
 import { Context } from '../lib/scope/Context.ts';
 import { AuthService } from '../app/domain/auth/AuthService.ts';
 import { ApiClient, IApiClientKey } from '../app/api/ApiClient.ts';
+import { TodoController } from '../app/widgets/todo/TodoController.ts';
+import { UserController } from '../app/widgets/auth/UserController.ts';
+import { ErrorController } from '../app/widgets/errors/ErrorController.ts';
 
 export class Common implements IContainerModule {
   applyTo(container: IContainer): void {
@@ -26,6 +29,9 @@ export class Common implements IContainerModule {
       .use(R.fromClass(TodoRepo))
       .use(R.fromClass(UserRepo))
       .use(R.fromClass(AuthService))
+      .use(R.fromClass(TodoController))
+      .use(R.fromClass(UserController))
+      .use(R.fromClass(ErrorController))
       .use(R.fromValue(new Context(new ApiClient('someToken'))).to(IApiClientKey))
       .use(
         R.fromClass(AuthClient)

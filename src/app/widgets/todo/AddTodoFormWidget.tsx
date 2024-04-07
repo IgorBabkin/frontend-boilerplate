@@ -4,10 +4,10 @@ import TextField from '../../ui/textField/TextField.tsx';
 import { IErrorHandler, IErrorHandlerKey } from '../../domain/errors/IErrorHandler.ts';
 import { useDependency } from '../../../lib/scope/ScopeContext.ts';
 import { useController } from '../../../lib/scope/useQuery.ts';
-import { TodoController } from './TodoController.ts';
+import { ITodoControllerKey, TodoController } from './TodoController.ts';
 
 function AddTodoFormWidget() {
-  const todoController = useController(TodoController);
+  const todoController = useController<TodoController>(ITodoControllerKey);
   const errorHandler = useDependency<IErrorHandler>(IErrorHandlerKey);
   const [title, setTitle] = useState('');
   const resetForm = useCallback(() => setTitle(''), []);

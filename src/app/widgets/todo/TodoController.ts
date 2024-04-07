@@ -1,10 +1,15 @@
-import { by, inject } from 'ts-ioc-container';
+import { by, inject, key, provider, register, scope, singleton } from 'ts-ioc-container';
 import { ITodoStoreKey, TodoStore } from '../../domain/todo/TodoStore.ts';
 import { ITodoRepoKey, TodoRepo } from '../../domain/todo/TodoRepo.ts';
 import { command, query } from '../../../lib/mediator/ICommand.ts';
 import { Observable } from 'rxjs';
 import { ITodo } from '../../domain/todo/ITodo.ts';
+import { Scope } from '../../../lib/scope/container.ts';
 
+export const ITodoControllerKey = Symbol('ITodoController');
+
+@register(key(ITodoControllerKey))
+@provider(scope(Scope.application), singleton())
 export class TodoController {
   constructor(
     @inject(by.key(ITodoStoreKey)) private todoStore: TodoStore,

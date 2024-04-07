@@ -5,14 +5,14 @@ import NavMenu from './ui/navigation/NavMenu.tsx';
 import NavLink from './ui/navigation/NavLink.tsx';
 import { UserPermissions } from './domain/user/IPermissions.ts';
 import ErrorsWidget from './widgets/errors/ErrorsWidget.tsx';
-import { UserController } from './widgets/auth/UserController.ts';
-import { TodoController } from './widgets/todo/TodoController.ts';
+import { IUserControllerKey, UserController } from './widgets/auth/UserController.ts';
+import { ITodoControllerKey, TodoController } from './widgets/todo/TodoController.ts';
 import { useObservable } from '../lib/observable/observable.ts';
 import { useMemo } from 'react';
 
 function App() {
-  const userController = useController(UserController);
-  const todoController = useController(TodoController);
+  const userController = useController<UserController>(IUserControllerKey);
+  const todoController = useController<TodoController>(ITodoControllerKey);
   const permissions = useObservable(
     useMemo(() => userController.getPermissions$(), [userController]),
     new UserPermissions({}),
