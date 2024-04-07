@@ -1,7 +1,7 @@
 import { PropsWithChildren, useContext, useEffect, useMemo } from 'react';
 import { IContainer } from 'ts-ioc-container';
 import { parseTags } from '../utils.ts';
-import { ScopeNotFoundError } from './ScopeNotFoundError.ts';
+import { ContextNotFoundError } from '../react/ContextNotFoundError.ts';
 import { ScopeContext } from './ScopeContext.ts';
 
 function Scope({
@@ -20,7 +20,7 @@ function Scope({
   );
 
   if (scope === undefined) {
-    throw new ScopeNotFoundError('Scope is not defined');
+    throw new ContextNotFoundError('Scope is not defined');
   }
 
   useEffect(() => {
