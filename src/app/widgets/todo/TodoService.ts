@@ -30,7 +30,7 @@ export class TodoService implements IResource, OnInit {
 
   @onInit
   @command
-  @permission('write')
+  @permission('read')
   async loadTodoList(): Promise<void> {
     const todos = await this.todoRepo.fetchTodos();
     this.todoStore.setList(todos);
