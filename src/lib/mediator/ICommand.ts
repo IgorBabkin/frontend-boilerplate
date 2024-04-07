@@ -37,3 +37,9 @@ export const query = hook('query');
 export function getQuery(target: object): string[] {
   return getHooks(target, 'query') ?? [];
 }
+
+export const setTags = (...tags: string[]) => setMetadata('tags', tags);
+export const getTags = (target: object): string[] => getMetadata<string[]>(target.constructor, 'tags') ?? [];
+
+export const service = setTags('service');
+export const isService = (target: object): boolean => getTags(target).includes('service');

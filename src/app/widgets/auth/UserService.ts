@@ -1,7 +1,7 @@
 import { by, inject, key, provider, register, scope, singleton } from 'ts-ioc-container';
 import { IUserStoreKey, UserStore } from '../../domain/user/UserStore.ts';
 import { IUserRepoKey, UserRepo } from '../../domain/user/UserRepo.ts';
-import { command, query } from '../../../lib/mediator/ICommand.ts';
+import { command, query, service } from '../../../lib/mediator/ICommand.ts';
 import { map, Observable } from 'rxjs';
 import { UserPermissions } from '../../domain/user/IPermissions.ts';
 import { IUser } from '../../domain/user/IUser.ts';
@@ -9,6 +9,7 @@ import { OnInit, onInit, Scope } from '../../../lib/scope/container.ts';
 
 export const IUserServiceKey = Symbol('IUserService');
 
+@service
 @register(key(IUserServiceKey))
 @provider(scope(Scope.application), singleton())
 export class UserService implements OnInit {
