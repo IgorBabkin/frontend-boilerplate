@@ -4,7 +4,7 @@ import { ITodoRepoKey, TodoRepo } from '../../domain/todo/TodoRepo.ts';
 import { command, query } from '../../../lib/mediator/ICommand.ts';
 import { Observable } from 'rxjs';
 import { ITodo } from '../../domain/todo/ITodo.ts';
-import { Initializable, onConstruct, Scope } from '../../../lib/scope/container.ts';
+import { OnInit, onInit, Scope } from '../../../lib/scope/container.ts';
 import { IResource } from '../../domain/user/IResource.ts';
 import { permission } from '../auth/CheckPermission.ts';
 
@@ -12,7 +12,7 @@ export const ITodoControllerKey = Symbol('ITodoController');
 
 @register(key(ITodoControllerKey))
 @provider(scope(Scope.application), singleton())
-export class TodoController implements IResource, Initializable {
+export class TodoController implements IResource, OnInit {
   resource = 'todo';
   isInitialized = false;
 
@@ -27,8 +27,8 @@ export class TodoController implements IResource, Initializable {
     this.todoStore.addTodo({ id: Date.now().toString(), title: payload });
   }
 
+  @onInit
   @command
-  @onConstruct
   @permission('write')
   async loadTodoList(): Promise<void> {
     const todos = await this.todoRepo.fetchTodos();

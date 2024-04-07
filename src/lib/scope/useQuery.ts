@@ -5,7 +5,7 @@ import { IErrorBus, IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
 import { IMediator } from '../mediator/IMediator.ts';
 import { getCommands, getQuery } from '../mediator/ICommand.ts';
 import { ICommandMediatorKey } from '../mediator/CommandMediator.ts';
-import { getConstructHooks, isInitializable } from './container.ts';
+import { getOnInitHooks, isInitializable } from './container.ts';
 
 // export const useQuery = <TQuery, Response>(
 //   token: constructor<IObservableQuery<TQuery, Response>>,
@@ -48,7 +48,7 @@ export const useController = <TController extends object>(token: InjectionToken<
   useEffect(() => {
     if (isInitializable(controller) && !controller.isInitialized) {
       controller.isInitialized = true;
-      for (const h of getConstructHooks(controller)) {
+      for (const h of getOnInitHooks(controller)) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const fn = pController[h];

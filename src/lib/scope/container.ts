@@ -31,13 +31,13 @@ export const Scope = {
   page: hasTags.every('page'),
 };
 
-export const onConstruct = hook('onConstruct');
-export const getConstructHooks = (target: object): string[] => getHooks(target, 'onConstruct') ?? [];
+export const onInit = hook('onInit');
+export const getOnInitHooks = (target: object): string[] => getHooks(target, 'onInit') ?? [];
 
-export interface Initializable {
+export interface OnInit {
   isInitialized: boolean;
 }
 
-export function isInitializable(target: object): target is Initializable {
-  return (target as Initializable).isInitialized !== undefined;
+export function isInitializable(target: object): target is OnInit {
+  return (target as OnInit).isInitialized !== undefined;
 }
