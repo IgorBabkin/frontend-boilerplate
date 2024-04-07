@@ -3,7 +3,7 @@ import { IErrorBusKey } from '../app/domain/errors/ErrorBus.ts';
 import { TodoStore } from '../app/domain/todo/TodoStore.ts';
 import { UserStore } from '../app/domain/user/UserStore.ts';
 import { Subject } from 'rxjs';
-import { CommandMediator } from '../lib/mediator/CommandMediator.ts';
+import { ServiceMediator } from '../lib/mediator/ServiceMediator.ts';
 import { CheckPermission } from '../app/widgets/auth/CheckPermission.ts';
 import { ErrorHandler } from '../app/domain/errors/IErrorHandler.ts';
 import { TodoRepo } from '../app/domain/todo/TodoRepo.ts';
@@ -23,7 +23,7 @@ export class Common implements IContainerModule {
       .use(R.fromValue(new Subject()).to(IErrorBusKey))
       .use(R.fromClass(TodoStore))
       .use(R.fromClass(UserStore))
-      .use(R.fromClass(CommandMediator))
+      .use(R.fromClass(ServiceMediator))
       .use(R.fromClass(CheckPermission))
       .use(R.fromClass(ErrorHandler))
       .use(R.fromClass(TodoRepo))

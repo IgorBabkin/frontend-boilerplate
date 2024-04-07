@@ -3,12 +3,12 @@ import { IMediator } from '../mediator/IMediator.ts';
 import { getOnInitHooks, OnInit } from './container.ts';
 import { IContainer } from 'ts-ioc-container';
 import { IErrorBus, IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
-import { ICommandMediatorKey } from '../mediator/CommandMediator.ts';
+import { IServiceMediatorKey } from '../mediator/ServiceMediator.ts';
 
 export function proxyService<T extends object>(service: T, scope: IContainer): T {
   const commands = getCommands(service);
   const query = getQuery(service);
-  const mediator = scope.resolve<IMediator>(ICommandMediatorKey);
+  const mediator = scope.resolve<IMediator>(IServiceMediatorKey);
 
   return new Proxy(service, {
     get(target, prop) {

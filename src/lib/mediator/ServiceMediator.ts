@@ -7,11 +7,11 @@ import { Observable } from 'rxjs';
 import { byCommandAliases } from '../scope/container.ts';
 import { ServiceInfo, IGuard, matchPayload } from './ICommand.ts';
 
-export const ICommandMediatorKey = Symbol('ICommandMediator');
+export const IServiceMediatorKey = Symbol('IServiceMediator');
 
-@register(key(ICommandMediatorKey))
+@register(key(IServiceMediatorKey))
 @provider(singleton())
-export class CommandMediator implements IMediator {
+export class ServiceMediator implements IMediator {
   private mediator: SimpleMediator;
 
   constructor(@inject(byCommandAliases.onBeforeExecution) private beforeCommands: IGuard[]) {
