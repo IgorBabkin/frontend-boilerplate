@@ -2,7 +2,7 @@ import { IMediator } from './IMediator.ts';
 import { inject, key, provider, register, singleton } from 'ts-ioc-container';
 
 import { SimpleMediator } from './SimpleMediator.ts';
-import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './myTypes.ts';
+import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './utilTypes.ts';
 import { Observable } from 'rxjs';
 import { byCommandAliases } from '../scope/container.ts';
 import { ServiceInfo, IGuard, matchPayload } from './ICommand.ts';

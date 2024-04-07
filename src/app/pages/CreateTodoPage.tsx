@@ -5,7 +5,7 @@ function CreateTodoPage() {
   return (
     <div>
       <h3>CreateTodo</h3>
-      <Scope tags="AddTodoFormWidget">
+      <Scope tags="widget">
         <AddTodoFormWidget />
       </Scope>
     </div>

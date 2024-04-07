@@ -4,9 +4,10 @@ import { ITodoRepoKey, TodoRepo } from '../../domain/todo/TodoRepo.ts';
 import { command, query, service } from '../../../lib/mediator/ICommand.ts';
 import { Observable } from 'rxjs';
 import { ITodo } from '../../domain/todo/ITodo.ts';
-import { onInit, Scope } from '../../../lib/scope/container.ts';
+import { Scope } from '../../../lib/scope/container.ts';
 import { IResource } from '../../domain/user/IResource.ts';
 import { permission } from '../auth/CheckPermission.ts';
+import { onInit } from '../../../lib/scope/OnInit.ts';
 
 export const ITodoServiceKey = Symbol('ITodoService');
 

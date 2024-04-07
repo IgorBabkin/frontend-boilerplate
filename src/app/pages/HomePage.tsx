@@ -16,7 +16,7 @@ function HomePage() {
     <div>
       <h3>Home {user?.nickname}</h3>
       {user && (
-        <Scope tags="TodoListWidget">
+        <Scope tags="widget">
           <TodoListWidget />
         </Scope>
       )}

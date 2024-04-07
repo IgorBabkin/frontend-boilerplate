@@ -2,12 +2,11 @@ import { createBrowserRouter } from 'react-router-dom';
 import HomePage from './pages/HomePage.tsx';
 import Scope from '../lib/scope/Scope.tsx';
 import CreateTodoPage from './pages/CreateTodoPage.tsx';
-import { Container } from 'ts-ioc-container';
+import { Container, MetadataInjector } from 'ts-ioc-container';
 import { Common } from '../env/Common.ts';
 import App from './App.tsx';
-import { DepInjector } from '../lib/scope/DepInjector.ts';
 
-const createContainer = (tags: string[]) => new Container(new DepInjector(), { tags }).use(new Common());
+const createContainer = (tags: string[]) => new Container(new MetadataInjector(), { tags }).use(new Common());
 
 export const router = createBrowserRouter([
   {
