@@ -10,32 +10,32 @@ import { getOnInitHooks, isInitializable } from './container.ts';
 export const useService = <TService extends object>(token: InjectionToken<TService>) => {
   const service = useDependency<TService>(token);
   const mediator = useDependency<IMediator>(ICommandMediatorKey);
-  const commands = useMemo(() => getCommands(service), [service]);
-  const query = useMemo(() => getQuery(service), [service]);
   const errorBus$ = useDependency<IErrorBus>(IErrorBusKey);
-  const pService = useMemo(
-    () =>
-      new Proxy(service, {
-        get(target, prop) {
-          if (typeof prop === 'string' && prop in target) {
-            if (commands.includes(prop)) {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              return (payload: any) => mediator.send(target, prop as any, payload);
-            }
+  const pService = useMemo(() => {
+    const commands = getCommands(service);
+    const query = getQuery(service);
 
-            if (query.includes(prop)) {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              return (payload: any) => mediator.send$(target, prop as any, payload);
-            }
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            return target[prop];
+    return new Proxy(service, {
+      get(target, prop) {
+        if (typeof prop === 'string' && prop in target) {
+          if (commands.includes(prop)) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return (payload: any) => mediator.send(target, prop as any, payload);
           }
-          throw new Error(`Method ${prop as string} not found on service`);
-        },
-      }) as TService,
-    [commands, service, mediator, query],
-  );
+
+          if (query.includes(prop)) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return (payload: any) => mediator.send$(target, prop as any, payload);
+          }
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          return target[prop];
+        }
+        throw new Error(`Method ${prop as string} not found on service`);
+      },
+    }) as TService;
+  }, [service, mediator]);
+
   useEffect(() => {
     if (isInitializable(service) && !service.isInitialized) {
       service.isInitialized = true;
