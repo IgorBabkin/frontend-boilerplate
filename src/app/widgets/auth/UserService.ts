@@ -5,16 +5,14 @@ import { command, query, service } from '../../../lib/mediator/ICommand.ts';
 import { map, Observable } from 'rxjs';
 import { UserPermissions } from '../../domain/user/IPermissions.ts';
 import { IUser } from '../../domain/user/IUser.ts';
-import { OnInit, onInit, Scope } from '../../../lib/scope/container.ts';
+import { onInit, Scope } from '../../../lib/scope/container.ts';
 
 export const IUserServiceKey = Symbol('IUserService');
 
 @service
 @register(key(IUserServiceKey))
 @provider(scope(Scope.application), singleton())
-export class UserService implements OnInit {
-  isInitialized = false;
-
+export class UserService {
   constructor(
     @inject(by.key(IUserStoreKey)) private userStore: UserStore,
     @inject(by.key(IUserRepoKey)) private userRepo: UserRepo,

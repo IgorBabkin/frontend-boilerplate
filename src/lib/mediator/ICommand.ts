@@ -41,5 +41,5 @@ export function getQuery(target: object): string[] {
 export const setTags = (...tags: string[]) => setMetadata('tags', tags);
 export const getTags = (target: object): string[] => getMetadata<string[]>(target.constructor, 'tags') ?? [];
 
-export const service = setTags('service');
+export const service = setTags('service', 'OnInit');
 export const isService = (target: object): boolean => getTags(target).includes('service');

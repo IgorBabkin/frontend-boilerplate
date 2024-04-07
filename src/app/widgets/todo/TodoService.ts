@@ -4,7 +4,7 @@ import { ITodoRepoKey, TodoRepo } from '../../domain/todo/TodoRepo.ts';
 import { command, query, service } from '../../../lib/mediator/ICommand.ts';
 import { Observable } from 'rxjs';
 import { ITodo } from '../../domain/todo/ITodo.ts';
-import { OnInit, onInit, Scope } from '../../../lib/scope/container.ts';
+import { onInit, Scope } from '../../../lib/scope/container.ts';
 import { IResource } from '../../domain/user/IResource.ts';
 import { permission } from '../auth/CheckPermission.ts';
 
@@ -13,9 +13,8 @@ export const ITodoServiceKey = Symbol('ITodoService');
 @service
 @register(key(ITodoServiceKey))
 @provider(scope(Scope.application), singleton())
-export class TodoService implements IResource, OnInit {
+export class TodoService implements IResource {
   resource = 'todo';
-  isInitialized = false;
 
   constructor(
     @inject(by.key(ITodoStoreKey)) private todoStore: TodoStore,
