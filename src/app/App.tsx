@@ -1,6 +1,6 @@
 import './App.css';
 import { Outlet } from 'react-router-dom';
-import { useAsyncEffect, useController } from '../lib/scope/useQuery.ts';
+import { useController } from '../lib/scope/useQuery.ts';
 import NavMenu from './ui/navigation/NavMenu.tsx';
 import NavLink from './ui/navigation/NavLink.tsx';
 import { UserPermissions } from './domain/user/IPermissions.ts';
@@ -15,10 +15,6 @@ function App() {
     useMemo(() => userController.getPermissions$(), [userController]),
     UserPermissions.default,
   );
-
-  useAsyncEffect(async () => {
-    await userController.loadUser();
-  }, [userController]);
 
   return (
     <div>

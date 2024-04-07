@@ -47,15 +47,12 @@ export const useController = <TController extends object>(token: InjectionToken<
   );
   useEffect(() => {
     if (isInitializable(controller) && !controller.isInitialized) {
+      controller.isInitialized = true;
       for (const h of getConstructHooks(controller)) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const fn = pController[h];
-        fn.call(pController)
-          .then(() => {
-            controller.isInitialized = true;
-          })
-          .catch((e: Error) => errorBus$.next(e));
+        fn.call(pController).catch((e: Error) => errorBus$.next(e));
       }
     }
   }, [controller, errorBus$, pController]);
