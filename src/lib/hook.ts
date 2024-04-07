@@ -9,3 +9,12 @@ export const hook =
 export function getHooks(target: Object, key: string | symbol): string[] {
   return Reflect.hasMetadata(key, target.constructor) ? Reflect.getMetadata(key, target.constructor) : [];
 }
+
+export const setMethodMetadata =
+  (key: string, value: unknown): MethodDecorator =>
+  (target, propertyKey) => {
+    Reflect.defineMetadata(key, value, target.constructor, propertyKey);
+  };
+
+export const getMethodMetadata = (key: string, target: object, propertyKey: string): unknown =>
+  Reflect.getMetadata(key, target.constructor, propertyKey);

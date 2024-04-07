@@ -4,10 +4,19 @@ import { getHooks, hook } from '../hook.ts';
 
 export interface ICommand<TPayload = unknown> {
   execute(payload: TPayload): Promise<void>;
+
   match?(payload: unknown): payload is TPayload;
 }
 
-export function matchPayload<TPayload>(command: ICommand<TPayload>, payload: unknown): payload is TPayload {
+export type ControllerInfo = { controller: object; method: string | number | symbol };
+
+export interface IGuard<TPayload = unknown> {
+  execute(resource: TPayload, method: string): Promise<void>;
+
+  match?(payload: unknown): payload is TPayload;
+}
+
+export function matchPayload<TPayload>(command: IGuard<TPayload>, payload: unknown): payload is TPayload {
   return command.match ? command.match(payload) : true;
 }
 
@@ -16,17 +25,15 @@ export interface IObservableQuery<TPayload = unknown, TResponse = unknown> {
 }
 
 export const beforeExecution = (...commands: constructor<ICommand>[]) => setMetadata('beforeExecution', commands);
-
 export const getBeforeExecution = (condition: ICommand | IObservableQuery) =>
   getMetadata<constructor<ICommand>[]>(condition.constructor, 'beforeExecution') ?? [];
 
 export const command = hook('command');
-export const query = hook('query');
-
 export function getCommands(target: object): string[] {
-  return getHooks(target, 'commands') ?? [];
+  return getHooks(target, 'command') ?? [];
 }
 
+export const query = hook('query');
 export function getQuery(target: object): string[] {
   return getHooks(target, 'query') ?? [];
 }

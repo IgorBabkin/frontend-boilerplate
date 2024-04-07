@@ -1,4 +1,3 @@
-import { IResource } from './IResource.ts';
 import { PermissionError } from './PermissionError.ts';
 
 export type Permission = 'read' | 'write';
@@ -10,7 +9,7 @@ export const hasPermission = (permissions: IPermissions, resource: string, permi
   return rights.includes(permission);
 };
 
-export function checkPermission(permissions: IPermissions, { resource, permission }: IResource) {
+export function checkPermission(permissions: IPermissions, resource: string, permission: Permission) {
   PermissionError.assert(
     hasPermission(permissions, resource, permission),
     `Permission denied for ${resource} ${permission}`,
