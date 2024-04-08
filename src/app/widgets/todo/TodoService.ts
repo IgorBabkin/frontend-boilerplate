@@ -1,19 +1,19 @@
 import { by, inject, key, provider, register, scope, singleton } from 'ts-ioc-container';
 import { ITodoStoreKey, TodoStore } from '../../domain/todo/TodoStore.ts';
 import { ITodoRepoKey, TodoRepo } from '../../domain/todo/TodoRepo.ts';
-import { command, query, service } from '../../../lib/mediator/ICommand.ts';
+import { command, query } from '../../../lib/mediator/ICommand.ts';
 import { Observable } from 'rxjs';
 import { ITodo } from '../../domain/todo/ITodo.ts';
 import { Scope } from '../../../lib/scope/container.ts';
 import { IResource } from '../../domain/user/IResource.ts';
 import { permission } from '../auth/CheckPermission.ts';
 import { onInit } from '../../../lib/scope/OnInit.ts';
+import { service } from '../../../lib/mediator/ServiceProvider.ts';
 
 export const ITodoServiceKey = Symbol('ITodoService');
 
-@service
 @register(key(ITodoServiceKey))
-@provider(scope(Scope.application), singleton())
+@provider(service, scope(Scope.application), singleton())
 export class TodoService implements IResource {
   resource = 'todo';
 

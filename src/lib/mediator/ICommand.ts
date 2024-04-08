@@ -38,8 +38,5 @@ export function getQuery(target: object): string[] {
   return getHooks(target, 'query') ?? [];
 }
 
-export const setTags = (...tags: string[]) => setMetadata('tags', tags);
-export const getTags = (target: object): string[] => getMetadata<string[]>(target.constructor, 'tags') ?? [];
-
-export const service = setTags('service', 'OnInit');
-export const isService = (target: object): boolean => getTags(target).includes('service');
+export const isClassInstance = (target: unknown): target is object =>
+  target !== null && typeof target === 'object' && typeof target.constructor === 'function';

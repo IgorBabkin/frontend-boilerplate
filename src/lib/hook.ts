@@ -10,6 +10,11 @@ export function getHooks(target: Object, key: string | symbol): string[] {
   return Reflect.hasMetadata(key, target.constructor) ? Reflect.getMetadata(key, target.constructor) : [];
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function hasHooks(target: Object, key: string | symbol): boolean {
+  return Reflect.hasMetadata(key, target.constructor);
+}
+
 export const setMethodMetadata =
   (key: string, value: unknown): MethodDecorator =>
   (target, propertyKey) => {

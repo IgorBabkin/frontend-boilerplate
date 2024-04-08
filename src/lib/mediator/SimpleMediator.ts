@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { IMediator } from './IMediator.ts';
-import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './utilTypes.ts';
+import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './types.ts';
 
 export class SimpleMediator implements IMediator {
   send$<TService extends object, Key extends CommandMethodKeys<TService, QueryMethod>>(
