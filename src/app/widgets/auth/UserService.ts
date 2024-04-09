@@ -2,7 +2,7 @@ import { by, inject, provider, register, scope, singleton } from 'ts-ioc-contain
 import { IUserStoreKey, UserStore } from '../../domain/user/UserStore.ts';
 import { IUserRepoKey, UserRepo } from '../../domain/user/UserRepo.ts';
 import { command, query } from '../../../lib/mediator/ICommand.ts';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UserPermissions } from '../../domain/user/IPermissions.ts';
 import { IUser } from '../../domain/user/IUser.ts';
 import { Scope } from '../../../lib/scope/container.ts';
@@ -36,7 +36,7 @@ export class UserService implements IUserService {
   }
 
   @query getPermissions$(): Observable<UserPermissions> {
-    return this.userStore.getPermissions$().pipe(map((permissions) => new UserPermissions(permissions)));
+    return this.userStore.getPermissions$();
   }
 
   @query getUser$(): Observable<IUser | undefined> {

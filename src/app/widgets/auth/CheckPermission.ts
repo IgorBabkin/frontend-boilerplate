@@ -2,7 +2,7 @@ import { IGuard } from '../../../lib/mediator/ICommand.ts';
 import { IResource, isResource } from '../../domain/user/IResource.ts';
 import { alias, inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { IUserStoreKey, UserStore } from '../../domain/user/UserStore.ts';
-import { checkPermission, Permission } from '../../domain/user/IPermissions.ts';
+import { Permission } from '../../domain/user/IPermissions.ts';
 import { CommandAlias, Scope } from '../../../lib/scope/container.ts';
 import { getMethodMetadata, setMethodMetadata } from '../../../lib/hook.ts';
 
@@ -21,7 +21,7 @@ export class CheckPermission implements IGuard {
       return;
     }
     const permissions = this.userStore.getPermissions();
-    checkPermission(permissions, service.resource, permission);
+    permissions.checkPermission(service.resource, permission);
   }
 }
 
