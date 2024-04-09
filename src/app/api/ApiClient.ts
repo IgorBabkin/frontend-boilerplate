@@ -1,4 +1,5 @@
 import { sleep } from '../../lib/utils.ts';
+import { accessor } from '../../lib/container/utils.ts';
 
 export interface TodoDTO {
   id: string;
@@ -10,7 +11,7 @@ export interface UserDTO {
   permissions: Record<string, ('read' | 'write')[]>;
 }
 
-export const IApiClientKey = Symbol('IApiClient');
+export const IApiClientKey = accessor<ApiClient>(Symbol('IApiClient'));
 
 export class ApiClient {
   constructor(private token: string) {}

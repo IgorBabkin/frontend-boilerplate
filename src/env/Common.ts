@@ -32,10 +32,10 @@ export class Common implements IContainerModule {
       .use(R.fromClass(TodoService))
       .use(R.fromClass(UserService))
       .use(R.fromClass(ErrorService))
-      .use(R.fromValue(new Context(new ApiClient('someToken'))).to(IApiClientKey))
+      .use(R.fromValue(new Context(new ApiClient('someToken'))).to(IApiClientKey.key))
       .use(
         R.fromClass(AuthClient)
-          .to(IAuthClientKey)
+          .to(IAuthClientKey.key)
           .pipe(scope(hasTags.every('application')), singleton()),
       );
   }

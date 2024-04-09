@@ -1,15 +1,16 @@
 import { IMediator } from './IMediator.ts';
-import { inject, key, provider, register, singleton } from 'ts-ioc-container';
+import { inject, provider, register, singleton } from 'ts-ioc-container';
 
 import { SimpleMediator } from './SimpleMediator.ts';
 import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './types.ts';
 import { Observable } from 'rxjs';
 import { byCommandAliases } from '../scope/container.ts';
-import { ServiceInfo, IGuard, matchPayload } from './ICommand.ts';
+import { IGuard, matchPayload, ServiceInfo } from './ICommand.ts';
+import { accessor } from '../container/utils.ts';
 
-export const IServiceMediatorKey = Symbol('IServiceMediator');
+export const IServiceMediatorKey = accessor<IMediator>(Symbol('IServiceMediator'));
 
-@register(key(IServiceMediatorKey))
+@register(IServiceMediatorKey.register)
 @provider(singleton())
 export class ServiceMediator implements IMediator {
   private mediator: SimpleMediator;

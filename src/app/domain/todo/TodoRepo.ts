@@ -1,6 +1,6 @@
 import { ITodo } from './ITodo.ts';
 import { mapNetworkToDomainError } from '../../api/mapApiToDomainError.ts';
-import { by, inject, provider, register, scope, singleton } from 'ts-ioc-container';
+import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '../../../lib/scope/container.ts';
 import { ApiClient, IApiClientKey, TodoDTO } from '../../api/ApiClient.ts';
 import { Context } from '../../../lib/scope/Context.ts';
@@ -18,7 +18,7 @@ export class TodoRepo {
     };
   }
 
-  constructor(@inject(by.key(IApiClientKey)) private apiClient: Context<ApiClient>) {}
+  constructor(@inject(IApiClientKey.resolve) private apiClient: Context<ApiClient>) {}
 
   @mapNetworkToDomainError
   async fetchTodos(): Promise<ITodo[]> {

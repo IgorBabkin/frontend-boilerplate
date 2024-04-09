@@ -1,4 +1,4 @@
-import { by, inject, key, provider, register, scope, singleton } from 'ts-ioc-container';
+import { inject, key, provider, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '../../../lib/scope/container.ts';
 import { ApiClient, IApiClientKey, UserDTO } from '../../api/ApiClient.ts';
 import { Context } from '../../../lib/scope/Context.ts';
@@ -16,7 +16,7 @@ export class UserRepo {
     };
   }
 
-  constructor(@inject(by.key(IApiClientKey)) private apiClient: Context<ApiClient>) {}
+  constructor(@inject(IApiClientKey.resolve) private apiClient: Context<ApiClient>) {}
 
   async fetchUser(): Promise<IUser> {
     const user = await this.apiClient.getValueOrFail().getUser();

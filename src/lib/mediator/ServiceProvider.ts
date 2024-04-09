@@ -1,9 +1,8 @@
 import { IContainer, IProvider, ProviderDecorator } from 'ts-ioc-container';
 import { getCommands, getQuery, isClassInstance } from './ICommand.ts';
-import { IMediator } from './IMediator.ts';
 import { IServiceMediatorKey } from './ServiceMediator.ts';
 
-export const service = <T>(provider: IProvider<T>): IProvider<T> => new ServiceProvider(provider);
+export const service = <T>(provider: IProvider<T>) => new ServiceProvider(provider);
 
 export class ServiceProvider<T> extends ProviderDecorator<T> {
   constructor(private provider: IProvider<T>) {
@@ -22,10 +21,10 @@ export class ServiceProvider<T> extends ProviderDecorator<T> {
   private proxyService<T extends object>(service: T, scope: IContainer): T {
     const commands = getCommands(service);
     const query = getQuery(service);
-    const mediator = scope.resolve<IMediator>(IServiceMediatorKey);
+    const mediator = IServiceMediatorKey.resolve(scope);
 
     return new Proxy(service, {
-      resolve(target, prop) {
+      get(target, prop) {
         if (typeof prop === 'string' && prop in target) {
           if (commands.includes(prop)) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
