@@ -2,11 +2,11 @@ import { FormEvent, useCallback, useState } from 'react';
 import Button from '../../ui/button/Button.tsx';
 import TextField from '../../ui/textField/TextField.tsx';
 import { useAsyncEventHandler } from '../../../lib/scope/useQuery.ts';
-import { ITodoServiceKey, TodoService } from './TodoService.ts';
+import { ITodoServiceKey } from './TodoService.ts';
 import { useDependency } from '../../../lib/scope/ScopeContext.ts';
 
 function AddTodoFormWidget() {
-  const todoService = useDependency<TodoService>(ITodoServiceKey);
+  const todoService = useDependency(ITodoServiceKey.get);
   const [title, setTitle] = useState('');
   const resetForm = useCallback(() => setTitle(''), []);
 

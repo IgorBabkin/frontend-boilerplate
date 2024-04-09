@@ -4,12 +4,12 @@ import NavMenu from './ui/navigation/NavMenu.tsx';
 import NavLink from './ui/navigation/NavLink.tsx';
 import { UserPermissions } from './domain/user/IPermissions.ts';
 import ErrorsWidget from './widgets/errors/ErrorsWidget.tsx';
-import { IUserServiceKey, UserService } from './widgets/auth/UserService.ts';
+import { IUserServiceKey } from './widgets/auth/UserService.ts';
 import { useObservable } from '../lib/observable/observable.ts';
 import { useDependency } from '../lib/scope/ScopeContext.ts';
 
 function App() {
-  const userService = useDependency<UserService>(IUserServiceKey);
+  const userService = useDependency(IUserServiceKey.get);
   const permissions = useObservable(() => userService.getPermissions$(), UserPermissions.default, [userService]);
 
   return (

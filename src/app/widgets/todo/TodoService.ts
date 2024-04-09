@@ -1,4 +1,4 @@
-import { by, inject, key, provider, register, scope, singleton } from 'ts-ioc-container';
+import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { ITodoStoreKey, TodoStore } from '../../domain/todo/TodoStore.ts';
 import { ITodoRepoKey, TodoRepo } from '../../domain/todo/TodoRepo.ts';
 import { command, query } from '../../../lib/mediator/ICommand.ts';
@@ -9,17 +9,26 @@ import { IResource } from '../../domain/user/IResource.ts';
 import { permission } from '../auth/CheckPermission.ts';
 import { onInit } from '../../../lib/scope/OnInit.ts';
 import { service } from '../../../lib/mediator/ServiceProvider.ts';
+import { accessor } from '../../../lib/container/utils.ts';
 
-export const ITodoServiceKey = Symbol('ITodoService');
+export const ITodoServiceKey = accessor<ITodoService>(Symbol('ITodoService'));
 
-@register(key(ITodoServiceKey))
+export interface ITodoService {
+  addTodo(payload: string): Promise<void>;
+
+  loadTodoList(): Promise<void>;
+
+  getTodoList$(): Observable<ITodo[]>;
+}
+
+@register(ITodoServiceKey.register)
 @provider(service, scope(Scope.application), singleton())
-export class TodoService implements IResource {
+export class TodoService implements IResource, ITodoService {
   resource = 'todo';
 
   constructor(
-    @inject(by.key(ITodoStoreKey)) private todoStore: TodoStore,
-    @inject(by.key(ITodoRepoKey)) private todoRepo: TodoRepo,
+    @inject(ITodoStoreKey.get) private todoStore: TodoStore,
+    @inject(ITodoRepoKey.get) private todoRepo: TodoRepo,
   ) {}
 
   @command
@@ -36,8 +45,7 @@ export class TodoService implements IResource {
     this.todoStore.setList(todos);
   }
 
-  @query
-  getTodoList$(): Observable<ITodo[]> {
+  @query getTodoList$(): Observable<ITodo[]> {
     return this.todoStore.getList$();
   }
 }

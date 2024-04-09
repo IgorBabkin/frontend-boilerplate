@@ -1,19 +1,23 @@
-import { by, inject, key, provider, register, scope, singleton } from 'ts-ioc-container';
+import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { type IErrorBus, IErrorBusKey } from '../../domain/errors/ErrorBus.ts';
 import { Observable } from 'rxjs';
 import { query } from '../../../lib/mediator/ICommand.ts';
 import { Scope } from '../../../lib/scope/container.ts';
 import { service } from '../../../lib/mediator/ServiceProvider.ts';
+import { accessor } from '../../../lib/container/utils.ts';
 
-export const IErrorServiceKey = Symbol('IErrorService');
+export const IErrorServiceKey = accessor<IErrorService>(Symbol('IErrorService'));
 
-@register(key(IErrorServiceKey))
+export interface IErrorService {
+  getError$(): Observable<Error>;
+}
+
+@register(IErrorServiceKey.register)
 @provider(service, scope(Scope.application), singleton())
-export class ErrorService {
-  constructor(@inject(by.key(IErrorBusKey)) private errorBus: IErrorBus) {}
+export class ErrorService implements IErrorService {
+  constructor(@inject(IErrorBusKey.get) private errorBus: IErrorBus) {}
 
-  @query
-  getError$(): Observable<Error> {
+  @query getError$(): Observable<Error> {
     return this.errorBus.asObservable();
   }
 }

@@ -1,7 +1,6 @@
 import { Subject } from 'rxjs';
+import { accessor } from '../../../lib/container/utils.ts';
 
-export const IErrorBusKey = Symbol('IErrorBusKey');
+export const IErrorBusKey = accessor<IErrorBus>(Symbol('IErrorBusKey'));
 
 export type IErrorBus = Subject<Error>;
-
-export const createErrorBus = (): IErrorBus => new Subject();

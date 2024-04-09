@@ -1,6 +1,6 @@
 import { getHooks, hasHooks, hook } from '../hook.ts';
 import { IContainer } from 'ts-ioc-container';
-import { IErrorBus, IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
+import { IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
 
 export const onInit = hook('onInit');
 export const getOnInitHooks = (target: object): string[] => getHooks(target, 'onInit') ?? [];
@@ -19,7 +19,7 @@ export function isInitialized(target: OnInit): boolean {
 
 export function initialize(instance: OnInit, scope: IContainer) {
   instance._isInitialized = true;
-  const errorBus$ = scope.resolve<IErrorBus>(IErrorBusKey);
+  const errorBus$ = IErrorBusKey.get(scope);
   for (const h of getOnInitHooks(instance)) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

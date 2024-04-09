@@ -1,13 +1,14 @@
 import { createContext, useEffect, useMemo } from 'react';
-import { IContainer, InjectionToken } from 'ts-ioc-container';
+import { IContainer } from 'ts-ioc-container';
 import { useContextOrFail } from '../react/context.ts';
 import { initialize, isInitializable, isInitialized } from './OnInit.ts';
+import { InjectFn } from '@ibabkin/utils';
 
 export const ScopeContext = createContext<IContainer | undefined>(undefined);
 
-export const useDependency = <T extends object>(token: InjectionToken<T>) => {
+export const useDependency = <T extends object>(fn: InjectFn<IContainer, T>) => {
   const scope = useContextOrFail(ScopeContext);
-  const instance = useMemo(() => scope.resolve(token), [scope, token]);
+  const instance = useMemo(() => fn(scope), [scope]);
 
   useEffect(() => {
     if (isInitializable(instance) && !isInitialized(instance)) {

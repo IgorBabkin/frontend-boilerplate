@@ -20,7 +20,7 @@ import { ErrorService } from '../app/widgets/errors/ErrorService.ts';
 export class Common implements IContainerModule {
   applyTo(container: IContainer): void {
     container
-      .use(R.fromValue(new Subject()).to(IErrorBusKey))
+      .use(R.fromValue(new Subject()).to(IErrorBusKey.key))
       .use(R.fromClass(TodoStore))
       .use(R.fromClass(UserStore))
       .use(R.fromClass(ServiceMediator))

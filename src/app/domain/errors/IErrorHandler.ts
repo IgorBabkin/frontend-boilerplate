@@ -1,4 +1,4 @@
-import { by, inject, key, provider, register, scope, singleton } from 'ts-ioc-container';
+import { inject, key, provider, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '../../../lib/scope/container.ts';
 import { type IErrorBus, IErrorBusKey } from './ErrorBus.ts';
 
@@ -11,7 +11,7 @@ export interface IErrorHandler {
 @register(key(IErrorHandlerKey))
 @provider(scope(Scope.application), singleton())
 export class ErrorHandler implements IErrorHandler {
-  constructor(@inject(by.key(IErrorBusKey)) private errorBus$: IErrorBus) {}
+  constructor(@inject(IErrorBusKey.get) private errorBus$: IErrorBus) {}
 
   handle(fn: () => Promise<void>): void {
     fn().catch((error) => {
