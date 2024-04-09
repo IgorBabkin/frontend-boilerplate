@@ -6,15 +6,11 @@ import { UserPermissions } from './domain/user/IPermissions.ts';
 import ErrorsWidget from './widgets/errors/ErrorsWidget.tsx';
 import { IUserServiceKey, UserService } from './widgets/auth/UserService.ts';
 import { useObservable } from '../lib/observable/observable.ts';
-import { useMemo } from 'react';
 import { useDependency } from '../lib/scope/ScopeContext.ts';
 
 function App() {
   const userService = useDependency<UserService>(IUserServiceKey);
-  const permissions = useObservable(
-    useMemo(() => userService.getPermissions$(), [userService]),
-    UserPermissions.default,
-  );
+  const permissions = useObservable(() => userService.getPermissions$(), UserPermissions.default, [userService]);
 
   return (
     <div>
