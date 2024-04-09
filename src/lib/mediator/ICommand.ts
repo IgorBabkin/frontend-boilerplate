@@ -11,7 +11,7 @@ export interface ICommand<TPayload = unknown> {
 export type ServiceInfo = { service: object; method: string | number | symbol };
 
 export interface IGuard<TPayload = unknown> {
-  execute(resource: TPayload, method: string): Promise<void>;
+  execute(resource: TPayload, method: string): void;
 
   match?(payload: unknown): payload is TPayload;
 }

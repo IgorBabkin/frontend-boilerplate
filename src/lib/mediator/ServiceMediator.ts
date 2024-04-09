@@ -24,6 +24,7 @@ export class ServiceMediator implements IMediator {
     method: Key,
     payload: Payload<TService, Key>,
   ): Observable<Response<TService, Key>> {
+    this.runBeforeCommands({ service: service, method }, this.beforeCommands);
     return this.mediator.send$(service, method, payload);
   }
 
@@ -32,14 +33,14 @@ export class ServiceMediator implements IMediator {
     method: Key,
     payload: Payload<TService, Key>,
   ): Promise<void> {
-    await this.runBeforeCommands({ service: service, method }, this.beforeCommands);
+    this.runBeforeCommands({ service: service, method }, this.beforeCommands);
     await this.mediator.send(service, method, payload);
   }
 
-  private async runBeforeCommands(target: ServiceInfo, beforeCommands: IGuard[]) {
+  private runBeforeCommands(target: ServiceInfo, beforeCommands: IGuard[]) {
     const commands = beforeCommands.filter((c) => typeof target.method === 'string' && matchPayload(c, target.service));
     for (const c of commands) {
-      await c.execute(target.service, target.method as string);
+      c.execute(target.service, target.method as string);
     }
   }
 }
