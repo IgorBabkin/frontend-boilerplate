@@ -5,7 +5,7 @@ import { IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
 
 export const useObservable = <T>(fn: () => Observable<T>, initial: T, deps: unknown[]): T => {
   const [value, next] = useState(initial);
-  const errorBus$ = useDependency(IErrorBusKey.get);
+  const errorBus$ = useDependency(IErrorBusKey.resolve);
   const error = useCallback((err: Error) => errorBus$.next(err), [errorBus$]);
   const obs$ = useMemo(fn, deps);
   useEffect(() => {

@@ -5,7 +5,7 @@ import { useObservable } from '../../lib/observable/observable.ts';
 import { useDependency } from '../../lib/scope/ScopeContext.ts';
 
 function HomePage() {
-  const userService = useDependency(IUserServiceKey.get);
+  const userService = useDependency(IUserServiceKey.resolve);
   const user = useObservable(() => userService.getUser$(), undefined, [userService]);
 
   return (

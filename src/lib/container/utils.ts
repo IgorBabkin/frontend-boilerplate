@@ -4,6 +4,6 @@ export function accessor<T>(token: DependencyKey) {
   return {
     register: key(token),
     key: token,
-    get: by.key<T>(token),
+    resolve: by.key<T>(token),
   };
 }

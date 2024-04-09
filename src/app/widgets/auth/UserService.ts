@@ -24,7 +24,7 @@ export interface IUserService {
 @provider(service, scope(Scope.application), singleton())
 export class UserService implements IUserService {
   constructor(
-    @inject(IUserStoreKey.get) private userStore: UserStore,
+    @inject(IUserStoreKey.resolve) private userStore: UserStore,
     @inject(by.key(IUserRepoKey)) private userRepo: UserRepo,
   ) {}
 

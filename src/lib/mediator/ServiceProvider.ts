@@ -25,7 +25,7 @@ export class ServiceProvider<T> extends ProviderDecorator<T> {
     const mediator = scope.resolve<IMediator>(IServiceMediatorKey);
 
     return new Proxy(service, {
-      get(target, prop) {
+      resolve(target, prop) {
         if (typeof prop === 'string' && prop in target) {
           if (commands.includes(prop)) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

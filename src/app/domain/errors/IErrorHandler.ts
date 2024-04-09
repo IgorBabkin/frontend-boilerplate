@@ -11,7 +11,7 @@ export interface IErrorHandler {
 @register(key(IErrorHandlerKey))
 @provider(scope(Scope.application), singleton())
 export class ErrorHandler implements IErrorHandler {
-  constructor(@inject(IErrorBusKey.get) private errorBus$: IErrorBus) {}
+  constructor(@inject(IErrorBusKey.resolve) private errorBus$: IErrorBus) {}
 
   handle(fn: () => Promise<void>): void {
     fn().catch((error) => {

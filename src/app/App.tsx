@@ -9,7 +9,7 @@ import { useObservable } from '../lib/observable/observable.ts';
 import { useDependency } from '../lib/scope/ScopeContext.ts';
 
 function App() {
-  const userService = useDependency(IUserServiceKey.get);
+  const userService = useDependency(IUserServiceKey.resolve);
   const permissions = useObservable(() => userService.getPermissions$(), UserPermissions.default, [userService]);
 
   return (

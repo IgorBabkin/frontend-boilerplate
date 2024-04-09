@@ -15,7 +15,7 @@ export interface IErrorService {
 @register(IErrorServiceKey.register)
 @provider(service, scope(Scope.application), singleton())
 export class ErrorService implements IErrorService {
-  constructor(@inject(IErrorBusKey.get) private errorBus: IErrorBus) {}
+  constructor(@inject(IErrorBusKey.resolve) private errorBus: IErrorBus) {}
 
   @query getError$(): Observable<Error> {
     return this.errorBus.asObservable();

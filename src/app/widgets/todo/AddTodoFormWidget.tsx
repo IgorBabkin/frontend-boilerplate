@@ -6,7 +6,7 @@ import { ITodoServiceKey } from './TodoService.ts';
 import { useDependency } from '../../../lib/scope/ScopeContext.ts';
 
 function AddTodoFormWidget() {
-  const todoService = useDependency(ITodoServiceKey.get);
+  const todoService = useDependency(ITodoServiceKey.resolve);
   const [title, setTitle] = useState('');
   const resetForm = useCallback(() => setTitle(''), []);
 

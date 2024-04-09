@@ -9,7 +9,7 @@ import { getMethodMetadata, setMethodMetadata } from '../../../lib/hook.ts';
 @register(alias(CommandAlias.onBeforeExecution))
 @provider(scope(Scope.application), singleton())
 export class CheckPermission implements IGuard {
-  constructor(@inject(IUserStoreKey.get) private userStore: UserStore) {}
+  constructor(@inject(IUserStoreKey.resolve) private userStore: UserStore) {}
 
   match(resource: unknown): resource is IResource {
     return isResource(resource);

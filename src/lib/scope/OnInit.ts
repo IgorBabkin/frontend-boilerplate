@@ -19,7 +19,7 @@ export function isInitialized(target: OnInit): boolean {
 
 export function initialize(instance: OnInit, scope: IContainer) {
   instance._isInitialized = true;
-  const errorBus$ = IErrorBusKey.get(scope);
+  const errorBus$ = IErrorBusKey.resolve(scope);
   for (const h of getOnInitHooks(instance)) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

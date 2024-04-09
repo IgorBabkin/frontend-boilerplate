@@ -27,8 +27,8 @@ export class TodoService implements IResource, ITodoService {
   resource = 'todo';
 
   constructor(
-    @inject(ITodoStoreKey.get) private todoStore: TodoStore,
-    @inject(ITodoRepoKey.get) private todoRepo: TodoRepo,
+    @inject(ITodoStoreKey.resolve) private todoStore: TodoStore,
+    @inject(ITodoRepoKey.resolve) private todoRepo: TodoRepo,
   ) {}
 
   @command

@@ -3,7 +3,7 @@ import { useObservable } from '../../../lib/observable/observable.ts';
 import { useDependency } from '../../../lib/scope/ScopeContext.ts';
 
 function TodoListWidget() {
-  const todoService = useDependency(ITodoServiceKey.get);
+  const todoService = useDependency(ITodoServiceKey.resolve);
   const list = useObservable(() => todoService.getTodoList$(), [], [todoService]);
 
   return (
