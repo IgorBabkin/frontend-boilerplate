@@ -1,6 +1,6 @@
-import { IPermissions } from './IPermissions.ts';
+import { UserPermissions } from './IPermissions.ts';
 
 export interface IUser {
   nickname: string;
-  permissions: IPermissions;
+  permissions: UserPermissions;
 }

@@ -3,6 +3,7 @@ import { Scope } from '../../../lib/scope/container.ts';
 import { ApiClient, IApiClientKey, UserDTO } from '../../api/ApiClient.ts';
 import { Context } from '../../../lib/scope/Context.ts';
 import { IUser } from './IUser.ts';
+import { UserPermissions } from './IPermissions.ts';
 
 export const IUserRepoKey = Symbol('IUserRepo');
 
@@ -12,7 +13,7 @@ export class UserRepo {
   static toDomain(user: UserDTO): IUser {
     return {
       nickname: user.nickname,
-      permissions: user.permissions,
+      permissions: new UserPermissions(user.permissions),
     };
   }
 

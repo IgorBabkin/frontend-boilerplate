@@ -14,11 +14,11 @@ export class UserStore {
   private user = new ObservableStore<IUser | undefined>(undefined);
 
   getPermissions$() {
-    return this.user.asObservable().pipe(map((u) => new UserPermissions(u?.permissions ?? {})));
+    return this.user.asObservable().pipe(map((u) => u?.permissions ?? UserPermissions.default));
   }
 
   getPermissions() {
-    return new UserPermissions(this.user.getValue()?.permissions ?? {});
+    return this.user.getValue()?.permissions ?? UserPermissions.default;
   }
 
   getUser$() {
