@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import { constructor, getMetadata, setMetadata } from 'ts-ioc-container';
-import { getHooks, hook } from '../hook.ts';
+import { constructor, getMetadata, IContainer, setMetadata } from 'ts-ioc-container';
+import { getHooks, hook, setMethodMetadata } from '../hook.ts';
 
 export interface ICommand<TPayload = unknown> {
   execute(payload: TPayload): Promise<void>;
@@ -27,6 +27,8 @@ export interface IObservableQuery<TPayload = unknown, TResponse = unknown> {
 export const beforeExecution = (...commands: constructor<ICommand>[]) => setMetadata('beforeExecution', commands);
 export const getBeforeExecution = (condition: ICommand | IObservableQuery) =>
   getMetadata<constructor<ICommand>[]>(condition.constructor, 'beforeExecution') ?? [];
+
+export const subscribe = <T>(factory: (c: IContainer) => Observable<T>) => setMethodMetadata('subscribe', factory);
 
 export const command = hook('command');
 export function getCommands(target: object): string[] {

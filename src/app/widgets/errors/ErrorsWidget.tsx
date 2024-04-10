@@ -1,6 +1,6 @@
 import { IErrorServiceKey } from './ErrorService.ts';
-import { useObservable } from '../../../lib/observable/observable.ts';
-import { useDependency } from '../../../lib/scope/ScopeContext.ts';
+import { useObservable } from '@lib/observable/observable.ts';
+import { useDependency } from '@lib/scope/ScopeContext.ts';
 
 function ErrorsWidget() {
   const errorService = useDependency(IErrorServiceKey.resolve);

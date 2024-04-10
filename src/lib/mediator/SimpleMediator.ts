@@ -18,6 +18,9 @@ export class SimpleMediator implements IMediator {
     payload: Payload<TService, Key>,
   ): Promise<void> {
     const fn = service[method] as CommandMethod<Payload<TService, Key>>;
-    await fn.call(service, payload);
+    const result = fn.call(service, payload);
+    if (result instanceof Promise) {
+      await result;
+    }
   }
 }

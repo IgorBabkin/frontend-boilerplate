@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
 type Fn<P, R> = (payload: P) => R;
-export type CommandMethod<Payload = never> = Fn<Payload, Promise<void>>;
+export type CommandMethod<Payload = never> = Fn<Payload, Promise<void> | void>;
 export type QueryMethod<Payload = never, Response = unknown> = Fn<Payload, Observable<Response>>;
 
 export type CommandMethodKeys<T extends object, Method> = {
