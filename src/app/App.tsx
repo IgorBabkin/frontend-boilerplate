@@ -1,4 +1,4 @@
-import './App.css';
+import './App.scss';
 import { Outlet } from 'react-router-dom';
 import NavMenu from './ui/navigation/NavMenu.tsx';
 import NavLink from './ui/navigation/NavLink.tsx';
