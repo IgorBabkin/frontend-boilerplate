@@ -1,7 +1,6 @@
 import { accessor } from '@lib/container/utils.ts';
 import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
-import { error$ } from '../errors/ErrorService.ts';
-import { command, subscribe } from '@lib/mediator/ICommand.ts';
+import { command } from '@lib/mediator/ICommand.ts';
 import { DomainError } from '../../domain/errors/DomainError.ts';
 import { MessageStore } from './MessageStore.ts';
 import { service } from '@lib/mediator/ServiceProvider.ts';
@@ -17,7 +16,6 @@ export class MessageService implements IMessageService {
   constructor(@inject(IMessageServiceKey.resolve) private messageBus: MessageStore) {}
 
   @command
-  @subscribe(error$)
   addMessage(error: DomainError): void {
     this.messageBus.addMessage(error.message);
   }
