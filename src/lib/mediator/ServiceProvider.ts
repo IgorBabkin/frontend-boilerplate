@@ -1,6 +1,9 @@
 import { IContainer, IProvider, ProviderDecorator } from 'ts-ioc-container';
 import { getActions, getQuery, isClassInstance } from './ICommand.ts';
 import { IServiceMediatorKey } from './ServiceMediator.ts';
+import { initialize } from '@lib/scope/OnInit.ts';
+import { createSubscriptions } from '@lib/scope/Subscriber.ts';
+import { invokeCondition } from '@lib/scope/Condition.ts';
 
 export const service = <T>(provider: IProvider<T>) => new ServiceProvider(provider);
 
@@ -15,7 +18,15 @@ export class ServiceProvider<T> extends ProviderDecorator<T> {
 
   resolve(container: IContainer, ...args: unknown[]): T {
     const instance = this.provider.resolve(container, ...args);
-    return isClassInstance(instance) ? this.proxyService(instance, container) : instance;
+    return isClassInstance(instance) ? this.resolveService(instance, container) : instance;
+  }
+
+  private resolveService<T extends object>(service: T, scope: IContainer): T {
+    const instance = this.proxyService(service, scope);
+    initialize(instance, scope);
+    createSubscriptions(instance, scope);
+    invokeCondition(instance, scope);
+    return instance;
   }
 
   private proxyService<T extends object>(service: T, scope: IContainer): T {

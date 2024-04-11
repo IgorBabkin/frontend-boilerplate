@@ -19,7 +19,7 @@ export class ApiClient {
   async getUser(): Promise<UserDTO> {
     console.log('getting user...', this.token);
     await sleep(1000);
-    return { nickname: 'ironman', permissions: { todo: ['read'] } };
+    return { nickname: 'ironman', permissions: { todo: ['read', 'write'] } };
   }
 
   async getTodos(): Promise<TodoDTO[]> {
