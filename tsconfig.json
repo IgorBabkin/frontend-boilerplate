@@ -24,6 +24,7 @@
     "experimentalDecorators": true,
     "paths": {
       "@lib/*": ["lib/*"],
+      "@ui/*": ["app/ui/*"],
     }
   },
   "include": ["src"],
