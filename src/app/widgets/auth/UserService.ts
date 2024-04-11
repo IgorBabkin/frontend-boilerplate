@@ -1,7 +1,7 @@
 import { by, inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { IUserStoreKey, UserStore } from '../../domain/user/UserStore.ts';
 import { IUserRepoKey, UserRepo } from '../../domain/user/UserRepo.ts';
-import { command, query } from '../../../lib/mediator/ICommand.ts';
+import { action, query } from '../../../lib/mediator/ICommand.ts';
 import { Observable } from 'rxjs';
 import { UserPermissions } from '../../domain/user/IPermissions.ts';
 import { IUser } from '../../domain/user/IUser.ts';
@@ -29,7 +29,7 @@ export class UserService implements IUserService {
   ) {}
 
   @onInit
-  @command
+  @action
   async loadUser(): Promise<void> {
     const user = await this.userRepo.fetchUser();
     this.userStore.setUser(user);

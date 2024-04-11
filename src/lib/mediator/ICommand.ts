@@ -28,14 +28,14 @@ export const beforeExecution = (...commands: constructor<ICommand>[]) => setMeta
 export const getBeforeExecution = (condition: ICommand | IObservableQuery) =>
   getMetadata<constructor<ICommand>[]>(condition.constructor, 'beforeExecution') ?? [];
 
-export const command = hook('command');
-export function getCommands(target: object): string[] {
-  return getHooks(target, 'command') ?? [];
+export const action = hook('action');
+export function getActions(target: object) {
+  return getHooks(target, 'action');
 }
 
 export const query = hook('query');
-export function getQuery(target: object): string[] {
-  return getHooks(target, 'query') ?? [];
+export function getQuery(target: object) {
+  return getHooks(target, 'query');
 }
 
 export const isClassInstance = (target: unknown): target is object =>

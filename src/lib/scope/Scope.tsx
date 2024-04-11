@@ -3,6 +3,8 @@ import { IContainer } from 'ts-ioc-container';
 import { parseTags } from '../utils.ts';
 import { ContextNotFoundError } from '../react/ContextNotFoundError.ts';
 import { ScopeContext } from './ScopeContext.ts';
+import { isSubscriber, unsubscribe } from '@lib/scope/Subscriber.ts';
+import { isClassInstance } from '@lib/mediator/ICommand.ts';
 
 function Scope({
   fallback,
@@ -25,6 +27,11 @@ function Scope({
 
   useEffect(() => {
     return () => {
+      for (const instance of scope.getInstances()) {
+        if (isClassInstance(instance) && isSubscriber(instance)) {
+          unsubscribe(instance);
+        }
+      }
       scope.dispose();
     };
   }, [scope]);

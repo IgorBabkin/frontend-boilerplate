@@ -8,9 +8,13 @@ export const IMessageStoreKey = accessor<MessageStore>(Symbol('IMessageStore'));
 @register(IMessageStoreKey.register)
 @provider(scope(Scope.application), singleton())
 export class MessageStore {
-  private messages = new ObservableStore<string[]>([]);
+  private messages = new ObservableStore<string | undefined>(undefined);
 
-  addMessage(message: string) {
-    this.messages.map((messages) => [...messages, message]);
+  pushMessage(message: string) {
+    this.messages.map(() => message);
+  }
+
+  getMessage$() {
+    return this.messages.asObservable();
   }
 }

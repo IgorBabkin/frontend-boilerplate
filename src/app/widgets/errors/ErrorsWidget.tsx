@@ -1,11 +1,11 @@
-import { IErrorServiceKey } from './ErrorService.ts';
 import { useObservable } from '@lib/observable/observable.ts';
 import { useDependency } from '@lib/scope/ScopeContext.ts';
+import { IMessageServiceKey } from '../messages/MessageService.ts';
 
 function ErrorsWidget() {
-  const errorService = useDependency(IErrorServiceKey.resolve);
-  const error = useObservable(() => errorService.getError$(), undefined, [errorService]);
-  return <div>{error?.message}</div>;
+  const messageService = useDependency(IMessageServiceKey.resolve);
+  const message = useObservable(() => messageService.getMessage$(), undefined, [messageService]);
+  return <div>{message}</div>;
 }
 
 export default ErrorsWidget;

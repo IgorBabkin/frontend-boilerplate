@@ -1,7 +1,7 @@
 import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { ITodoStoreKey, TodoStore } from '../../domain/todo/TodoStore.ts';
 import { ITodoRepoKey, TodoRepo } from '../../domain/todo/TodoRepo.ts';
-import { command, query } from '@lib/mediator/ICommand.ts';
+import { action, query } from '@lib/mediator/ICommand.ts';
 import { Observable } from 'rxjs';
 import { ITodo } from '../../domain/todo/ITodo.ts';
 import { Scope } from '@lib/scope/container.ts';
@@ -31,14 +31,14 @@ export class TodoService implements IResource, ITodoService {
     @inject(ITodoRepoKey.resolve) private todoRepo: TodoRepo,
   ) {}
 
-  @command
+  @action
   @permission('write')
   async addTodo(payload: string): Promise<void> {
     this.todoStore.addTodo({ id: Date.now().toString(), title: payload });
   }
 
   @onInit
-  @command
+  @action
   @permission('read')
   async loadTodoList(): Promise<void> {
     const todos = await this.todoRepo.fetchTodos();

@@ -1,5 +1,5 @@
-import { sleep } from '../../lib/utils.ts';
-import { accessor } from '../../lib/container/utils.ts';
+import { sleep } from '@lib/utils.ts';
+import { accessor } from '@lib/container/utils.ts';
 
 export interface TodoDTO {
   id: string;
