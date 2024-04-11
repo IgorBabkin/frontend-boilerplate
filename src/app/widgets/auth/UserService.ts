@@ -1,14 +1,14 @@
 import { by, inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { IUserStoreKey, UserStore } from '../../domain/user/UserStore.ts';
 import { IUserRepoKey, UserRepo } from '../../domain/user/UserRepo.ts';
-import { action, query } from '../../../lib/mediator/ICommand.ts';
+import { action, query } from '@lib/mediator/ICommand.ts';
 import { Observable } from 'rxjs';
 import { UserPermissions } from '../../domain/user/IPermissions.ts';
 import { IUser } from '../../domain/user/IUser.ts';
-import { Scope } from '../../../lib/scope/container.ts';
-import { onInit } from '../../../lib/scope/OnInit.ts';
-import { service } from '../../../lib/mediator/ServiceProvider.ts';
-import { accessor } from '../../../lib/container/utils.ts';
+import { Scope } from '@lib/scope/container.ts';
+import { onInit } from '@lib/scope/OnInit.ts';
+import { service } from '@lib/mediator/ServiceProvider.ts';
+import { accessor } from '@lib/container/utils.ts';
 
 export const IUserServiceKey = accessor<IUserService>(Symbol('IUserService'));
 
