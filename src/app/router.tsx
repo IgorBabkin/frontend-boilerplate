@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
       {
         path: '/',
         element: (
-          <Scope tags="page">
+          <Scope tags="page,list">
             <HomePage />
           </Scope>
         ),
@@ -28,7 +28,7 @@ export const router = createBrowserRouter([
       {
         path: '/add-todo',
         element: (
-          <Scope tags="page">
+          <Scope tags="page,create">
             <CreateTodoPage />
           </Scope>
         ),

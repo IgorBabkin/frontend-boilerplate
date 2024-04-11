@@ -5,7 +5,9 @@ import UserInfoWidget from '@widgets/auth/UserInfoWidget.tsx';
 function HomePage() {
   return (
     <div>
-      <UserInfoWidget />
+      <Scope tags="widget">
+        <UserInfoWidget />
+      </Scope>
       <Scope tags="widget">
         <TodoListWidget />
       </Scope>

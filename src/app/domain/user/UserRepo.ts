@@ -1,7 +1,7 @@
 import { inject, key, provider, register, scope, singleton } from 'ts-ioc-container';
-import { Scope } from '../../../lib/scope/container.ts';
+import { Scope } from '@lib/scope/container.ts';
 import { ApiClient, IApiClientKey, UserDTO } from '../../api/ApiClient.ts';
-import { Context } from '../../../lib/scope/Context.ts';
+import { Context } from '@lib/scope/Context.ts';
 import { IUser } from './IUser.ts';
 import { UserPermissions } from './IPermissions.ts';
 
