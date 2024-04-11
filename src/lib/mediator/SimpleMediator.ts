@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { IMediator } from './IMediator.ts';
 import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './types.ts';
 
@@ -16,11 +16,11 @@ export class SimpleMediator implements IMediator {
     service: TService,
     method: Key,
     payload: Payload<TService, Key>,
-  ): Promise<void> {
+  ): Promise<void | Subscription> {
     const fn = service[method] as CommandMethod<Payload<TService, Key>>;
     const result = fn.call(service, payload);
     if (result instanceof Promise) {
-      await result;
+      return await result;
     }
   }
 }

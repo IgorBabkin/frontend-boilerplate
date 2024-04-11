@@ -5,6 +5,7 @@ import { ContextNotFoundError } from '../react/ContextNotFoundError.ts';
 import { ScopeContext } from './ScopeContext.ts';
 import { isSubscriber, unsubscribe } from '@lib/scope/Subscriber.ts';
 import { isClassInstance } from '@lib/mediator/ICommand.ts';
+import { isInitializable, unsubscribeInit } from '@lib/scope/OnInit.ts';
 
 function Scope({
   fallback,
@@ -28,8 +29,13 @@ function Scope({
   useEffect(() => {
     return () => {
       for (const instance of scope.getInstances()) {
-        if (isClassInstance(instance) && isSubscriber(instance)) {
-          unsubscribe(instance);
+        if (isClassInstance(instance)) {
+          if (isSubscriber(instance)) {
+            unsubscribe(instance);
+          }
+          if (isInitializable(instance)) {
+            unsubscribeInit(instance);
+          }
         }
       }
       scope.dispose();

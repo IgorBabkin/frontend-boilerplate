@@ -3,7 +3,7 @@ import { inject, provider, register, singleton } from 'ts-ioc-container';
 
 import { SimpleMediator } from './SimpleMediator.ts';
 import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './types.ts';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { byCommandAliases } from '../scope/container.ts';
 import { IGuard, matchPayload, ServiceInfo } from './ICommand.ts';
 import { accessor } from '../container/utils.ts';
@@ -32,9 +32,9 @@ export class ServiceMediator implements IMediator {
     service: TService,
     method: Key,
     payload: Payload<TService, Key>,
-  ): Promise<void> {
+  ): Promise<void | Subscription> {
     this.runBeforeCommands({ service: service, method }, this.beforeCommands);
-    await this.mediator.send(service, method, payload);
+    return await this.mediator.send(service, method, payload);
   }
 
   private runBeforeCommands(target: ServiceInfo, beforeCommands: IGuard[]) {

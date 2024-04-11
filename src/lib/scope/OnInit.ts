@@ -1,12 +1,13 @@
 import { getHooks, hasHooks, hook } from '../hook.ts';
 import { IContainer } from 'ts-ioc-container';
 import { IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
+import { Subscription } from 'rxjs';
 
 export const onInit = hook('onInit');
 export const getOnInitHooks = (target: object) => getHooks(target, 'onInit');
 
 export interface OnInit {
-  _isInitialized: boolean;
+  _isInitialized: Subscription[];
 }
 
 export function isInitializable(target: object): target is OnInit {
@@ -14,19 +15,30 @@ export function isInitializable(target: object): target is OnInit {
 }
 
 export function isInitialized(target: OnInit): boolean {
-  return target._isInitialized;
+  return target._isInitialized !== undefined;
 }
 
 export function initialize(instance: object, scope: IContainer) {
   if (!isInitializable(instance) || isInitialized(instance)) {
     return;
   }
-  instance._isInitialized = true;
+  instance._isInitialized = [];
   const errorBus$ = IErrorBusKey.resolve(scope);
   for (const [h, argsFn] of getOnInitHooks(instance)) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const fn = instance[h];
-    fn.apply(instance, argsFn(scope)).catch((e: Error) => errorBus$.next(e));
+    fn.apply(instance, argsFn(scope))
+      .then((result: unknown) => {
+        if (result instanceof Subscription) {
+          instance._isInitialized.push(result);
+        }
+      })
+      .catch((e: Error) => errorBus$.next(e));
   }
+}
+
+export function unsubscribeInit(instance: OnInit) {
+  instance._isInitialized.forEach((s) => s.unsubscribe());
+  instance._isInitialized = [];
 }

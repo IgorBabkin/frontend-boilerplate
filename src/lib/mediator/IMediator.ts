@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './types.ts';
 
 export interface IMediator {
@@ -6,7 +6,7 @@ export interface IMediator {
     service: TService,
     method: Key,
     payload: Payload<TService, Key>,
-  ): Promise<void>;
+  ): Promise<void | Subscription>;
 
   send$<TService extends object, Key extends CommandMethodKeys<TService, QueryMethod>>(
     service: TService,

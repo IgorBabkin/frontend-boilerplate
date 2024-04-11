@@ -2,23 +2,16 @@ import './App.scss';
 import { Outlet } from 'react-router-dom';
 import NavMenu from '@ui/navigation/NavMenu.tsx';
 import NavLink from '@ui/navigation/NavLink.tsx';
-import { UserPermissions } from './domain/user/IPermissions.ts';
 import NotificationsWidget from './widgets/notifications/NotificationsWidget.tsx';
-import { IUserServiceKey } from './widgets/auth/UserService.ts';
-import { useObservable } from '@lib/observable/observable.ts';
-import { useDependency } from '@lib/scope/ScopeContext.ts';
 
 function App() {
-  const userService = useDependency(IUserServiceKey.resolve);
-  const permissions = useObservable(() => userService.getPermissions$(), UserPermissions.default, [userService]);
-
   return (
     <div>
       <NotificationsWidget />
       <h1>App</h1>
       <NavMenu>
         <NavLink to="/">Home</NavLink>
-        {permissions.hasRight('todo', 'write') && <NavLink to="/add-todo">Create Todo</NavLink>}
+        <NavLink to="/add-todo">Create Todo</NavLink>
       </NavMenu>
       <Outlet />
     </div>

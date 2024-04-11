@@ -5,6 +5,8 @@ import { Scope } from '@lib/scope/container.ts';
 
 export const INotificationStoreKey = accessor<NotificationStore>(Symbol('INotificationStore'));
 
+export const isMessage = (message: string | undefined): message is string => message !== undefined;
+
 @register(INotificationStoreKey.register)
 @provider(scope(Scope.application), singleton())
 export class NotificationStore {
@@ -16,5 +18,9 @@ export class NotificationStore {
 
   getMessage$() {
     return this.messages.asObservable();
+  }
+
+  clearMessage() {
+    this.messages.map(() => undefined);
   }
 }
