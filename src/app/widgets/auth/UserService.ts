@@ -1,5 +1,5 @@
 import { ArgsFn, by, inject, provider, register, scope, singleton } from 'ts-ioc-container';
-import { IUserStoreKey, UserStore } from '../../domain/user/UserStore.ts';
+import { isUserPresent, IUserStoreKey, UserStore } from '../../domain/user/UserStore.ts';
 import { IUserRepoKey, UserRepo } from '../../domain/user/UserRepo.ts';
 import { action, query } from '@lib/mediator/ICommand.ts';
 import { filter, Observable } from 'rxjs';
@@ -23,8 +23,6 @@ export interface IUserService {
 }
 
 export const hasUser$: ArgsFn = (c) => [IUserServiceKey.resolve(c).hasUser$()];
-
-const isUserPresent = (u: IUser | undefined): u is IUser => u !== undefined;
 
 @register(IUserServiceKey.register)
 @provider(service, scope(Scope.application), singleton())
