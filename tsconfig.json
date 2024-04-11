@@ -25,6 +25,8 @@
     "paths": {
       "@lib/*": ["lib/*"],
       "@ui/*": ["app/ui/*"],
+      "@widgets/*": ["app/widgets/*"],
+      "@pages/*": ["app/pages/*"],
       "@domain/*": ["app/domain/*"],
     }
   },
