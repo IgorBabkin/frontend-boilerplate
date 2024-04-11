@@ -3,9 +3,8 @@ import { IContainer } from 'ts-ioc-container';
 import { parseTags } from '../utils.ts';
 import { ContextNotFoundError } from '../react/ContextNotFoundError.ts';
 import { ScopeContext } from './ScopeContext.ts';
-import { isSubscriber, unsubscribe } from '@lib/mediator/Subscriber.ts';
-import { isClassInstance } from '@lib/mediator/ICommand.ts';
-import { isInitializable, unsubscribeInit } from '@lib/mediator/OnInit.ts';
+import { unsubscribe } from '@lib/mediator/Subscriber.ts';
+import { unsubscribeInit } from '@lib/mediator/OnInit.ts';
 
 function Scope({
   fallback,
@@ -28,15 +27,9 @@ function Scope({
 
   useEffect(() => {
     return () => {
-      for (const instance of scope.getInstances()) {
-        if (isClassInstance(instance)) {
-          if (isSubscriber(instance)) {
-            unsubscribe(instance);
-          }
-          if (isInitializable(instance)) {
-            unsubscribeInit(instance);
-          }
-        }
+      for (const instance of scope.getInstances() as object[]) {
+        unsubscribe(instance);
+        unsubscribeInit(instance);
       }
       scope.dispose();
     };

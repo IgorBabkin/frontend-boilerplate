@@ -1,6 +1,6 @@
 import { getHooks, hasHooks, hook } from '../hook.ts';
 import { IContainer } from 'ts-ioc-container';
-import { IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
+import { IErrorBusKey } from '@domain/errors/ErrorBus.ts';
 import { Subscription } from 'rxjs';
 
 export const onInit = hook('onInit');
@@ -38,7 +38,10 @@ export function initialize(instance: object, scope: IContainer) {
   }
 }
 
-export function unsubscribeInit(instance: OnInit) {
+export function unsubscribeInit(instance: object) {
+  if (!isInitializable(instance)) {
+    return;
+  }
   instance._isInitialized.forEach((s) => s.unsubscribe());
   instance._isInitialized = [];
 }

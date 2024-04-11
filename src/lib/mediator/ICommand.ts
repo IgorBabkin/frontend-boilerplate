@@ -1,13 +1,5 @@
 import { getHooks, hook } from '../hook.ts';
 
-export interface ICommand<TPayload = unknown> {
-  execute(payload: TPayload): Promise<void>;
-
-  match?(payload: unknown): payload is TPayload;
-}
-
-export type ServiceInfo = { service: object; method: string | number | symbol };
-
 export interface IGuard<TPayload = unknown> {
   execute(resource: TPayload, method: string): void;
 

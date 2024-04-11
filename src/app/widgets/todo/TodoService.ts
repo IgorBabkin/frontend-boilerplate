@@ -1,18 +1,16 @@
 import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
-import { ITodoStoreKey, TodoStore } from '../../domain/todo/TodoStore.ts';
-import { ITodoRepoKey, TodoRepo } from '../../domain/todo/TodoRepo.ts';
+import { ITodoStoreKey, TodoStore } from '@domain/todo/TodoStore.ts';
+import { ITodoRepoKey, TodoRepo } from '@domain/todo/TodoRepo.ts';
 import { action, query } from '@lib/mediator/ICommand.ts';
 import { Observable } from 'rxjs';
-import { ITodo } from '../../domain/todo/ITodo.ts';
+import { ITodo } from '@domain/todo/ITodo.ts';
 import { Scope } from '@lib/scope/container.ts';
-import { IResource } from '../../domain/user/IResource.ts';
+import { IResource } from '@domain/user/IResource.ts';
 import { permission } from '../auth/CheckPermission.ts';
 import { service } from '@lib/mediator/ServiceProvider.ts';
 import { accessor } from '@lib/container/utils.ts';
 import { when } from '@lib/mediator/Condition.ts';
 import { isUserLoaded$ } from '../auth/UserService.ts';
-
-export const ITodoServiceKey = accessor<ITodoService>(Symbol('ITodoService'));
 
 export interface ITodoService {
   addTodo(payload: string): Promise<void>;
@@ -21,6 +19,8 @@ export interface ITodoService {
 
   getTodoList$(): Observable<ITodo[]>;
 }
+
+export const ITodoServiceKey = accessor<ITodoService>(Symbol('ITodoService'));
 
 @register(ITodoServiceKey.register)
 @provider(service, scope(Scope.application), singleton())

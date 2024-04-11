@@ -1,6 +1,6 @@
 import { getHooks, hasHooks, hook } from '../hook.ts';
 import { type ArgsFn, IContainer } from 'ts-ioc-container';
-import { IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
+import { IErrorBusKey } from '@domain/errors/ErrorBus.ts';
 import { Observable, Subscription } from 'rxjs';
 
 export const subscribeOn = (fn: ArgsFn) => hook('subscribe', fn);
@@ -40,7 +40,10 @@ export function createSubscriptions(instance: object, scope: IContainer) {
   }
 }
 
-export function unsubscribe(instance: Subscriber) {
+export function unsubscribe(instance: object) {
+  if (!isSubscriber(instance)) {
+    return;
+  }
   instance._subscriptions.forEach((s) => s.unsubscribe());
   instance._subscriptions = [];
 }

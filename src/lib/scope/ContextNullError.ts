@@ -1,4 +1,4 @@
-import { DomainError } from '../../app/domain/errors/DomainError.ts';
+import { DomainError } from '@domain/errors/DomainError.ts';
 
 export class ContextNullError extends DomainError {
   name = 'ContextNullError';

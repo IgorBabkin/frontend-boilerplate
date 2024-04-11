@@ -5,7 +5,7 @@ import { SimpleMediator } from './SimpleMediator.ts';
 import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from './types.ts';
 import { Observable, Subscription } from 'rxjs';
 import { byCommandAliases } from '../scope/container.ts';
-import { IGuard, matchPayload, ServiceInfo } from './ICommand.ts';
+import { IGuard, matchPayload } from './ICommand.ts';
 import { accessor } from '../container/utils.ts';
 
 export const IServiceMediatorKey = accessor<IMediator>(Symbol('IServiceMediator'));
@@ -37,7 +37,7 @@ export class ServiceMediator implements IMediator {
     return await this.mediator.send(service, method, payload);
   }
 
-  private runBeforeCommands(target: ServiceInfo, beforeCommands: IGuard[]) {
+  private runBeforeCommands(target: { service: object; method: string | number | symbol }, beforeCommands: IGuard[]) {
     const commands = beforeCommands.filter((c) => typeof target.method === 'string' && matchPayload(c, target.service));
     for (const c of commands) {
       c.execute(target.service, target.method as string);

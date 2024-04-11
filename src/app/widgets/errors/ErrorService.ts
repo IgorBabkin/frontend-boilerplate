@@ -1,5 +1,5 @@
 import { ArgsFn, IContainer, inject, provider, register, scope, singleton } from 'ts-ioc-container';
-import { type IErrorBus, IErrorBusKey } from '../../domain/errors/ErrorBus.ts';
+import { type IErrorBus, IErrorBusKey } from '@domain/errors/ErrorBus.ts';
 import { Observable } from 'rxjs';
 import { query } from '@lib/mediator/ICommand.ts';
 import { Scope } from '@lib/scope/container.ts';

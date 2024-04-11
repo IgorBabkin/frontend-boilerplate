@@ -10,7 +10,7 @@ import { onInit } from '@lib/mediator/OnInit.ts';
 import { service } from '@lib/mediator/ServiceProvider.ts';
 import { accessor } from '@lib/container/utils.ts';
 
-export const IUserServiceKey = accessor<IUserService>(Symbol('IUserService'));
+export const isUserLoaded$: ArgsFn = (c) => [IUserServiceKey.resolve(c).hasUser$()];
 
 export interface IUserService {
   loadUser(): Promise<void>;
@@ -22,7 +22,7 @@ export interface IUserService {
   hasUser$(): Observable<IUser>;
 }
 
-export const isUserLoaded$: ArgsFn = (c) => [IUserServiceKey.resolve(c).hasUser$()];
+export const IUserServiceKey = accessor<IUserService>(Symbol('IUserService'));
 
 @register(IUserServiceKey.register)
 @provider(service, scope(Scope.application), singleton())

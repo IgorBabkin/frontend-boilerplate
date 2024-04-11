@@ -1,6 +1,6 @@
 import { getHooks, hasHooks, hook } from '../hook.ts';
 import { type ArgsFn, IContainer } from 'ts-ioc-container';
-import { IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
+import { IErrorBusKey } from '@domain/errors/ErrorBus.ts';
 import { lastValueFrom, Observable } from 'rxjs';
 
 export const when = (fn: ArgsFn) => hook('when', fn);
