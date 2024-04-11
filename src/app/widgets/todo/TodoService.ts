@@ -10,7 +10,7 @@ import { permission } from '../auth/CheckPermission.ts';
 import { service } from '@lib/mediator/ServiceProvider.ts';
 import { accessor } from '@lib/container/utils.ts';
 import { when } from '@lib/mediator/Condition.ts';
-import { hasUser$ } from '../auth/UserService.ts';
+import { isUserLoaded$ } from '../auth/UserService.ts';
 
 export const ITodoServiceKey = accessor<ITodoService>(Symbol('ITodoService'));
 
@@ -39,7 +39,7 @@ export class TodoService implements IResource, ITodoService {
   }
 
   @action
-  @when(hasUser$)
+  @when(isUserLoaded$)
   @permission('read')
   async loadTodoList(): Promise<void> {
     const todos = await this.todoRepo.fetchTodos();

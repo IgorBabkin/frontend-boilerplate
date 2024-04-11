@@ -11,13 +11,14 @@ import { hasTags } from '../lib/scope/container.ts';
 import { UserRepo } from '../app/domain/user/UserRepo.ts';
 import { AuthClient, IAuthClientKey } from '../app/api/AuthClient.ts';
 import { Context } from '../lib/scope/Context.ts';
-import { AuthService } from '../app/domain/auth/AuthService.ts';
+import { AuthProvider } from '../app/domain/auth/AuthProvider.ts';
 import { ApiClient, IApiClientKey } from '../app/api/ApiClient.ts';
 import { TodoService } from '../app/widgets/todo/TodoService.ts';
 import { UserService } from '../app/widgets/auth/UserService.ts';
 import { ErrorService } from '../app/widgets/errors/ErrorService.ts';
 import { NotificationStore } from '../app/widgets/notifications/NotificationStore.ts';
 import { NotificationService } from '../app/widgets/notifications/NotificationService.ts';
+import { AuthService } from '../app/widgets/auth/AuthService.ts';
 
 export class Common implements IContainerModule {
   applyTo(container: IContainer): void {
@@ -30,12 +31,13 @@ export class Common implements IContainerModule {
       .use(R.fromClass(ErrorHandler))
       .use(R.fromClass(TodoRepo))
       .use(R.fromClass(UserRepo))
-      .use(R.fromClass(AuthService))
+      .use(R.fromClass(AuthProvider))
       .use(R.fromClass(TodoService))
       .use(R.fromClass(UserService))
       .use(R.fromClass(NotificationService))
       .use(R.fromClass(ErrorService))
       .use(R.fromClass(NotificationStore))
+      .use(R.fromClass(AuthService))
       .use(R.fromValue(new Context(new ApiClient('someToken'))).to(IApiClientKey.key))
       .use(
         R.fromClass(AuthClient)

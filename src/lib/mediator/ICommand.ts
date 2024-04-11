@@ -1,5 +1,3 @@
-import { Observable } from 'rxjs';
-import { constructor, getMetadata, setMetadata } from 'ts-ioc-container';
 import { getHooks, hook } from '../hook.ts';
 
 export interface ICommand<TPayload = unknown> {
@@ -19,14 +17,6 @@ export interface IGuard<TPayload = unknown> {
 export function matchPayload<TPayload>(command: IGuard<TPayload>, payload: unknown): payload is TPayload {
   return command.match ? command.match(payload) : true;
 }
-
-export interface IObservableQuery<TPayload = unknown, TResponse = unknown> {
-  create(payload: TPayload): Observable<TResponse>;
-}
-
-export const beforeExecution = (...commands: constructor<ICommand>[]) => setMetadata('beforeExecution', commands);
-export const getBeforeExecution = (condition: ICommand | IObservableQuery) =>
-  getMetadata<constructor<ICommand>[]>(condition.constructor, 'beforeExecution') ?? [];
 
 export const action = hook('action');
 export function getActions(target: object) {

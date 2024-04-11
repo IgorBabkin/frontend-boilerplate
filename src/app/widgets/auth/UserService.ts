@@ -22,7 +22,7 @@ export interface IUserService {
   hasUser$(): Observable<IUser>;
 }
 
-export const hasUser$: ArgsFn = (c) => [IUserServiceKey.resolve(c).hasUser$()];
+export const isUserLoaded$: ArgsFn = (c) => [IUserServiceKey.resolve(c).hasUser$()];
 
 @register(IUserServiceKey.register)
 @provider(service, scope(Scope.application), singleton())
