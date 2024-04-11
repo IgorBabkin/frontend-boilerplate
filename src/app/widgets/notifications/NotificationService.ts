@@ -5,7 +5,7 @@ import { DomainError } from '../../domain/errors/DomainError.ts';
 import { INotificationStoreKey, NotificationStore } from './NotificationStore.ts';
 import { service } from '@lib/mediator/ServiceProvider.ts';
 import { Scope } from '@lib/scope/container.ts';
-import { subscribe } from '@lib/scope/Subscriber.ts';
+import { subscribeOn } from '@lib/scope/Subscriber.ts';
 import { error$ } from '../errors/ErrorService.ts';
 import { Observable } from 'rxjs';
 
@@ -21,7 +21,7 @@ export class NotificationService implements INotificationService {
   constructor(@inject(INotificationStoreKey.resolve) private notificationStore: NotificationStore) {}
 
   @action
-  @subscribe(error$)
+  @subscribeOn(error$)
   addMessage(error: DomainError): void {
     this.notificationStore.pushMessage(error.message);
   }
