@@ -6,7 +6,7 @@ import { filter, Observable } from 'rxjs';
 import { UserPermissions } from '../../domain/user/IPermissions.ts';
 import { IUser } from '../../domain/user/IUser.ts';
 import { Scope } from '@lib/scope/container.ts';
-import { onInit } from '@lib/scope/OnInit.ts';
+import { onInit } from '@lib/mediator/OnInit.ts';
 import { service } from '@lib/mediator/ServiceProvider.ts';
 import { accessor } from '@lib/container/utils.ts';
 

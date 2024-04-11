@@ -3,9 +3,9 @@ import { IContainer } from 'ts-ioc-container';
 import { parseTags } from '../utils.ts';
 import { ContextNotFoundError } from '../react/ContextNotFoundError.ts';
 import { ScopeContext } from './ScopeContext.ts';
-import { isSubscriber, unsubscribe } from '@lib/scope/Subscriber.ts';
+import { isSubscriber, unsubscribe } from '@lib/mediator/Subscriber.ts';
 import { isClassInstance } from '@lib/mediator/ICommand.ts';
-import { isInitializable, unsubscribeInit } from '@lib/scope/OnInit.ts';
+import { isInitializable, unsubscribeInit } from '@lib/mediator/OnInit.ts';
 
 function Scope({
   fallback,

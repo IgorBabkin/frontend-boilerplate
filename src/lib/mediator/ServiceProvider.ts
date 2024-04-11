@@ -1,9 +1,9 @@
 import { IContainer, IProvider, ProviderDecorator } from 'ts-ioc-container';
 import { getActions, getQuery, isClassInstance } from './ICommand.ts';
 import { IServiceMediatorKey } from './ServiceMediator.ts';
-import { initialize } from '@lib/scope/OnInit.ts';
-import { createSubscriptions } from '@lib/scope/Subscriber.ts';
-import { invokeCondition } from '@lib/scope/Condition.ts';
+import { initialize } from '@lib/mediator/OnInit.ts';
+import { createSubscriptions } from '@lib/mediator/Subscriber.ts';
+import { invokeCondition } from '@lib/mediator/Condition.ts';
 
 export const service = <T>(provider: IProvider<T>) => new ServiceProvider(provider);
 
@@ -17,16 +17,18 @@ export class ServiceProvider<T> extends ProviderDecorator<T> {
   }
 
   resolve(container: IContainer, ...args: unknown[]): T {
-    const instance = this.provider.resolve(container, ...args);
-    return isClassInstance(instance) ? this.resolveService(instance, container) : instance;
-  }
+    const instance: T = this.provider.resolve(container, ...args);
+    if (isClassInstance(instance)) {
+      const result = this.proxyService(instance, container);
 
-  private resolveService<T extends object>(service: T, scope: IContainer): T {
-    const instance = this.proxyService(service, scope);
-    initialize(instance, scope);
-    createSubscriptions(instance, scope);
-    invokeCondition(instance, scope);
-    return instance;
+      initialize(result, container);
+      createSubscriptions(result, container);
+      invokeCondition(result, container);
+
+      return result;
+    }
+
+    throw new Error('Service must be a class instance');
   }
 
   private proxyService<T extends object>(service: T, scope: IContainer): T {

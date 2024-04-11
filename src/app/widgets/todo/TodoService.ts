@@ -9,7 +9,7 @@ import { IResource } from '../../domain/user/IResource.ts';
 import { permission } from '../auth/CheckPermission.ts';
 import { service } from '@lib/mediator/ServiceProvider.ts';
 import { accessor } from '@lib/container/utils.ts';
-import { when } from '@lib/scope/Condition.ts';
+import { when } from '@lib/mediator/Condition.ts';
 import { hasUser$ } from '../auth/UserService.ts';
 
 export const ITodoServiceKey = accessor<ITodoService>(Symbol('ITodoService'));
