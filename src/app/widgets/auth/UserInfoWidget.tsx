@@ -6,7 +6,12 @@ function UserInfoWidget() {
   const userService = useDependency(IUserServiceKey.resolve);
   const user = useObservable(() => userService.getUser$(), undefined, [userService]);
 
-  return <h3>Hello {user?.nickname}</h3>;
+  return (
+    <>
+      {user && <h3>Hello {user?.nickname}</h3>}
+      {!user && <h4>Loading...</h4>}
+    </>
+  );
 }
 
 export default UserInfoWidget;
