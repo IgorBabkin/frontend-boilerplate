@@ -16,8 +16,8 @@ import { ApiClient, IApiClientKey } from '../app/api/ApiClient.ts';
 import { TodoService } from '../app/widgets/todo/TodoService.ts';
 import { UserService } from '../app/widgets/auth/UserService.ts';
 import { ErrorService } from '../app/widgets/errors/ErrorService.ts';
-import { MessageStore } from '../app/widgets/messages/NotificationStore.ts';
-import { MessageService } from '../app/widgets/messages/NotificationService.ts';
+import { NotificationStore } from '../app/widgets/notifications/NotificationStore.ts';
+import { NotificationService } from '../app/widgets/notifications/NotificationService.ts';
 
 export class Common implements IContainerModule {
   applyTo(container: IContainer): void {
@@ -33,9 +33,9 @@ export class Common implements IContainerModule {
       .use(R.fromClass(AuthService))
       .use(R.fromClass(TodoService))
       .use(R.fromClass(UserService))
-      .use(R.fromClass(MessageService))
+      .use(R.fromClass(NotificationService))
       .use(R.fromClass(ErrorService))
-      .use(R.fromClass(MessageStore))
+      .use(R.fromClass(NotificationStore))
       .use(R.fromValue(new Context(new ApiClient('someToken'))).to(IApiClientKey.key))
       .use(
         R.fromClass(AuthClient)

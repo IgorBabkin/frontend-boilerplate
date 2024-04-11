@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import NavMenu from './ui/navigation/NavMenu.tsx';
 import NavLink from './ui/navigation/NavLink.tsx';
 import { UserPermissions } from './domain/user/IPermissions.ts';
-import Messages from './widgets/messages/Notifications.tsx';
+import Notifications from './widgets/notifications/Notifications.tsx';
 import { IUserServiceKey } from './widgets/auth/UserService.ts';
 import { useObservable } from '../lib/observable/observable.ts';
 import { useDependency } from '../lib/scope/ScopeContext.ts';
@@ -14,7 +14,7 @@ function App() {
 
   return (
     <div>
-      <Messages />
+      <Notifications />
       <h1>App</h1>
       <NavMenu>
         <NavLink to="/">Home</NavLink>
