@@ -7,9 +7,10 @@ import { ITodo } from '../../domain/todo/ITodo.ts';
 import { Scope } from '@lib/scope/container.ts';
 import { IResource } from '../../domain/user/IResource.ts';
 import { permission } from '../auth/CheckPermission.ts';
-import { onInit } from '@lib/scope/OnInit.ts';
 import { service } from '@lib/mediator/ServiceProvider.ts';
 import { accessor } from '@lib/container/utils.ts';
+import { when } from '@lib/scope/Condition.ts';
+import { hasUser$ } from '../auth/UserService.ts';
 
 export const ITodoServiceKey = accessor<ITodoService>(Symbol('ITodoService'));
 
@@ -37,8 +38,8 @@ export class TodoService implements IResource, ITodoService {
     this.todoStore.addTodo({ id: Date.now().toString(), title: payload });
   }
 
-  @onInit
   @action
+  @when(hasUser$)
   @permission('read')
   async loadTodoList(): Promise<void> {
     const todos = await this.todoRepo.fetchTodos();

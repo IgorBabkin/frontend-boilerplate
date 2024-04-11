@@ -1,9 +1,9 @@
-import { ObservableStore } from '../../../lib/observable/ObservableStore.ts';
-import { Scope } from '../../../lib/scope/container.ts';
+import { ObservableStore } from '@lib/observable/ObservableStore.ts';
+import { Scope } from '@lib/scope/container.ts';
 import { provider, register, scope, singleton } from 'ts-ioc-container';
 import { IUser } from './IUser.ts';
 import { map } from 'rxjs';
-import { accessor } from '../../../lib/container/utils.ts';
+import { accessor } from '@lib/container/utils.ts';
 import { UserPermissions } from './IPermissions.ts';
 
 export const IUserStoreKey = accessor<UserStore>(Symbol('IUserStore'));

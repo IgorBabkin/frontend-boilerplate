@@ -1,8 +1,8 @@
-import { by, inject, provider, register, scope, singleton } from 'ts-ioc-container';
+import { ArgsFn, by, inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { IUserStoreKey, UserStore } from '../../domain/user/UserStore.ts';
 import { IUserRepoKey, UserRepo } from '../../domain/user/UserRepo.ts';
 import { action, query } from '@lib/mediator/ICommand.ts';
-import { Observable } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { UserPermissions } from '../../domain/user/IPermissions.ts';
 import { IUser } from '../../domain/user/IUser.ts';
 import { Scope } from '@lib/scope/container.ts';
@@ -18,7 +18,13 @@ export interface IUserService {
   getPermissions$(): Observable<UserPermissions>;
 
   getUser$(): Observable<IUser | undefined>;
+
+  hasUser$(): Observable<IUser>;
 }
+
+export const hasUser$: ArgsFn = (c) => [IUserServiceKey.resolve(c).hasUser$()];
+
+const isUserPresent = (u: IUser | undefined): u is IUser => u !== undefined;
 
 @register(IUserServiceKey.register)
 @provider(service, scope(Scope.application), singleton())
@@ -41,5 +47,9 @@ export class UserService implements IUserService {
 
   @query getUser$(): Observable<IUser | undefined> {
     return this.userStore.getUser$();
+  }
+
+  @query hasUser$() {
+    return this.userStore.getUser$().pipe(filter(isUserPresent));
   }
 }

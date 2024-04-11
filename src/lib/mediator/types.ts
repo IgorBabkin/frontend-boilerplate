@@ -12,4 +12,8 @@ export type Payload<Target extends object, Method extends keyof Target> =
   Target[Method] extends Fn<infer R, unknown> ? R : never;
 
 export type Response<Target extends object, Method extends keyof Target> =
-  Target[Method] extends Fn<unknown, Observable<infer R>> ? R : never;
+  Target[Method] extends Fn<unknown, Observable<infer R>>
+    ? R
+    : Target[Method] extends Fn<unknown, Promise<infer R>>
+      ? R
+      : never;

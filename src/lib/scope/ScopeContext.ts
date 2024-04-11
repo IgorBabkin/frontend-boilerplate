@@ -4,6 +4,7 @@ import { useContextOrFail } from '../react/context.ts';
 import { initialize } from './OnInit.ts';
 import { InjectFn } from '@ibabkin/utils';
 import { createSubscriptions } from '@lib/scope/Subscriber.ts';
+import { invokeCondition } from '@lib/scope/Condition.ts';
 
 export const ScopeContext = createContext<IContainer | undefined>(undefined);
 
@@ -14,6 +15,7 @@ export const useDependency = <T extends object>(fn: InjectFn<IContainer, T>) => 
   useEffect(() => {
     initialize(instance, scope);
     createSubscriptions(instance, scope);
+    invokeCondition(instance, scope);
   }, [instance, scope]);
 
   return instance;
