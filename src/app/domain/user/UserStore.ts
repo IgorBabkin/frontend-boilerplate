@@ -8,8 +8,6 @@ import { UserPermissions } from './IPermissions.ts';
 
 export const IUserStoreKey = accessor<UserStore>(Symbol('IUserStore'));
 
-export const isUserPresent = (u: IUser | undefined): u is IUser => u !== undefined;
-
 @register(IUserStoreKey.register)
 @provider(scope(Scope.application), singleton())
 export class UserStore {

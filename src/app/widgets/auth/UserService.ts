@@ -1,5 +1,5 @@
 import { ArgsFn, by, inject, provider, register, scope, singleton } from 'ts-ioc-container';
-import { isUserPresent, IUserStoreKey, UserStore } from '@domain/user/UserStore.ts';
+import { IUserStoreKey, UserStore } from '@domain/user/UserStore.ts';
 import { IUserRepoKey, UserRepo } from '@domain/user/UserRepo.ts';
 import { action, query } from '@lib/mediator/ICommand.ts';
 import { filter, Observable, take } from 'rxjs';
@@ -9,6 +9,7 @@ import { Scope } from '@lib/scope/container.ts';
 import { onInit } from '@lib/mediator/OnInit.ts';
 import { service } from '@lib/mediator/ServiceProvider.ts';
 import { accessor } from '@lib/container/utils.ts';
+import { isPresent } from '@lib/utils.ts';
 
 export const isUserLoaded$: ArgsFn = (c) => [IUserServiceKey.resolve(c).hasUser$()];
 
@@ -48,6 +49,6 @@ export class UserService implements IUserService {
   }
 
   @query hasUser$() {
-    return this.userStore.getUser$().pipe(filter(isUserPresent), take(1));
+    return this.userStore.getUser$().pipe(filter(isPresent), take(1));
   }
 }

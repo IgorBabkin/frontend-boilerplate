@@ -3,8 +3,6 @@ import { provider, register, scope, singleton } from 'ts-ioc-container';
 import { accessor } from '@lib/container/utils.ts';
 import { Scope } from '@lib/scope/container.ts';
 
-export const isMessage = (message: string | undefined): message is string => message !== undefined;
-
 export const INotificationStoreKey = accessor<NotificationStore>(Symbol('INotificationStore'));
 
 @register(INotificationStoreKey.register)

@@ -5,3 +5,5 @@ export const parseTags = (tags: string) =>
     .filter(Boolean);
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const isPresent = <T>(value: T | undefined): value is T => value !== undefined;
