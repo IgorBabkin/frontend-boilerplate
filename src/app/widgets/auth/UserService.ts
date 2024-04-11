@@ -2,7 +2,7 @@ import { ArgsFn, by, inject, provider, register, scope, singleton } from 'ts-ioc
 import { isUserPresent, IUserStoreKey, UserStore } from '../../domain/user/UserStore.ts';
 import { IUserRepoKey, UserRepo } from '../../domain/user/UserRepo.ts';
 import { action, query } from '@lib/mediator/ICommand.ts';
-import { filter, Observable } from 'rxjs';
+import { filter, Observable, take } from 'rxjs';
 import { UserPermissions } from '../../domain/user/IPermissions.ts';
 import { IUser } from '../../domain/user/IUser.ts';
 import { Scope } from '@lib/scope/container.ts';
@@ -48,6 +48,6 @@ export class UserService implements IUserService {
   }
 
   @query hasUser$() {
-    return this.userStore.getUser$().pipe(filter(isUserPresent));
+    return this.userStore.getUser$().pipe(filter(isUserPresent), take(1));
   }
 }

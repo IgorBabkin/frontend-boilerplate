@@ -1,9 +1,9 @@
 import { provider, register, scope, singleton } from 'ts-ioc-container';
-import { ObservableList } from '../../../lib/observable/ObservableList.ts';
+import { ObservableList } from '@lib/observable/ObservableList.ts';
 import { Observable } from 'rxjs';
-import { Scope } from '../../../lib/scope/container.ts';
+import { Scope } from '@lib/scope/container.ts';
 import { ITodo } from './ITodo.ts';
-import { accessor } from '../../../lib/container/utils.ts';
+import { accessor } from '@lib/container/utils.ts';
 
 export const ITodoStoreKey = accessor<TodoStore>(Symbol('ITodoStore'));
 

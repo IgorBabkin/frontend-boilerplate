@@ -1,7 +1,7 @@
 import { getHooks, hasHooks, hook } from '../hook.ts';
 import { type ArgsFn, IContainer } from 'ts-ioc-container';
 import { IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
-import { firstValueFrom, Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 
 export const when = (fn: ArgsFn) => hook('when', fn);
 export const getConditionHooks = (target: object) => getHooks(target, 'when');
@@ -29,7 +29,7 @@ export function invokeCondition(instance: object, scope: IContainer) {
     // @ts-ignore
     const fn = instance[h];
     const [obs$] = argsFn(scope) as [Observable<unknown>];
-    firstValueFrom(obs$)
+    lastValueFrom(obs$)
       .then((v) => fn.apply(instance, v))
       .catch((e: Error) => errorBus$.next(e));
   }
