@@ -1,11 +1,11 @@
 import { useObservable } from '@lib/observable/observable.ts';
 import { useDependency } from '@lib/scope/ScopeContext.ts';
-import { IMessageServiceKey } from './MessageService.ts';
+import { INotificationServiceKey } from './NotificationService.ts';
 
-function Messages() {
-  const messageService = useDependency(IMessageServiceKey.resolve);
+function Notifications() {
+  const messageService = useDependency(INotificationServiceKey.resolve);
   const message = useObservable(() => messageService.getMessage$(), undefined, [messageService]);
   return <div>{message}</div>;
 }
 
-export default Messages;
+export default Notifications;

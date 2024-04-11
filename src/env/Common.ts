@@ -16,8 +16,8 @@ import { ApiClient, IApiClientKey } from '../app/api/ApiClient.ts';
 import { TodoService } from '../app/widgets/todo/TodoService.ts';
 import { UserService } from '../app/widgets/auth/UserService.ts';
 import { ErrorService } from '../app/widgets/errors/ErrorService.ts';
-import { MessageStore } from '../app/widgets/messages/MessageStore.ts';
-import { MessageService } from '../app/widgets/messages/MessageService.ts';
+import { MessageStore } from '../app/widgets/messages/NotificationStore.ts';
+import { MessageService } from '../app/widgets/messages/NotificationService.ts';
 
 export class Common implements IContainerModule {
   applyTo(container: IContainer): void {

@@ -3,11 +3,11 @@ import { provider, register, scope, singleton } from 'ts-ioc-container';
 import { accessor } from '@lib/container/utils.ts';
 import { Scope } from '@lib/scope/container.ts';
 
-export const IMessageStoreKey = accessor<MessageStore>(Symbol('IMessageStore'));
+export const INotificationStoreKey = accessor<NotificationStore>(Symbol('INotificationStore'));
 
-@register(IMessageStoreKey.register)
+@register(INotificationStoreKey.register)
 @provider(scope(Scope.application), singleton())
-export class MessageStore {
+export class NotificationStore {
   private messages = new ObservableStore<string | undefined>(undefined);
 
   pushMessage(message: string) {
