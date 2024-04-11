@@ -25,6 +25,7 @@
     "paths": {
       "@lib/*": ["lib/*"],
       "@ui/*": ["app/ui/*"],
+      "@domain/*": ["app/domain/*"],
     }
   },
   "include": ["src"],

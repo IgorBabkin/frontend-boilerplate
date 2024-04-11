@@ -1,6 +1,6 @@
 import { FormEvent, useCallback, useState } from 'react';
-import Button from '../../ui/button/Button.tsx';
-import TextField from '../../ui/textField/TextField.tsx';
+import Button from '@ui/button/Button.tsx';
+import TextField from '@ui/textField/TextField.tsx';
 import { useAsyncEventHandler } from '@lib/scope/useQuery.ts';
 import { ITodoServiceKey } from './TodoService.ts';
 import { useDependency } from '@lib/scope/ScopeContext.ts';

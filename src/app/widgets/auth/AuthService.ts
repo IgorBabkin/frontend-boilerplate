@@ -1,5 +1,5 @@
 import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
-import { AuthProvider, IAuthProviderKey } from '../../domain/auth/AuthProvider.ts';
+import { AuthProvider, IAuthProviderKey } from '@domain/auth/AuthProvider.ts';
 import { Context } from '@lib/scope/Context.ts';
 import { ApiClient, IApiClientKey } from '../../api/ApiClient.ts';
 import { accessor } from '@lib/container/utils.ts';
