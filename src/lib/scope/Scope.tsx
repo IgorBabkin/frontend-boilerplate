@@ -6,14 +6,12 @@ import { ScopeContext } from './ScopeContext.ts';
 import { unsubscribe } from '@lib/mediator/Subscriber.ts';
 import { unsubscribeInit } from '@lib/mediator/OnInit.ts';
 
-function Scope({
-  fallback,
-  tags = '',
-  children,
-}: PropsWithChildren<{
-  fallback?: (tags: string[]) => IContainer;
+export type IScopeProps = {
   tags?: string;
-}>) {
+  fallback?: (tags: string[]) => IContainer;
+};
+
+function Scope({ fallback, tags = '', children }: PropsWithChildren<IScopeProps>) {
   const current = useContext(ScopeContext);
   const tagsArr = useMemo(() => parseTags(tags), [tags]);
   const scope = useMemo(
@@ -31,6 +29,7 @@ function Scope({
         unsubscribe(instance);
         unsubscribeInit(instance);
       }
+      if (scope.isDisposed) return;
       scope.dispose();
     };
   }, [scope]);

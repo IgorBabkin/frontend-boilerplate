@@ -1,37 +1,20 @@
 import { createBrowserRouter } from 'react-router-dom';
 import HomePage from './pages/HomePage.tsx';
-import Scope from '../lib/scope/Scope.tsx';
 import CreateTodoPage from './pages/CreateTodoPage.tsx';
-import { Container, MetadataInjector } from 'ts-ioc-container';
-import { Common } from '../env/Common.ts';
 import App from './App.tsx';
-
-const createContainer = (tags: string[]) => new Container(new MetadataInjector(), { tags }).use(new Common());
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: (
-      <Scope tags="application" fallback={createContainer}>
-        <App />
-      </Scope>
-    ),
+    element: <App />,
     children: [
       {
         path: '/',
-        element: (
-          <Scope tags="page,list">
-            <HomePage />
-          </Scope>
-        ),
+        element: <HomePage />,
       },
       {
         path: '/add-todo',
-        element: (
-          <Scope tags="page,create">
-            <CreateTodoPage />
-          </Scope>
-        ),
+        element: <CreateTodoPage />,
       },
     ],
   },

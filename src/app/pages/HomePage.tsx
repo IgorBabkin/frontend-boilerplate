@@ -1,18 +1,14 @@
-import Scope from '@lib/scope/Scope.tsx';
 import TodoListWidget from '@widgets/todo/TodoListWidget.tsx';
 import UserInfoWidget from '@widgets/auth/UserInfoWidget.tsx';
+import { ScopeProps, withScope } from '@lib/scope/ScopeHOCs.tsx';
 
-function HomePage() {
+const HomePage = withScope(() => {
   return (
     <div>
-      <Scope tags="widget">
-        <UserInfoWidget />
-      </Scope>
-      <Scope tags="widget">
-        <TodoListWidget />
-      </Scope>
+      <UserInfoWidget />
+      <TodoListWidget />
     </div>
   );
-}
+}, ScopeProps.page('HomePage'));
 
 export default HomePage;
