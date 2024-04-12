@@ -1,12 +1,12 @@
 import { useObservable } from '@lib/observable/observable.ts';
 import { useDependency } from '@lib/scope/ScopeContext.ts';
 import { INotificationServiceKey } from './NotificationService.ts';
-import { ScopeProps, withScope } from '@lib/scope/ScopeHOCs.tsx';
+import { widget } from '@lib/scope/ScopeHOCs.tsx';
 
-const NotificationsWidget = withScope(() => {
+const NotificationsWidget = widget(() => {
   const messageService = useDependency(INotificationServiceKey.resolve);
   const message = useObservable(() => messageService.getMessage$(), undefined, [messageService]);
   return <div>{message}</div>;
-}, ScopeProps.widget('NotificationsWidget'));
+}, 'NotificationsWidget');
 
 export default NotificationsWidget;

@@ -4,9 +4,9 @@ import TextField from '@ui/textField/TextField.tsx';
 import { useAsyncEventHandler } from '@lib/scope/useQuery.ts';
 import { ITodoServiceKey } from './TodoService.ts';
 import { useDependency } from '@lib/scope/ScopeContext.ts';
-import { ScopeProps, withScope } from '@lib/scope/ScopeHOCs.tsx';
+import { widget } from '@lib/scope/ScopeHOCs.tsx';
 
-const AddTodoFormWidget = withScope(() => {
+const AddTodoFormWidget = widget(() => {
   const todoService = useDependency(ITodoServiceKey.resolve);
   const [title, setTitle] = useState('');
   const resetForm = useCallback(() => setTitle(''), []);
@@ -26,6 +26,6 @@ const AddTodoFormWidget = withScope(() => {
       <Button type="submit">Add</Button>
     </form>
   );
-}, ScopeProps.widget('AddTodoFormWidget'));
+}, 'AddTodoFormWidget');
 
 export default AddTodoFormWidget;

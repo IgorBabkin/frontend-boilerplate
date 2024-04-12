@@ -1,13 +1,13 @@
 import AddTodoFormWidget from '../widgets/todo/AddTodoFormWidget.tsx';
-import { ScopeProps, withScope } from '@lib/scope/ScopeHOCs.tsx';
+import { page } from '@lib/scope/ScopeHOCs.tsx';
 
-const CreateTodoPage = withScope(() => {
+const CreateTodoPage = page(() => {
   return (
     <div>
       <h3>CreateTodo</h3>
       <AddTodoFormWidget />
     </div>
   );
-}, ScopeProps.page('CreateTodoPage'));
+}, 'CreateTodoPage');
 
 export default CreateTodoPage;

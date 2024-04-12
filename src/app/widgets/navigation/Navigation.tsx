@@ -1,7 +1,7 @@
 import NavMenu from '@ui/navigation/NavMenu.tsx';
 import NavLink from '@ui/navigation/NavLink.tsx';
 
-export const NavigationWidget = () => {
+export const Navigation = () => {
   return (
     <NavMenu>
       <NavLink to="/">Home</NavLink>
@@ -10,4 +10,4 @@ export const NavigationWidget = () => {
   );
 };
 
-export default NavigationWidget;
+export default Navigation;

@@ -2,7 +2,7 @@ import { FC, PropsWithChildren } from 'react';
 import Scope, { IScopeProps } from '@lib/scope/Scope.tsx';
 import { IContainer } from 'ts-ioc-container';
 
-export const withScope = <Props,>(Component: FC<Props>, scopeProps: IScopeProps = {}) => {
+const withScope = <Props,>(Component: FC<Props>, scopeProps: IScopeProps = {}) => {
   return (props: PropsWithChildren<Props>) => (
     <Scope {...scopeProps}>
       <Component {...props} />
@@ -10,8 +10,11 @@ export const withScope = <Props,>(Component: FC<Props>, scopeProps: IScopeProps 
   );
 };
 
-export const ScopeProps = {
-  widget: (...tags: string[]) => ({ tags: ['widget', ...tags].join(',') }),
-  application: (fallback: (tags: string[]) => IContainer) => ({ tags: 'application', fallback }),
-  page: (...tags: string[]) => ({ tags: ['page', ...tags].join(',') }),
-};
+export const widget = <Props,>(Component: FC<Props>, ...tags: string[]) =>
+  withScope(Component, { tags: ['widget', ...tags].join(',') });
+
+export const page = <Props,>(Component: FC<Props>, ...tags: string[]) =>
+  withScope(Component, { tags: ['page', ...tags].join(',') });
+
+export const application = <Props,>(Component: FC<Props>, fallback: (tags: string[]) => IContainer) =>
+  withScope(Component, { tags: 'application', fallback });
