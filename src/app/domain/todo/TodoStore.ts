@@ -7,8 +7,8 @@ import { accessor } from '@lib/container/utils.ts';
 
 export const ITodoStoreKey = accessor<TodoStore>(Symbol('ITodoStore'));
 
-@register(ITodoStoreKey.register)
-@provider(scope(Scope.application), singleton())
+@register(ITodoStoreKey.register, scope(Scope.application))
+@provider(singleton())
 export class TodoStore {
   private list$ = new ObservableList<ITodo>([]);
 

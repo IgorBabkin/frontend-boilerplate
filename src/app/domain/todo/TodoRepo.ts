@@ -8,8 +8,8 @@ import { accessor } from '@lib/container/utils.ts';
 
 export const ITodoRepoKey = accessor<TodoRepo>(Symbol('ITodoRepo'));
 
-@register(ITodoRepoKey.register)
-@provider(scope(Scope.application), singleton())
+@register(ITodoRepoKey.register, scope(Scope.application))
+@provider(singleton())
 export class TodoRepo {
   static toDomain(todo: TodoDTO): ITodo {
     return {

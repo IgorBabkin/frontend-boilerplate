@@ -1,5 +1,5 @@
 import { inject, key, provider, register, scope, singleton } from 'ts-ioc-container';
-import { Scope } from '../../../lib/scope/container.ts';
+import { Scope } from '@lib/scope/container.ts';
 import { type IErrorBus, IErrorBusKey } from './ErrorBus.ts';
 
 export const IErrorHandlerKey = Symbol('IErrorHandler');
@@ -8,8 +8,8 @@ export interface IErrorHandler {
   handle(fn: () => Promise<void>): void;
 }
 
-@register(key(IErrorHandlerKey))
-@provider(scope(Scope.application), singleton())
+@register(key(IErrorHandlerKey), scope(Scope.application))
+@provider(singleton())
 export class ErrorHandler implements IErrorHandler {
   constructor(@inject(IErrorBusKey.resolve) private errorBus$: IErrorBus) {}
 

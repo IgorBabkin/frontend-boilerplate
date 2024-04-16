@@ -22,8 +22,8 @@ export interface ITodoService {
 
 export const ITodoServiceKey = accessor<ITodoService>(Symbol('ITodoService'));
 
-@register(ITodoServiceKey.register)
-@provider(service, scope(Scope.application), singleton())
+@register(ITodoServiceKey.register, scope(Scope.application))
+@provider(service, singleton())
 export class TodoService implements IResource, ITodoService {
   resource = 'todo';
 

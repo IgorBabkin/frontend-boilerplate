@@ -17,8 +17,8 @@ export interface INotificationService {
 
 export const INotificationServiceKey = accessor<INotificationService>(Symbol('INotificationService'));
 
-@register(INotificationServiceKey.register)
-@provider(service, scope(Scope.application), singleton())
+@register(INotificationServiceKey.register, scope(Scope.application))
+@provider(service, singleton())
 export class NotificationService implements INotificationService {
   constructor(@inject(INotificationStoreKey.resolve) private notificationStore: NotificationStore) {}
 

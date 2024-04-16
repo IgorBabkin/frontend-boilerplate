@@ -5,8 +5,8 @@ import { Scope } from '@lib/scope/container.ts';
 
 export const INotificationStoreKey = accessor<NotificationStore>(Symbol('INotificationStore'));
 
-@register(INotificationStoreKey.register)
-@provider(scope(Scope.application), singleton())
+@register(INotificationStoreKey.register, scope(Scope.application))
+@provider(singleton())
 export class NotificationStore {
   private messages = new ObservableStore<string | undefined>(undefined);
 

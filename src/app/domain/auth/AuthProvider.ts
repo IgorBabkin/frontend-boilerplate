@@ -6,8 +6,8 @@ import { accessor } from '@lib/container/utils.ts';
 
 export const IAuthProviderKey = accessor<AuthProvider>(Symbol('IAuthProvider'));
 
-@register(IAuthProviderKey.register)
-@provider(scope(Scope.application), singleton())
+@register(IAuthProviderKey.register, scope(Scope.application))
+@provider(singleton())
 export class AuthProvider {
   constructor(@inject(IAuthClientKey.resolve) private authClient: AuthClient) {}
 

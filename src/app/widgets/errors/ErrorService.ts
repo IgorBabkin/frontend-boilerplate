@@ -14,8 +14,8 @@ export interface IErrorService {
 
 export const error$: ArgsFn = (c: IContainer) => [IErrorServiceKey.resolve(c).getError$()];
 
-@register(IErrorServiceKey.register)
-@provider(service, scope(Scope.application), singleton())
+@register(IErrorServiceKey.register, scope(Scope.application))
+@provider(service, singleton())
 export class ErrorService implements IErrorService {
   constructor(@inject(IErrorBusKey.resolve) private errorBus: IErrorBus) {}
 

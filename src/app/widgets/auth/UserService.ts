@@ -25,8 +25,8 @@ export const IUserServiceKey = accessor<IUserService>(Symbol('IUserService'));
 
 export const isUserLoaded$: ArgsFn = (c) => [IUserServiceKey.resolve(c).hasUser$()];
 
-@register(IUserServiceKey.register)
-@provider(service, scope(Scope.application), singleton())
+@register(IUserServiceKey.register, scope(Scope.application))
+@provider(service, singleton())
 export class UserService implements IUserService {
   constructor(
     @inject(IUserStoreKey.resolve) private userStore: UserStore,

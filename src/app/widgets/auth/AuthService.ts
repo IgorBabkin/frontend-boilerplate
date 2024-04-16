@@ -13,8 +13,8 @@ export interface IAuthService {
 
 export const IAuthServiceKey = accessor<IAuthService>(Symbol('IAuthService'));
 
-@register(IAuthServiceKey.register)
-@provider(service, scope(Scope.application), singleton())
+@register(IAuthServiceKey.register, scope(Scope.application))
+@provider(service, singleton())
 export class AuthService implements IAuthService {
   constructor(
     @inject(IAuthProviderKey.resolve) private authProvider: AuthProvider,

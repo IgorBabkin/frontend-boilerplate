@@ -12,10 +12,6 @@ export class ServiceProvider<T> extends ProviderDecorator<T> {
     super(provider);
   }
 
-  clone(): IProvider<T> {
-    return new ServiceProvider(this.provider.clone());
-  }
-
   resolve(container: IContainer, ...args: unknown[]): T {
     const instance: T = this.provider.resolve(container, ...args);
     if (isClassInstance(instance)) {

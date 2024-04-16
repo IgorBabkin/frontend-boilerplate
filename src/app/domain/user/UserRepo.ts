@@ -7,8 +7,8 @@ import { UserPermissions } from './IPermissions.ts';
 
 export const IUserRepoKey = Symbol('IUserRepo');
 
-@register(key(IUserRepoKey))
-@provider(scope(Scope.application), singleton())
+@register(key(IUserRepoKey), scope(Scope.application))
+@provider(singleton())
 export class UserRepo {
   static toDomain(user: UserDTO): IUser {
     return {
