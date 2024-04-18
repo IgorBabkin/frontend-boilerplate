@@ -16,11 +16,11 @@ export enum CommandAlias {
 }
 
 export const byComponentAliases = {
-  onMount: by.aliases((aliases) => aliases.includes(ComponentAlias.onMount)),
+  onMount: by.aliases((aliases) => aliases.has(ComponentAlias.onMount)),
 };
 
 export const byCommandAliases = {
-  onBeforeExecution: by.aliases((aliases) => aliases.includes(CommandAlias.onBeforeExecution)),
+  onBeforeExecution: by.aliases((aliases) => aliases.has(CommandAlias.onBeforeExecution)),
 };
 
 export const parentOnly = ({ isParent }: { isParent: boolean }) => isParent;

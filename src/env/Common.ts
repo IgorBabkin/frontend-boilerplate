@@ -23,27 +23,22 @@ import { AuthService } from '@widgets/auth/AuthService.ts';
 export class Common implements IContainerModule {
   applyTo(container: IContainer): void {
     container
-      .addRegistration(R.fromValue(new Subject()).to(IErrorBusKey.key))
-      .addRegistration(R.fromClass(TodoStore))
-      .addRegistration(R.fromClass(UserStore))
-      .addRegistration(R.fromClass(ServiceMediator))
-      .addRegistration(R.fromClass(CheckPermission))
-      .addRegistration(R.fromClass(ErrorHandler))
-      .addRegistration(R.fromClass(TodoRepo))
-      .addRegistration(R.fromClass(UserRepo))
-      .addRegistration(R.fromClass(AuthProvider))
-      .addRegistration(R.fromClass(TodoService))
-      .addRegistration(R.fromClass(UserService))
-      .addRegistration(R.fromClass(NotificationService))
-      .addRegistration(R.fromClass(ErrorService))
-      .addRegistration(R.fromClass(NotificationStore))
-      .addRegistration(R.fromClass(AuthService))
-      .addRegistration(R.fromValue(new Context(new ApiClient('someToken'))).to(IApiClientKey.key))
-      .addRegistration(
-        R.fromClass(AuthClient)
-          .to(IAuthClientKey.key)
-          .pipe(singleton())
-          .setScopePredicate(hasTags.every('application')),
-      );
+      .add(R.fromValue(new Subject()).to(IErrorBusKey.key))
+      .add(R.fromClass(TodoStore))
+      .add(R.fromClass(UserStore))
+      .add(R.fromClass(ServiceMediator))
+      .add(R.fromClass(CheckPermission))
+      .add(R.fromClass(ErrorHandler))
+      .add(R.fromClass(TodoRepo))
+      .add(R.fromClass(UserRepo))
+      .add(R.fromClass(AuthProvider))
+      .add(R.fromClass(TodoService))
+      .add(R.fromClass(UserService))
+      .add(R.fromClass(NotificationService))
+      .add(R.fromClass(ErrorService))
+      .add(R.fromClass(NotificationStore))
+      .add(R.fromClass(AuthService))
+      .add(R.fromValue(new Context(new ApiClient('someToken'))).to(IApiClientKey.key))
+      .add(R.fromClass(AuthClient).to(IAuthClientKey.key).pipe(singleton()).when(hasTags.every('application')));
   }
 }
