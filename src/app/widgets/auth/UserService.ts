@@ -1,4 +1,4 @@
-import { ArgsFn, by, inject, provider, register, scope, singleton } from 'ts-ioc-container';
+import { ArgsFn, by, inject, register, scope, singleton } from 'ts-ioc-container';
 import { IUserStoreKey, UserStore } from '@domain/user/UserStore.ts';
 import { IUserRepoKey, UserRepo } from '@domain/user/UserRepo.ts';
 import { action, query } from '@lib/mediator/ICommand.ts';
@@ -25,8 +25,7 @@ export const IUserServiceKey = accessor<IUserService>(Symbol('IUserService'));
 
 export const isUserLoaded$: ArgsFn = (c) => [IUserServiceKey.resolve(c).hasUser$()];
 
-@register(IUserServiceKey.register, scope(Scope.application))
-@provider(service, singleton())
+@register(IUserServiceKey.register, scope(Scope.application), service, singleton())
 export class UserService implements IUserService {
   constructor(
     @inject(IUserStoreKey.resolve) private userStore: UserStore,

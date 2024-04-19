@@ -1,4 +1,4 @@
-import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
+import { inject, register, scope, singleton } from 'ts-ioc-container';
 import { AuthProvider, IAuthProviderKey } from '@domain/auth/AuthProvider.ts';
 import { Context } from '@lib/scope/Context.ts';
 import { ApiClient, IApiClientKey } from '../../api/ApiClient.ts';
@@ -13,8 +13,7 @@ export interface IAuthService {
 
 export const IAuthServiceKey = accessor<IAuthService>(Symbol('IAuthService'));
 
-@register(IAuthServiceKey.register, scope(Scope.application))
-@provider(service, singleton())
+@register(IAuthServiceKey.register, scope(Scope.application), service, singleton())
 export class AuthService implements IAuthService {
   constructor(
     @inject(IAuthProviderKey.resolve) private authProvider: AuthProvider,

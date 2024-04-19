@@ -1,4 +1,4 @@
-import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
+import { inject, register, scope, singleton } from 'ts-ioc-container';
 import { ITodoStoreKey, TodoStore } from '@domain/todo/TodoStore.ts';
 import { ITodoRepoKey, TodoRepo } from '@domain/todo/TodoRepo.ts';
 import { action, query } from '@lib/mediator/ICommand.ts';
@@ -22,8 +22,7 @@ export interface ITodoService {
 
 export const ITodoServiceKey = accessor<ITodoService>(Symbol('ITodoService'));
 
-@register(ITodoServiceKey.register, scope(Scope.application))
-@provider(service, singleton())
+@register(ITodoServiceKey.register, scope(Scope.application), service, singleton())
 export class TodoService implements IResource, ITodoService {
   resource = 'todo';
 

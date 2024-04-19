@@ -1,11 +1,11 @@
-import { IContainer, IProvider, ProviderDecorator } from 'ts-ioc-container';
+import { IContainer, IProvider, markAsProvider, ProviderDecorator } from 'ts-ioc-container';
 import { getActions, getQuery, isClassInstance } from './ICommand.ts';
 import { IServiceMediatorKey } from './ServiceMediator.ts';
 import { initialize } from '@lib/mediator/OnInit.ts';
 import { createSubscriptions } from '@lib/mediator/Subscriber.ts';
 import { invokeCondition } from '@lib/mediator/Condition.ts';
 
-export const service = <T>(provider: IProvider<T>) => new ServiceProvider(provider);
+export const service = markAsProvider(<T>(provider: IProvider<T>) => new ServiceProvider(provider));
 
 export class ServiceProvider<T> extends ProviderDecorator<T> {
   constructor(private provider: IProvider<T>) {

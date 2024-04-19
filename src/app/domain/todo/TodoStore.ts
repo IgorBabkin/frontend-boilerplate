@@ -1,4 +1,4 @@
-import { provider, register, scope, singleton } from 'ts-ioc-container';
+import { register, scope, singleton } from 'ts-ioc-container';
 import { ObservableList } from '@lib/observable/ObservableList.ts';
 import { Observable } from 'rxjs';
 import { Scope } from '@lib/scope/container.ts';
@@ -7,8 +7,7 @@ import { accessor } from '@lib/container/utils.ts';
 
 export const ITodoStoreKey = accessor<TodoStore>(Symbol('ITodoStore'));
 
-@register(ITodoStoreKey.register, scope(Scope.application))
-@provider(singleton())
+@register(ITodoStoreKey.register, scope(Scope.application), singleton())
 export class TodoStore {
   private list$ = new ObservableList<ITodo>([]);
 
