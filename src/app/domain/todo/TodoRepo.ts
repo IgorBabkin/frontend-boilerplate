@@ -1,6 +1,6 @@
 import { ITodo } from './ITodo.ts';
 import { mapNetworkError } from '../../api/mapApiToDomainError.ts';
-import { inject, register, scope, singleton } from 'ts-ioc-container';
+import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@lib/scope/container.ts';
 import { ApiClient, IApiClientKey, TodoDTO } from '../../api/ApiClient.ts';
 import { Context } from '@lib/scope/Context.ts';
@@ -8,7 +8,8 @@ import { accessor } from '@lib/container/utils.ts';
 
 export const ITodoRepoKey = accessor<TodoRepo>(Symbol('ITodoRepo'));
 
-@register(ITodoRepoKey.register, scope(Scope.application), singleton())
+@register(ITodoRepoKey.register, scope(Scope.application))
+@provider(singleton())
 export class TodoRepo {
   static toDomain(todo: TodoDTO): ITodo {
     return {

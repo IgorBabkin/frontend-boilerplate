@@ -1,12 +1,13 @@
 import { IGuard } from '@lib/mediator/ICommand.ts';
 import { IResource, isResource } from '@domain/user/IResource.ts';
-import { alias, inject, register, scope, singleton } from 'ts-ioc-container';
+import { alias, inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { IUserStoreKey, UserStore } from '@domain/user/UserStore.ts';
 import { Permission } from '@domain/user/IPermissions.ts';
 import { CommandAlias, Scope } from '@lib/scope/container.ts';
 import { getMethodMetadata, setMethodMetadata } from '@lib/hook.ts';
 
-@register(alias(CommandAlias.onBeforeExecution), scope(Scope.application), singleton())
+@register(alias(CommandAlias.onBeforeExecution), scope(Scope.application))
+@provider(singleton())
 export class CheckPermission implements IGuard {
   constructor(@inject(IUserStoreKey.resolve) private userStore: UserStore) {}
 

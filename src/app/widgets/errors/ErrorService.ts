@@ -1,4 +1,4 @@
-import { ArgsFn, IContainer, inject, register, scope, singleton } from 'ts-ioc-container';
+import { ArgsFn, IContainer, inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { type IErrorBus, IErrorBusKey } from '@domain/errors/ErrorBus.ts';
 import { Observable } from 'rxjs';
 import { query } from '@lib/mediator/ICommand.ts';
@@ -14,7 +14,8 @@ export interface IErrorService {
 
 export const error$: ArgsFn = (c: IContainer) => [IErrorServiceKey.resolve(c).getError$()];
 
-@register(IErrorServiceKey.register, scope(Scope.application), service, singleton())
+@register(IErrorServiceKey.register, scope(Scope.application))
+@provider(service, singleton())
 export class ErrorService implements IErrorService {
   constructor(@inject(IErrorBusKey.resolve) private errorBus: IErrorBus) {}
 

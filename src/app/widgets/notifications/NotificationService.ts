@@ -1,5 +1,5 @@
 import { accessor } from '@lib/container/utils.ts';
-import { inject, register, scope, singleton } from 'ts-ioc-container';
+import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { action } from '@lib/mediator/ICommand.ts';
 import { DomainError } from '@domain/errors/DomainError.ts';
 import { INotificationStoreKey, NotificationStore } from './NotificationStore.ts';
@@ -17,7 +17,8 @@ export interface INotificationService {
 
 export const INotificationServiceKey = accessor<INotificationService>(Symbol('INotificationService'));
 
-@register(INotificationServiceKey.register, scope(Scope.application), service, singleton())
+@register(INotificationServiceKey.register, scope(Scope.application))
+@provider(service, singleton())
 export class NotificationService implements INotificationService {
   constructor(@inject(INotificationStoreKey.resolve) private notificationStore: NotificationStore) {}
 
