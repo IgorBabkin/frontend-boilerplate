@@ -1,5 +1,5 @@
-import { sleep } from '@lib/utils.ts';
 import { accessor } from '@lib/container/utils.ts';
+import { ApiClient } from '@ibabkin/backend-template';
 
 export interface TodoDTO {
   id: string;
@@ -12,23 +12,3 @@ export interface UserDTO {
 }
 
 export const IApiClientKey = accessor<ApiClient>(Symbol('IApiClient'));
-
-export class ApiClient {
-  constructor(private token: string) {}
-
-  async getUser(): Promise<UserDTO> {
-    console.log('getting user...', this.token);
-    await sleep(1000);
-    return { nickname: 'ironman', permissions: { todo: ['read', 'write'] } };
-  }
-
-  async getTodos(): Promise<TodoDTO[]> {
-    console.log('getting todos...', this.token);
-    await sleep(1000);
-    return [
-      { id: '1', name: 'Buy milk' },
-      { id: '2', name: 'Buy bread' },
-      { id: '3', name: 'Buy butter' },
-    ];
-  }
-}

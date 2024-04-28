@@ -6,8 +6,8 @@ import { Permission } from '@domain/user/IPermissions.ts';
 import { CommandAlias, Scope } from '@lib/scope/container.ts';
 import { getMethodMetadata, setMethodMetadata } from '@lib/hook.ts';
 
-@register(alias(CommandAlias.onBeforeExecution), scope(Scope.application))
-@provider(singleton())
+@register(scope(Scope.application))
+@provider(singleton(), alias(CommandAlias.onBeforeExecution))
 export class CheckPermission implements IGuard {
   constructor(@inject(IUserStoreKey.resolve) private userStore: UserStore) {}
 

@@ -1,7 +1,4 @@
-import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
-import { AuthProvider, IAuthProviderKey } from '@domain/auth/AuthProvider.ts';
-import { Context } from '@lib/scope/Context.ts';
-import { ApiClient, IApiClientKey } from '../../api/ApiClient.ts';
+import { provider, register, scope, singleton } from 'ts-ioc-container';
 import { accessor } from '@lib/container/utils.ts';
 import { service } from '@lib/mediator/ServiceProvider.ts';
 import { Scope } from '@lib/scope/container.ts';
@@ -16,14 +13,11 @@ export const IAuthServiceKey = accessor<IAuthService>(Symbol('IAuthService'));
 @register(IAuthServiceKey.register, scope(Scope.application))
 @provider(service, singleton())
 export class AuthService implements IAuthService {
-  constructor(
-    @inject(IAuthProviderKey.resolve) private authProvider: AuthProvider,
-    @inject(IApiClientKey.resolve) private apiClientContext: Context<ApiClient>,
-  ) {}
+  constructor() {} // @inject(IApiClientKey.resolve) private apiClientContext: Context<ApiClient>, // @inject(IAuthProviderKey.resolve) private authProvider: AuthProvider,
 
   @action
   async login(): Promise<void> {
-    const token = await this.authProvider.login('ironman@marvel.com', '12345');
-    this.apiClientContext.setValue(new ApiClient(token));
+    // const token = await this.authProvider.login('ironman@marvel.com', '12345');
+    // this.apiClientContext.setValue(new ApiClient(token));
   }
 }

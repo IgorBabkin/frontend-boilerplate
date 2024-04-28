@@ -7,20 +7,33 @@ import { ServiceMediator } from '@lib/mediator/ServiceMediator.ts';
 import { CheckPermission } from '@widgets/auth/CheckPermission.ts';
 import { ErrorHandler } from '@domain/errors/IErrorHandler.ts';
 import { TodoRepo } from '@domain/todo/TodoRepo.ts';
-import { hasTags } from '@lib/scope/container.ts';
+import { hasTags, Scope } from '@lib/scope/container.ts';
 import { UserRepo } from '@domain/user/UserRepo.ts';
 import { AuthClient, IAuthClientKey } from '../app/api/AuthClient.ts';
-import { Context } from '@lib/scope/Context.ts';
 import { AuthProvider } from '@domain/auth/AuthProvider.ts';
-import { ApiClient, IApiClientKey } from '../app/api/ApiClient.ts';
+import { IApiClientKey } from '../app/api/ApiClient.ts';
 import { TodoService } from '@widgets/todo/TodoService.ts';
 import { UserService } from '@widgets/auth/UserService.ts';
 import { ErrorService } from '@widgets/errors/ErrorService.ts';
 import { NotificationStore } from '@widgets/notifications/NotificationStore.ts';
 import { NotificationService } from '@widgets/notifications/NotificationService.ts';
 import { AuthService } from '@widgets/auth/AuthService.ts';
+import { ApiClient } from '@ibabkin/backend-template';
+import axios from 'axios';
+import { IEnv } from '../env/IEnv.ts';
 
 export class Common implements IContainerModule {
+  private apiClient = new ApiClient(
+    axios.create({
+      baseURL: this.env.apiBaseUrl,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }),
+  );
+
+  constructor(private env: IEnv) {}
+
   applyTo(container: IContainer): void {
     container
       .add(R.fromValue(new Subject()).to(IErrorBusKey.key))
@@ -38,7 +51,7 @@ export class Common implements IContainerModule {
       .add(R.fromClass(ErrorService))
       .add(R.fromClass(NotificationStore))
       .add(R.fromClass(AuthService))
-      .add(R.fromValue(new Context(new ApiClient('someToken'))).to(IApiClientKey.key))
+      .add(R.fromValue(this.apiClient).to(IApiClientKey.key).when(Scope.application))
       .add(R.fromClass(AuthClient).to(IAuthClientKey.key).pipe(singleton()).when(hasTags.every('application')));
   }
 }
