@@ -1,11 +1,16 @@
 import { PropsWithChildren } from 'react';
 
 interface ButtonProps {
-  type: 'submit';
+  type: 'submit' | 'button';
+  onClick?: () => void;
 }
 
-function Button({ children, type }: PropsWithChildren<ButtonProps>) {
-  return <button type={type}>{children}</button>;
+function Button({ children, type, onClick }: PropsWithChildren<ButtonProps>) {
+  return (
+    <button type={type} onClick={onClick}>
+      {children}
+    </button>
+  );
 }
 
 export default Button;

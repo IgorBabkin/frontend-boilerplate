@@ -24,4 +24,13 @@ export class TodoRepo {
     const todos = await this.apiClient.listTodo({});
     return todos.map(TodoRepo.toDomain);
   }
+
+  async createTodo({ title, description }: { description: string; title: string }) {
+    const todo = await this.apiClient.addTodo({ body: { title, description } });
+    return TodoRepo.toDomain(todo);
+  }
+
+  async deleteTodo(id: string) {
+    await this.apiClient.deleteTodo({ params: { id } });
+  }
 }

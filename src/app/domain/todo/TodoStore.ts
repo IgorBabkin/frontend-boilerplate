@@ -23,4 +23,8 @@ export class TodoStore {
   addTodo(payload: ITodo): void {
     this.list$.add(payload);
   }
+
+  deleteTodo(id: string) {
+    this.list$.delete(id);
+  }
 }

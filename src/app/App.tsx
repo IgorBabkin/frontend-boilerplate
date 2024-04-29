@@ -7,7 +7,6 @@ import { Common } from '../stages/Common.ts';
 import Navigation from '@widgets/navigation/Navigation.tsx';
 import { ProcessEnv } from '../env/ProcessEnv.ts';
 
-console.log('import.meta', import.meta.env);
 const env = ProcessEnv.parse(import.meta.env);
 const createContainer = (tags: string[]) => new Container(new MetadataInjector(), { tags }).use(new Common(env));
 

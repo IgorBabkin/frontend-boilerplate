@@ -18,6 +18,8 @@ export interface ITodoService {
   loadTodoList(): Promise<void>;
 
   getTodoList$(): Observable<ITodo[]>;
+
+  deleteTodo(id: string): Promise<void>;
 }
 
 export const ITodoServiceKey = accessor<ITodoService>(Symbol('ITodoService'));
@@ -35,7 +37,8 @@ export class TodoService implements IResource, ITodoService {
   @action
   @permission('write')
   async addTodo(payload: string): Promise<void> {
-    this.todoStore.addTodo({ id: Date.now().toString(), title: payload });
+    const todo = await this.todoRepo.createTodo({ title: payload, description: '' });
+    this.todoStore.addTodo(todo);
   }
 
   @action
@@ -48,5 +51,11 @@ export class TodoService implements IResource, ITodoService {
 
   @query getTodoList$(): Observable<ITodo[]> {
     return this.todoStore.getList$();
+  }
+
+  @action
+  async deleteTodo(id: string): Promise<void> {
+    await this.todoRepo.deleteTodo(id);
+    this.todoStore.deleteTodo(id);
   }
 }

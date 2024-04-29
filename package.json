@@ -24,7 +24,7 @@
     ]
   },
   "dependencies": {
-    "@ibabkin/backend-template": "^1.1.0",
+    "@ibabkin/backend-template": "^1.2.3",
     "@ibabkin/utils": "^0.1.0",
     "axios": "^1.6.8",
     "cors": "^2.8.5",
