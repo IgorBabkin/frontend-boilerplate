@@ -1,4 +1,4 @@
-import { IContainer, IProvider, ProviderDecorator } from 'ts-ioc-container';
+import { IContainer, InstantDependencyOptions, IProvider, ProviderDecorator } from 'ts-ioc-container';
 import { getActions, getQuery, isClassInstance } from './ICommand.ts';
 import { IServiceMediatorKey } from './ServiceMediator.ts';
 import { initialize } from '@lib/mediator/OnInit.ts';
@@ -12,8 +12,8 @@ export class ServiceProvider<T> extends ProviderDecorator<T> {
     super(provider);
   }
 
-  resolve(container: IContainer, ...args: unknown[]): T {
-    const instance: T = this.provider.resolve(container, ...args);
+  resolveInstantly(container: IContainer, options: InstantDependencyOptions): T {
+    const instance: T = this.provider.resolve(container, options);
     if (isClassInstance(instance)) {
       const result = this.proxyService(instance, container);
 

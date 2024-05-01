@@ -1,4 +1,4 @@
-import { IContainer, IProvider, ProviderDecorator } from 'ts-ioc-container';
+import { IContainer, IProvider, InstantDependencyOptions, ProviderDecorator } from 'ts-ioc-container';
 import { mapNetworkError } from './mapApiToDomainError.ts';
 
 export class RepositoryProvider extends ProviderDecorator<object> {
@@ -6,8 +6,8 @@ export class RepositoryProvider extends ProviderDecorator<object> {
     super(provider);
   }
 
-  resolve(container: IContainer, ...args: unknown[]): object {
-    const instance = this.provider.resolve(container, ...args);
+  resolveInstantly(container: IContainer, options: InstantDependencyOptions): object {
+    const instance = this.provider.resolve(container, options);
     return new Proxy(instance, {
       get(target, prop) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
