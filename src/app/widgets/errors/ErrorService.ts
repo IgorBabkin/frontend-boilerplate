@@ -3,8 +3,8 @@ import { type IErrorBus, IErrorBusKey } from '@domain/errors/ErrorBus.ts';
 import { Observable } from 'rxjs';
 import { query } from '@lib/mediator/ICommand.ts';
 import { Scope } from '@lib/scope/container.ts';
-import { service } from '@lib/mediator/ServiceProvider.ts';
 import { accessor } from '@lib/container/utils.ts';
+import { service } from '@lib/mediator/ServiceMediator.ts';
 
 export const IErrorServiceKey = accessor<IErrorService>(Symbol('IErrorService'));
 

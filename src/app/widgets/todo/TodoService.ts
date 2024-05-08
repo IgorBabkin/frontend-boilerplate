@@ -7,13 +7,17 @@ import { ITodo } from '@domain/todo/ITodo.ts';
 import { Scope } from '@lib/scope/container.ts';
 import { IResource } from '@domain/user/IResource.ts';
 import { permission } from '../auth/CheckPermission.ts';
-import { service } from '@lib/mediator/ServiceProvider.ts';
 import { accessor } from '@lib/container/utils.ts';
-import { when } from '@lib/mediator/Condition.ts';
 import { isUserLoaded$ } from '../auth/UserService.ts';
+import { service } from '@lib/mediator/ServiceMediator.ts';
+import { INotificationStoreKey, NotificationStore } from '@widgets/notifications/NotificationStore.ts';
+
+import { when } from '@lib/initialize/strategies.ts';
+
+import { onStart } from '@lib/initialize/OnInit.ts';
 
 export interface ITodoService {
-  addTodo(payload: string): Promise<void>;
+  addTodo(payload: string): Promise<ITodo>;
 
   loadTodoList(): Promise<void>;
 
@@ -32,18 +36,21 @@ export class TodoService implements IResource, ITodoService {
   constructor(
     @inject(ITodoStoreKey.resolve) private todoStore: TodoStore,
     @inject(ITodoRepoKey.resolve) private todoRepo: TodoRepo,
+    @inject(INotificationStoreKey.resolve) private notificationStore: NotificationStore,
   ) {}
 
   @action
   @permission('write')
-  async addTodo(payload: string): Promise<void> {
+  async addTodo(payload: string): Promise<ITodo> {
     const todo = await this.todoRepo.createTodo({ title: payload, description: '' });
     this.todoStore.addTodo(todo);
+    this.notificationStore.pushMessage('Todo added');
+    return todo;
   }
 
   @action
-  @when(isUserLoaded$)
   @permission('read')
+  @onStart(when(isUserLoaded$))
   async loadTodoList(): Promise<void> {
     const todos = await this.todoRepo.fetchTodos();
     this.todoStore.setList(todos);

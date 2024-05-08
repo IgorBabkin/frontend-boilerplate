@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
-import { useDependency } from './ScopeContext.ts';
-import { IErrorBusKey } from '../../app/domain/errors/ErrorBus.ts';
+import { IErrorBusKey } from '@domain/errors/ErrorBus.ts';
+import { useDependency } from '@lib/scope/Scope.tsx';
 
 export const useAsyncEffect = (fn: () => Promise<void>, deps: unknown[]) => {
   const errorBus$ = useDependency(IErrorBusKey.resolve);

@@ -15,13 +15,17 @@ export class RepositoryProvider extends ProviderDecorator<object> {
         const value = target[prop];
         if (value instanceof Function) {
           return function (...args: unknown[]) {
-            const result = value.apply(target, args);
-            if (result instanceof Promise) {
-              return result.catch((e) =>
-                mapNetworkError(e, { method: prop.toString(), target: target.constructor.name }),
-              );
+            try {
+              const result = value.apply(target, args);
+              if (result instanceof Promise) {
+                return result.catch((e) =>
+                  mapNetworkError(e, { method: prop.toString(), target: target.constructor.name }),
+                );
+              }
+              return result;
+            } catch (e) {
+              throw mapNetworkError(e, { method: prop.toString(), target: target.constructor.name });
             }
-            return result;
           };
         }
         return value;

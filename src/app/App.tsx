@@ -1,7 +1,7 @@
 import './App.scss';
 import { Outlet } from 'react-router-dom';
 import NotificationsWidget from './widgets/notifications/NotificationsWidget.tsx';
-import { application } from '@lib/scope/ScopeHOCs.tsx';
+import { application } from '@lib/scope/components.tsx';
 import { Container, MetadataInjector } from 'ts-ioc-container';
 import { Common } from '../stages/Common.ts';
 import Navigation from '@widgets/navigation/Navigation.tsx';

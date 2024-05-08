@@ -1,4 +1,4 @@
-import { by, Tag, Tagged } from 'ts-ioc-container';
+import { byAliases, Tag, Tagged } from 'ts-ioc-container';
 
 export const hasTags = {
   every:
@@ -7,20 +7,12 @@ export const hasTags = {
       values.every((v) => c.hasTag(v)),
 };
 
-export enum ComponentAlias {
-  onMount = 'onComponentMount',
-}
-
 export enum CommandAlias {
   onBeforeExecution = 'onCommandBeforeExecution',
 }
 
-export const byComponentAliases = {
-  onMount: by.aliases((aliases) => aliases.has(ComponentAlias.onMount)),
-};
-
 export const byCommandAliases = {
-  onBeforeExecution: by.aliases((aliases) => aliases.has(CommandAlias.onBeforeExecution)),
+  onBeforeExecution: byAliases((aliases) => aliases.has(CommandAlias.onBeforeExecution)),
 };
 
 export const parentOnly = ({ isParent }: { isParent: boolean }) => isParent;

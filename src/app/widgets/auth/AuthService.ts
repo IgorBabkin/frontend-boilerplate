@@ -1,8 +1,8 @@
 import { provider, register, scope, singleton } from 'ts-ioc-container';
 import { accessor } from '@lib/container/utils.ts';
-import { service } from '@lib/mediator/ServiceProvider.ts';
 import { Scope } from '@lib/scope/container.ts';
 import { action } from '@lib/mediator/ICommand.ts';
+import { service } from '@lib/mediator/ServiceMediator.ts';
 
 export interface IAuthService {
   login(): Promise<void>;

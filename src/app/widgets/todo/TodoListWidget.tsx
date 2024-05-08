@@ -1,9 +1,9 @@
 import { ITodoServiceKey } from './TodoService.ts';
 import { useObservable } from '@lib/observable/observable.ts';
-import { useDependency } from '@lib/scope/ScopeContext.ts';
-import { widget } from '@lib/scope/ScopeHOCs.tsx';
+import { widget } from '@lib/scope/components.tsx';
 import Button from '@ui/button/Button.tsx';
 import { useAsyncEventHandler } from '@lib/scope/useQuery.ts';
+import { useDependency } from '@lib/scope/Scope.tsx';
 
 const TodoListWidget = widget(() => {
   const todoService = useDependency(ITodoServiceKey.resolve);

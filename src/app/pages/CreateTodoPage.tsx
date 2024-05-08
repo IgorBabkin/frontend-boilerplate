@@ -1,5 +1,5 @@
 import AddTodoFormWidget from '../widgets/todo/AddTodoFormWidget.tsx';
-import { page } from '@lib/scope/ScopeHOCs.tsx';
+import { page } from '@lib/scope/components.tsx';
 
 const CreateTodoPage = page(() => {
   return (
