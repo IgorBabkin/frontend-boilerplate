@@ -1,13 +1,19 @@
-import { IContainer, IProvider, InstantDependencyOptions, ProviderDecorator } from 'ts-ioc-container';
-import { mapNetworkError } from '../../app/api/mapApiToDomainError.ts';
+import { IContainer, InstantDependencyOptions, IProvider, ProviderDecorator } from 'ts-ioc-container';
+
+export type MapError = (error: unknown, context: { target: string; method: string }) => Error;
 
 export class RepositoryProvider extends ProviderDecorator<object> {
-  constructor(private provider: IProvider<object>) {
+  constructor(
+    private provider: IProvider<object>,
+    private mapNetworkError: MapError,
+  ) {
     super(provider);
   }
 
   resolveInstantly(container: IContainer, options: InstantDependencyOptions): object {
     const instance = this.provider.resolve(container, options);
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const self = this;
     return new Proxy(instance, {
       get(target, prop) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -19,12 +25,12 @@ export class RepositoryProvider extends ProviderDecorator<object> {
               const result = value.apply(target, args);
               if (result instanceof Promise) {
                 return result.catch((e) =>
-                  mapNetworkError(e, { method: prop.toString(), target: target.constructor.name }),
+                  self.mapNetworkError(e, { method: prop.toString(), target: target.constructor.name }),
                 );
               }
               return result;
             } catch (e) {
-              throw mapNetworkError(e, { method: prop.toString(), target: target.constructor.name });
+              throw self.mapNetworkError(e, { method: prop.toString(), target: target.constructor.name });
             }
           };
         }
@@ -34,4 +40,5 @@ export class RepositoryProvider extends ProviderDecorator<object> {
   }
 }
 
-export const repository = (provider: IProvider) => new RepositoryProvider(provider as IProvider<object>);
+export const repository = (mapError: MapError) => (provider: IProvider) =>
+  new RepositoryProvider(provider as IProvider<object>, mapError);

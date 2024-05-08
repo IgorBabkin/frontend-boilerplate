@@ -5,11 +5,12 @@ import { IApiClientKey } from '../../api/ApiClient.ts';
 import { accessor } from '@lib/container/utils.ts';
 import { ApiClient, Todo } from '@ibabkin/backend-template';
 import { repository } from '@lib/components/RepositoryProvider.ts';
+import { mapNetworkError } from '../../api/mapApiToDomainError.ts';
 
 export const ITodoRepoKey = accessor<TodoRepo>(Symbol('ITodoRepo'));
 
 @register(ITodoRepoKey.register, scope(Scope.application))
-@provider(repository, singleton())
+@provider(repository(mapNetworkError), singleton())
 export class TodoRepo {
   static toDomain(todo: Todo): ITodo {
     return {
