@@ -18,7 +18,7 @@ export interface INotificationService {
 
 export const INotificationServiceKey = accessor<INotificationService>(Symbol('INotificationService'));
 
-const messageLifeTime$ = (c: IContainer) =>
+const hideMessage$ = (c: IContainer) =>
   INotificationStoreKey.resolve(c)
     .getMessage$()
     .pipe(
@@ -45,7 +45,7 @@ export class NotificationService implements INotificationService {
   }
 
   @action
-  @onStart(subscribeOn(messageLifeTime$))
+  @onStart(subscribeOn(hideMessage$))
   clearMessages() {
     this.notificationStore.clearMessage();
   }

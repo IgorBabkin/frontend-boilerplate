@@ -3,7 +3,7 @@ import { initializedMetadata } from '@lib/initialize/Metadata.ts';
 import { Observable } from 'rxjs';
 import { IErrorBusKey } from '@domain/errors/ErrorBus.ts';
 import { promiseToObservable } from '@lib/observable/utils.ts';
-import { doIt, subscribe } from '@lib/initialize/strategies.ts';
+import { invokeExecution, subscribeToExecution } from '@lib/initialize/strategies.ts';
 import { handleArray, handlePromise, handleSubscription } from '@lib/initialize/resultHandlers.ts';
 
 export type Unsubscribe = () => void;
@@ -36,15 +36,15 @@ const handleResult = (result: unknown, context: ExecutionContext) => {
   thenArray({ then: thenPromise({ then: thenSubscription({}), restart }), restart })(result);
 };
 
-export const justInvoke = (context: ExecutionContext) => {
-  doIt({
+export const execute = (context: ExecutionContext) => {
+  invokeExecution({
     handleError: (e: Error, s: IContainer) => IErrorBusKey.resolve(s).next(e),
     handleResult,
   })(context);
 };
 
 export const subscribeOn = (create$?: (s: IContainer) => Observable<unknown>) =>
-  subscribe({
+  subscribeToExecution({
     create$,
     handleError: (e: Error, s: IContainer) => IErrorBusKey.resolve(s).next(e),
     handleResult,

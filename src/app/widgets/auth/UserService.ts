@@ -10,7 +10,7 @@ import { accessor } from '@lib/container/utils';
 import { isPresent } from '@lib/utils';
 import { service } from '@lib/components/ServiceProvider.ts';
 
-import { justInvoke, onStart } from '@lib/initialize/OnInit.ts';
+import { execute, onStart } from '@lib/initialize/OnInit.ts';
 
 export interface IUserService {
   loadUser(): Promise<void>;
@@ -35,7 +35,7 @@ export class UserService implements IUserService {
   ) {}
 
   @action
-  @onStart(justInvoke)
+  @onStart(execute)
   async loadUser(): Promise<void> {
     const user = await this.userRepo.fetchUser();
     this.userStore.setUser(user);

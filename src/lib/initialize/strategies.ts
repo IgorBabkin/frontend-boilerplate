@@ -3,7 +3,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { Unsubscribe } from '@lib/initialize/OnInit.ts';
 import { toObservable } from '@lib/observable/utils.ts';
 
-export const doIt =
+export const invokeExecution =
   ({
     handleError,
     handleResult,
@@ -21,7 +21,7 @@ export const doIt =
     }
   };
 
-export const subscribe =
+export const subscribeToExecution =
   ({
     create$,
     handleError,
