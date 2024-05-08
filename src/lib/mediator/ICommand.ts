@@ -1,4 +1,4 @@
-import { getHooks, hook } from '../hook.ts';
+import { getHooks, hook } from 'ts-ioc-container';
 
 export interface IGuard<TPayload = unknown> {
   execute(resource: TPayload, method: string): void;
