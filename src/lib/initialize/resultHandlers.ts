@@ -1,7 +1,7 @@
 import { ExecutionContext } from 'ts-ioc-container';
 import { IErrorBusKey } from '@domain/errors/ErrorBus.ts';
 import { Subscription } from 'rxjs';
-import { OnInit } from '@lib/initialize/OnInit.ts';
+import { initializedMetadata } from '@lib/initialize/Metadata.ts';
 
 type HandleResult = (result: unknown, context: ExecutionContext) => void;
 
@@ -25,7 +25,10 @@ const handleSubscription =
   ({ then = () => ({}) }: Pick<HandleContext, 'then'>) =>
   (result: unknown, context: ExecutionContext) => {
     if (result instanceof Subscription) {
-      (context.instance as OnInit)._isInitialized.push(() => result.unsubscribe());
+      initializedMetadata.setMetadata(context.instance, (acc) => {
+        acc.push(() => result.unsubscribe());
+        return acc;
+      });
       return;
     }
 
