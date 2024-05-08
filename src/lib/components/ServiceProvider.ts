@@ -1,7 +1,7 @@
 import { IContainer, InstantDependencyOptions, IProvider, ProviderDecorator } from 'ts-ioc-container';
-import { getActions, getQuery, isClassInstance } from '@lib/mediator/operations.ts';
+import { getActions, getQuery, isClassInstance } from '@lib/components/operations.ts';
 import { initialize } from '@lib/initialize/OnInit.ts';
-import { IServiceMediatorKey } from '@lib/mediator/ServiceMediator.ts';
+import { IServiceMediatorKey } from '@lib/components/ServiceMediator.ts';
 
 export class ServiceProvider<T> extends ProviderDecorator<T> {
   constructor(private provider: IProvider<T>) {

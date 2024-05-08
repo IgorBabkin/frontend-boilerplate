@@ -1,13 +1,13 @@
 import { accessor } from '@lib/container/utils.ts';
 import { IContainer, inject, provider, register, scope, singleton } from 'ts-ioc-container';
-import { action } from '@lib/mediator/operations.ts';
+import { action } from '@lib/components/operations.ts';
 import { DomainError } from '@domain/errors/DomainError.ts';
 import { INotificationStoreKey, NotificationStore } from './NotificationStore.ts';
 import { Scope } from '@lib/scope/container.ts';
 import { error$ } from '../errors/ErrorService.ts';
 import { filter, map, Observable, switchMap, timer } from 'rxjs';
 import { isPresent } from '@lib/utils.ts';
-import { service } from '@lib/mediator/ServiceProvider.ts';
+import { service } from '@lib/components/ServiceProvider.ts';
 
 import { onStart, subscribeOn } from '@lib/initialize/OnInit.ts';
 

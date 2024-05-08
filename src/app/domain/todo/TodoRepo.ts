@@ -4,7 +4,7 @@ import { Scope } from '@lib/scope/container.ts';
 import { IApiClientKey } from '../../api/ApiClient.ts';
 import { accessor } from '@lib/container/utils.ts';
 import { ApiClient, Todo } from '@ibabkin/backend-template';
-import { repository } from '@lib/mediator/RepositoryProvider.ts';
+import { repository } from '@lib/components/RepositoryProvider.ts';
 
 export const ITodoRepoKey = accessor<TodoRepo>(Symbol('ITodoRepo'));
 

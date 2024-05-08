@@ -1,4 +1,4 @@
-import { IGuard } from '@lib/mediator/operations.ts';
+import { IGuard } from '@lib/components/operations.ts';
 import { IResource, isResource } from '@domain/user/IResource.ts';
 import { alias, inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { IUserStoreKey, UserStore } from '@domain/user/UserStore.ts';

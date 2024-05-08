@@ -3,7 +3,7 @@ import { IErrorBusKey } from '@domain/errors/ErrorBus.ts';
 import { TodoStore } from '@domain/todo/TodoStore.ts';
 import { UserStore } from '@domain/user/UserStore.ts';
 import { Subject } from 'rxjs';
-import { ServiceMediator } from '@lib/mediator/ServiceMediator.ts';
+import { ServiceMediator } from '@lib/components/ServiceMediator.ts';
 import { CheckPermission } from '@widgets/auth/CheckPermission.ts';
 import { ErrorHandler } from '@domain/errors/IErrorHandler.ts';
 import { TodoRepo } from '@domain/todo/TodoRepo.ts';
