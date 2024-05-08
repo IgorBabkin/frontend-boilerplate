@@ -1,5 +1,9 @@
-import { IEntity } from '../../../lib/observable/IEntity.ts';
+import { IEntity } from '@lib/observable/IEntity.ts';
 
 export interface ITodo extends IEntity {
   title: string;
+}
+
+export interface ITodoFilter {
+  status: 'active' | 'completed';
 }

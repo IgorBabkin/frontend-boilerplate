@@ -1,4 +1,4 @@
-import { ITodo } from './ITodo.ts';
+import { ITodo, ITodoFilter } from './ITodo.ts';
 import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@lib/scope/container.ts';
 import { IApiClientKey } from '../../api/ApiClient.ts';
@@ -20,8 +20,10 @@ export class TodoRepo {
 
   constructor(@inject(IApiClientKey.resolve) private apiClient: ApiClient) {}
 
-  async fetchTodos(): Promise<ITodo[]> {
-    const todos = await this.apiClient.listTodo({});
+  async fetchTodos(filter: Partial<ITodoFilter>): Promise<ITodo[]> {
+    const todos = await this.apiClient.listTodo({
+      status: filter.status,
+    });
     return todos.map(TodoRepo.toDomain);
   }
 

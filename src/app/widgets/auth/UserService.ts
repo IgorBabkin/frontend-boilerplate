@@ -2,7 +2,7 @@ import { by, IContainer, inject, provider, register, scope, singleton } from 'ts
 import { IUserStoreKey, UserStore } from '@domain/user/UserStore';
 import { IUserRepoKey, UserRepo } from '@domain/user/UserRepo';
 import { action, query } from '@lib/mediator/ICommand';
-import { filter, lastValueFrom, Observable, take } from 'rxjs';
+import { filter, Observable, take } from 'rxjs';
 import { UserPermissions } from '@domain/user/IPermissions';
 import { IUser } from '@domain/user/IUser';
 import { Scope } from '@lib/scope/container';
@@ -25,7 +25,7 @@ export interface IUserService {
 
 export const IUserServiceKey = accessor<IUserService>(Symbol('IUserService'));
 
-export const isUserLoaded$ = (c: IContainer) => lastValueFrom(IUserServiceKey.resolve(c).hasUser$());
+export const isUserLoaded$ = (c: IContainer) => IUserServiceKey.resolve(c).hasUser$();
 
 @register(IUserServiceKey.register, scope(Scope.application))
 @provider(service, singleton())

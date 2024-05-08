@@ -1,9 +1,9 @@
-import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
+import { IContainer, inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { ITodoStoreKey, TodoStore } from '@domain/todo/TodoStore.ts';
 import { ITodoRepoKey, TodoRepo } from '@domain/todo/TodoRepo.ts';
 import { action, query } from '@lib/mediator/ICommand.ts';
 import { Observable } from 'rxjs';
-import { ITodo } from '@domain/todo/ITodo.ts';
+import { type ITodo, type ITodoFilter } from '@domain/todo/ITodo.ts';
 import { Scope } from '@lib/scope/container.ts';
 import { IResource } from '@domain/user/IResource.ts';
 import { permission } from '../auth/CheckPermission.ts';
@@ -12,14 +12,15 @@ import { isUserLoaded$ } from '../auth/UserService.ts';
 import { service } from '@lib/mediator/ServiceMediator.ts';
 import { INotificationStoreKey, NotificationStore } from '@widgets/notifications/NotificationStore.ts';
 
-import { when } from '@lib/initialize/strategies.ts';
+import { subscribeOn } from '@lib/initialize/strategies.ts';
 
 import { onStart } from '@lib/initialize/OnInit.ts';
+import { IPageContextKey } from '@lib/mediator/IPageContext.ts';
 
 export interface ITodoService {
   addTodo(payload: string): Promise<ITodo>;
 
-  loadTodoList(): Promise<void>;
+  loadTodoList(filter: ITodoFilter): Promise<void>;
 
   getTodoList$(): Observable<ITodo[]>;
 
@@ -50,9 +51,9 @@ export class TodoService implements IResource, ITodoService {
 
   @action
   @permission('read')
-  @onStart(when(isUserLoaded$))
-  async loadTodoList(): Promise<void> {
-    const todos = await this.todoRepo.fetchTodos();
+  @onStart(subscribeOn(isUserLoaded$))
+  async loadTodoList(@inject(pageContextToFilter) filter: Partial<ITodoFilter>): Promise<void> {
+    const todos = await this.todoRepo.fetchTodos(filter);
     this.todoStore.setList(todos);
   }
 
@@ -66,3 +67,10 @@ export class TodoService implements IResource, ITodoService {
     this.todoStore.deleteTodo(id);
   }
 }
+
+const pageContextToFilter = (s: IContainer): Partial<ITodoFilter> => {
+  const pageContext = IPageContextKey.resolve(s);
+  return {
+    status: pageContext.status,
+  };
+};
