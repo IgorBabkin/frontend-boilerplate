@@ -1,9 +1,9 @@
 import { ExecutionContext, IContainer } from 'ts-ioc-container';
 import { IErrorBusKey } from '@domain/errors/ErrorBus.ts';
 import { combineLatest, Observable } from 'rxjs';
-import { OnInit } from '@lib/initialize/OnInit.ts';
 import { promiseToObservable, toObservable } from '@lib/observable/utils.ts';
 import { handleResult } from '@lib/initialize/resultHandlers.ts';
+import { initializedMetadata } from '@lib/initialize/Metadata.ts';
 
 export const justInvoke = (context: ExecutionContext) => {
   const args = context.resolveArgs();
@@ -25,7 +25,10 @@ export const subscribeOn = (create$?: (s: IContainer) => Observable<unknown>) =>
     },
     error: (e) => IErrorBusKey.resolve(context.scope).next(e as Error),
   });
-  (context.instance as OnInit)._isInitialized.push(() => s.unsubscribe());
+  initializedMetadata.setMetadata(context.instance, (acc) => {
+    acc.push(() => s.unsubscribe());
+    return acc;
+  });
 };
 
 export const when = (condition: (s: IContainer) => Promise<unknown>) => (context: ExecutionContext) =>
