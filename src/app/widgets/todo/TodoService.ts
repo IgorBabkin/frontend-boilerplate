@@ -12,9 +12,7 @@ import { isUserLoaded$ } from '../auth/UserService.ts';
 import { service } from '@lib/mediator/ServiceMediator.ts';
 import { INotificationStoreKey, NotificationStore } from '@widgets/notifications/NotificationStore.ts';
 
-import { subscribeOn } from '@lib/initialize/strategies.ts';
-
-import { onStart } from '@lib/initialize/OnInit.ts';
+import { onStart, subscribeOn } from '@lib/initialize/OnInit.ts';
 import { IPageContextKey } from '@lib/mediator/IPageContext.ts';
 
 export interface ITodoService {

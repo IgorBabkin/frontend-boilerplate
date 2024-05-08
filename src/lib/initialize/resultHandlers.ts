@@ -10,9 +10,10 @@ type HandleContext = {
   then?: HandleResult;
 };
 
-const handlePromise =
+export const handlePromise =
+  (context: ExecutionContext) =>
   ({ restart, then = () => ({}) }: HandleContext) =>
-  (result: unknown, context: ExecutionContext) => {
+  (result: unknown) => {
     if (result instanceof Promise) {
       result.then((r) => restart(r, context)).catch((e: Error) => IErrorBusKey.resolve(context.scope).next(e));
       return;
@@ -21,9 +22,10 @@ const handlePromise =
     then(result, context);
   };
 
-const handleSubscription =
+export const handleSubscription =
+  (context: ExecutionContext) =>
   ({ then = () => ({}) }: Pick<HandleContext, 'then'>) =>
-  (result: unknown, context: ExecutionContext) => {
+  (result: unknown) => {
     if (result instanceof Subscription) {
       initializedMetadata.setMetadata(context.instance, (acc) => {
         acc.push(() => result.unsubscribe());
@@ -35,9 +37,10 @@ const handleSubscription =
     then(result, context);
   };
 
-const handleArray =
+export const handleArray =
+  (context: ExecutionContext) =>
   ({ restart, then = () => ({}) }: HandleContext) =>
-  (result: unknown, context: ExecutionContext) => {
+  (result: unknown) => {
     if (result instanceof Array) {
       result.forEach((r) => restart(r, context));
       return;
@@ -45,10 +48,3 @@ const handleArray =
 
     then(result, context);
   };
-
-export const handleResult = (result: unknown, context: ExecutionContext) => {
-  handleArray({ then: handlePromise({ then: handleSubscription({}), restart: handleResult }), restart: handleResult })(
-    result,
-    context,
-  );
-};

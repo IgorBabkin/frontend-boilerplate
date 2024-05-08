@@ -9,9 +9,8 @@ import { Scope } from '@lib/scope/container';
 import { accessor } from '@lib/container/utils';
 import { isPresent } from '@lib/utils';
 import { service } from '@lib/mediator/ServiceMediator';
-import { justInvoke } from '@lib/initialize/strategies.ts';
 
-import { onStart } from '@lib/initialize/OnInit.ts';
+import { justInvoke, onStart } from '@lib/initialize/OnInit.ts';
 
 export interface IUserService {
   loadUser(): Promise<void>;

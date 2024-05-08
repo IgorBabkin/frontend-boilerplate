@@ -5,16 +5,15 @@ import { DomainError } from '@domain/errors/DomainError.ts';
 import { INotificationStoreKey, NotificationStore } from './NotificationStore.ts';
 import { Scope } from '@lib/scope/container.ts';
 import { error$ } from '../errors/ErrorService.ts';
-import { filter, Observable, switchMap, timer } from 'rxjs';
+import { filter, map, Observable, switchMap, timer } from 'rxjs';
 import { isPresent } from '@lib/utils.ts';
 import { service } from '@lib/mediator/ServiceMediator.ts';
-import { subscribeOn } from '@lib/initialize/strategies.ts';
 
-import { onStart } from '@lib/initialize/OnInit.ts';
+import { onStart, subscribeOn } from '@lib/initialize/OnInit.ts';
 
 export interface INotificationService {
   getMessage$(): Observable<string | undefined>;
-  addMessage(message: string): void;
+  showMessage(message: string): void;
 }
 
 export const INotificationServiceKey = accessor<INotificationService>(Symbol('INotificationService'));
@@ -27,6 +26,9 @@ const messageLifeTime$ = (c: IContainer) =>
       switchMap(() => timer(5000)),
     );
 
+const errorToMessage = (getError$: (c: IContainer) => Observable<Error>) => (c: IContainer) =>
+  getError$(c).pipe(map((e) => e instanceof DomainError && e.message));
+
 @register(INotificationServiceKey.register, scope(Scope.application))
 @provider(service, singleton())
 export class NotificationService implements INotificationService {
@@ -34,11 +36,7 @@ export class NotificationService implements INotificationService {
 
   @action
   @onStart(subscribeOn())
-  handleError(@inject(error$) error: DomainError): void {
-    this.notificationStore.pushMessage(error.message);
-  }
-
-  addMessage(message: string) {
+  showMessage(@inject(errorToMessage(error$)) message: string) {
     this.notificationStore.pushMessage(message);
   }
 

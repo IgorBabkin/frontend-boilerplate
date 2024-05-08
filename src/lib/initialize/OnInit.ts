@@ -1,33 +1,57 @@
-import { executeHooks, Execution, hasHooks, hook, IContainer } from 'ts-ioc-container';
+import { executeHooks, Execution, ExecutionContext, hasHooks, hook, IContainer } from 'ts-ioc-container';
 import { initializedMetadata } from '@lib/initialize/Metadata.ts';
+import { Observable } from 'rxjs';
+import { IErrorBusKey } from '@domain/errors/ErrorBus.ts';
+import { promiseToObservable } from '@lib/observable/utils.ts';
+import { doIt, subscribe } from '@lib/initialize/strategies.ts';
+import { handleArray, handlePromise, handleSubscription } from '@lib/initialize/resultHandlers.ts';
 
 export type Unsubscribe = () => void;
 
 const AUTORUN_KEY = '__autorun__';
 export const onStart = (fn: Execution) => hook(AUTORUN_KEY, fn);
-export const startAutorun = (instance: object, scope: IContainer) => executeHooks(instance, AUTORUN_KEY, { scope });
-export const hasAutorunHooks = (instance: object) => hasHooks(instance, AUTORUN_KEY);
 
 export function initialize(instance: object, scope: IContainer) {
-  if (!isInitializable(instance) || isInitialized(instance)) {
+  if (!hasHooks(instance, AUTORUN_KEY) || initializedMetadata.hasMetadata(instance)) {
     return;
   }
   initializedMetadata.setMetadata(instance, () => []);
-  startAutorun(instance, scope);
+  executeHooks(instance, AUTORUN_KEY, { scope });
 }
 
 export function unsubscribeInit(instance: object) {
-  if (!isInitializable(instance)) {
+  if (!hasHooks(instance, AUTORUN_KEY)) {
     return;
   }
   initializedMetadata.getMetadata(instance).forEach((fn) => fn());
   initializedMetadata.deleteMetadata(instance);
 }
 
-export function isInitializable(target: object) {
-  return hasAutorunHooks(target);
-}
+const handleResult = (result: unknown, context: ExecutionContext) => {
+  const thenPromise = handlePromise(context);
+  const thenSubscription = handleSubscription(context);
+  const thenArray = handleArray(context);
 
-export function isInitialized(target: object): boolean {
-  return initializedMetadata.hasMetadata(target);
-}
+  const restart = handleResult;
+  thenArray({ then: thenPromise({ then: thenSubscription({}), restart }), restart })(result);
+};
+
+export const justInvoke = (context: ExecutionContext) => {
+  doIt({
+    handleError: (e: Error, s: IContainer) => IErrorBusKey.resolve(s).next(e),
+    handleResult,
+  })(context);
+};
+
+export const subscribeOn = (create$?: (s: IContainer) => Observable<unknown>) =>
+  subscribe({
+    create$,
+    handleError: (e: Error, s: IContainer) => IErrorBusKey.resolve(s).next(e),
+    handleResult,
+    saveUnsubscribe: (instance, u) => initializedMetadata.setMetadata(instance, (acc) => acc.concat(u)),
+  });
+
+export const when =
+  (condition: (s: IContainer) => Promise<unknown>): Execution =>
+  (context) =>
+    subscribeOn(() => promiseToObservable(condition(context.scope)))(context);

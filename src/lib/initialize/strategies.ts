@@ -1,35 +1,44 @@
-import { ExecutionContext, IContainer } from 'ts-ioc-container';
-import { IErrorBusKey } from '@domain/errors/ErrorBus.ts';
+import { Execution, ExecutionContext, IContainer } from 'ts-ioc-container';
 import { combineLatest, Observable } from 'rxjs';
-import { promiseToObservable, toObservable } from '@lib/observable/utils.ts';
-import { handleResult } from '@lib/initialize/resultHandlers.ts';
-import { initializedMetadata } from '@lib/initialize/Metadata.ts';
+import { Unsubscribe } from '@lib/initialize/OnInit.ts';
+import { toObservable } from '@lib/observable/utils.ts';
 
-export const justInvoke = (context: ExecutionContext) => {
-  const args = context.resolveArgs();
-  try {
-    const result = context.invokeMethod({ args });
-    handleResult(result, context);
-  } catch (e) {
-    IErrorBusKey.resolve(context.scope).next(e as Error);
-  }
-};
-
-export const subscribeOn = (create$?: (s: IContainer) => Observable<unknown>) => (context: ExecutionContext) => {
-  const args = context.resolveArgs().map(toObservable);
-  const obs$ = create$?.apply(null, [context.scope]);
-  const s = combineLatest(obs$ ? [obs$, ...args] : args).subscribe({
-    next: ([, ...deps]) => {
-      const result = context.invokeMethod({ args: deps });
+export const doIt =
+  ({
+    handleError,
+    handleResult,
+  }: {
+    handleError: (e: Error, s: IContainer) => void;
+    handleResult: (result: unknown, context: ExecutionContext) => void;
+  }): Execution =>
+  (context) => {
+    const args = context.resolveArgs();
+    try {
+      const result = context.invokeMethod({ args });
       handleResult(result, context);
-    },
-    error: (e) => IErrorBusKey.resolve(context.scope).next(e as Error),
-  });
-  initializedMetadata.setMetadata(context.instance, (acc) => {
-    acc.push(() => s.unsubscribe());
-    return acc;
-  });
-};
+    } catch (e) {
+      handleError(e as Error, context.scope);
+    }
+  };
 
-export const when = (condition: (s: IContainer) => Promise<unknown>) => (context: ExecutionContext) =>
-  subscribeOn(() => promiseToObservable(condition(context.scope)))(context);
+export const subscribe =
+  ({
+    create$,
+    handleError,
+    handleResult,
+    saveUnsubscribe,
+  }: {
+    create$?: (s: IContainer) => Observable<unknown>;
+    handleError: (e: Error, s: IContainer) => void;
+    handleResult: (r: unknown, c: ExecutionContext) => void;
+    saveUnsubscribe: (instance: object, u: Unsubscribe) => void;
+  }): Execution =>
+  (context) => {
+    const args = context.resolveArgs().map(toObservable);
+    const obs$ = create$?.apply(null, [context.scope]);
+    const s = combineLatest(obs$ ? [obs$, ...args] : args).subscribe({
+      next: (deps) => handleResult(context.invokeMethod({ args: obs$ ? deps.slice(1) : deps }), context),
+      error: (e) => handleError(e, context.scope),
+    });
+    saveUnsubscribe(context.instance, () => s.unsubscribe());
+  };
