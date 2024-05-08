@@ -1,5 +1,5 @@
 import { IContainer, IProvider, InstantDependencyOptions, ProviderDecorator } from 'ts-ioc-container';
-import { mapNetworkError } from './mapApiToDomainError.ts';
+import { mapNetworkError } from '../../app/api/mapApiToDomainError.ts';
 
 export class RepositoryProvider extends ProviderDecorator<object> {
   constructor(private provider: IProvider<object>) {

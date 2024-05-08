@@ -1,7 +1,7 @@
 import { IContainer, inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { ITodoStoreKey, TodoStore } from '@domain/todo/TodoStore.ts';
 import { ITodoRepoKey, TodoRepo } from '@domain/todo/TodoRepo.ts';
-import { action, query } from '@lib/mediator/ICommand.ts';
+import { action, query } from '@lib/mediator/operations.ts';
 import { Observable } from 'rxjs';
 import { type ITodo, type ITodoFilter } from '@domain/todo/ITodo.ts';
 import { Scope } from '@lib/scope/container.ts';
@@ -9,7 +9,7 @@ import { IResource } from '@domain/user/IResource.ts';
 import { permission } from '../auth/CheckPermission.ts';
 import { accessor } from '@lib/container/utils.ts';
 import { isUserLoaded$ } from '../auth/UserService.ts';
-import { service } from '@lib/mediator/ServiceMediator.ts';
+import { service } from '@lib/mediator/ServiceProvider.ts';
 import { INotificationStoreKey, NotificationStore } from '@widgets/notifications/NotificationStore.ts';
 
 import { onStart, subscribeOn } from '@lib/initialize/OnInit.ts';

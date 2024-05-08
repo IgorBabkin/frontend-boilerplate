@@ -1,10 +1,10 @@
 import { IContainer, inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { type IErrorBus, IErrorBusKey } from '@domain/errors/ErrorBus.ts';
 import { Observable } from 'rxjs';
-import { query } from '@lib/mediator/ICommand.ts';
+import { query } from '@lib/mediator/operations.ts';
 import { Scope } from '@lib/scope/container.ts';
 import { accessor } from '@lib/container/utils.ts';
-import { service } from '@lib/mediator/ServiceMediator.ts';
+import { service } from '@lib/mediator/ServiceProvider.ts';
 
 export const IErrorServiceKey = accessor<IErrorService>(Symbol('IErrorService'));
 
