@@ -21,6 +21,8 @@ import { AuthService } from '@widgets/auth/AuthService.ts';
 import { ApiClient } from '@ibabkin/backend-template';
 import axios from 'axios';
 import { IEnv } from '../env/IEnv.ts';
+import { ObservableStore } from '@lib/observable/ObservableStore.ts';
+import { FavoritesService } from '@widgets/todo/FavoritesService.ts';
 
 export class Common implements IContainerModule {
   private apiClient = new ApiClient(
@@ -47,6 +49,8 @@ export class Common implements IContainerModule {
       .add(R.fromClass(AuthProvider))
       .add(R.fromClass(TodoService))
       .add(R.fromClass(UserService))
+      .add(R.fromClass(FavoritesService))
+      .add(R.fromClass(ObservableStore))
       .add(R.fromClass(NotificationService))
       .add(R.fromClass(ErrorService))
       .add(R.fromClass(NotificationStore))

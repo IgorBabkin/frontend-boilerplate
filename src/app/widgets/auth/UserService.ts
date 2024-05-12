@@ -35,7 +35,7 @@ export class UserService implements IUserService {
   ) {}
 
   @action
-  @onStart(execute)
+  @onStart(execute())
   async loadUser(): Promise<void> {
     const user = await this.userRepo.fetchUser();
     this.userStore.setUser(user);

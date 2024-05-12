@@ -8,12 +8,6 @@ export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve
 
 export const isPresent = <T>(value: T | undefined): value is T => value !== undefined;
 
-export const memoize = <T>(fn: () => T) => {
-  let value: T;
-  return (): T => {
-    if (value === undefined) {
-      value = fn();
-    }
-    return value;
-  };
-};
+export function toggleElement<T>(list: T[], id: T) {
+  return list.includes(id) ? list.filter((it) => it !== id) : [...list, id];
+}

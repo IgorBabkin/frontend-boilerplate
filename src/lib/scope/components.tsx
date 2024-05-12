@@ -1,8 +1,13 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useCallback, useMemo } from 'react';
 import Scope, { IScopeProps } from '@lib/scope/Scope.tsx';
-import { IContainer } from 'ts-ioc-container';
+import { IContainer, Provider } from 'ts-ioc-container';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { IPageContextKey } from '@lib/components/IPageContext.ts';
+import { BehaviorSubject } from 'rxjs';
 
-const withScope = <Props,>(Component: FC<Props>, scopeProps: IScopeProps = {}) => {
+const createScope = (parent: IContainer, tags: string[]) => parent.createScope(...tags);
+
+const withScope = <Props,>(Component: FC<Props>, scopeProps: IScopeProps) => {
   return (props: PropsWithChildren<Props>) => (
     <Scope {...scopeProps}>
       <Component {...props} />
@@ -11,10 +16,33 @@ const withScope = <Props,>(Component: FC<Props>, scopeProps: IScopeProps = {}) =
 };
 
 export const widget = <Props,>(Component: FC<Props>, ...tags: string[]) =>
-  withScope(Component, { tags: ['widget', ...tags].join(',') });
+  withScope(Component, {
+    tags: ['widget', ...tags].join(','),
+    createScope,
+  });
 
-export const page = <Props,>(Component: FC<Props>, ...tags: string[]) =>
-  withScope(Component, { tags: ['page', ...tags].join(',') });
+const usePageContext = () => {
+  const [searchParams] = useSearchParams();
+  const urlParams = useParams();
+  return useMemo(() => ({ searchParams, urlParams }), [searchParams, urlParams]);
+};
+
+export const page = <Props,>(Component: FC<Props>, ...tags: string[]) => {
+  const tagStr = ['page', ...tags].join(',');
+  return (props: PropsWithChildren<Props>) => {
+    const context = usePageContext();
+    const createScope = useCallback(
+      (parent: IContainer, tags: string[]) =>
+        parent.createScope(...tags).register(IPageContextKey.key, Provider.fromValue(new BehaviorSubject(context))),
+      [context],
+    );
+    return (
+      <Scope tags={tagStr} createScope={createScope}>
+        <Component {...props} />
+      </Scope>
+    );
+  };
+};
 
 export const application = <Props,>(Component: FC<Props>, fallback: (tags: string[]) => IContainer) =>
-  withScope(Component, { tags: 'application', fallback });
+  withScope(Component, { tags: 'application', fallback, createScope });

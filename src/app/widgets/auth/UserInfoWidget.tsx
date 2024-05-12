@@ -1,7 +1,8 @@
 import { IUserServiceKey } from './UserService.ts';
 import { useObservable } from '@lib/observable/observable.ts';
 import { widget } from '@lib/scope/components.tsx';
-import { useDependency } from '@lib/scope/Scope.tsx';
+
+import { useDependency } from '@lib/scope/ScopeContext.ts';
 
 const UserInfoWidget = widget(() => {
   const userService = useDependency(IUserServiceKey.resolve);

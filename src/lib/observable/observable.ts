@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { IErrorBusKey } from '@domain/errors/ErrorBus.ts';
-import { useDependency } from '@lib/scope/Scope.tsx';
+
+import { useDependency } from '@lib/scope/ScopeContext.ts';
 
 export const useObservable = <T>(fn: () => Observable<T>, initial: T, deps: unknown[]): T => {
   const [value, next] = useState(initial);

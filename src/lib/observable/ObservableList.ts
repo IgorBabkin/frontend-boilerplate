@@ -1,6 +1,7 @@
 import { ObservableStore } from './ObservableStore.ts';
 import { IEntity } from './IEntity.ts';
 import { map, Observable } from 'rxjs';
+import { execute, onDispose } from '@lib/initialize/OnInit.ts';
 
 export class ObservableList<T extends IEntity> {
   private readonly list$: ObservableStore<T[]>;
@@ -33,11 +34,17 @@ export class ObservableList<T extends IEntity> {
     this.list$.map((values) => values.concat(value));
   }
 
+  @onDispose(execute())
   clear(): void {
     this.list$.map(() => []);
   }
 
   asObservable() {
     return this.list$.asObservable();
+  }
+
+  @onDispose(execute())
+  dispose() {
+    this.list$.dispose();
   }
 }

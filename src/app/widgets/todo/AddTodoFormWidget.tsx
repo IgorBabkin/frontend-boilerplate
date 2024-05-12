@@ -4,7 +4,8 @@ import TextField from '@ui/textField/TextField.tsx';
 import { useAsyncEventHandler } from '@lib/scope/useQuery.ts';
 import { ITodoServiceKey } from './TodoService.ts';
 import { widget } from '@lib/scope/components.tsx';
-import { useDependency } from '@lib/scope/Scope.tsx';
+
+import { useDependency } from '@lib/scope/ScopeContext.ts';
 
 const AddTodoFormWidget = widget(() => {
   const todoService = useDependency(ITodoServiceKey.resolve);

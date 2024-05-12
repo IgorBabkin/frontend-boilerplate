@@ -3,9 +3,9 @@ import { IErrorBusKey } from '@domain/errors/ErrorBus.ts';
 import { Subscription } from 'rxjs';
 import { initializedMetadata } from '@lib/initialize/Metadata.ts';
 
-type HandleResult = (result: unknown, context: ExecutionContext) => void;
+export type HandleResult = (result: unknown, context: ExecutionContext) => void;
 
-type HandleContext = {
+export type HandleContext = {
   restart: HandleResult;
   then?: HandleResult;
 };

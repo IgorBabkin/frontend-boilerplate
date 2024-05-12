@@ -1,9 +1,9 @@
-import { IContainer, inject, provider, register, scope, singleton } from 'ts-ioc-container';
+import { IContainer, provider, register, scope, inject, singleton } from 'ts-ioc-container';
 import { ITodoStoreKey, TodoStore } from '@domain/todo/TodoStore.ts';
 import { ITodoRepoKey, TodoRepo } from '@domain/todo/TodoRepo.ts';
 import { action, query } from '@lib/components/operations.ts';
-import { Observable } from 'rxjs';
-import { type ITodo, type ITodoFilter } from '@domain/todo/ITodo.ts';
+import { debounceTime, Observable, switchMap } from 'rxjs';
+import { type ITodo } from '@domain/todo/ITodo.ts';
 import { Scope } from '@lib/scope/container.ts';
 import { IResource } from '@domain/user/IResource.ts';
 import { permission } from '../auth/CheckPermission.ts';
@@ -14,11 +14,10 @@ import { INotificationStoreKey, NotificationStore } from '@widgets/notifications
 
 import { onStart, subscribeOn } from '@lib/initialize/OnInit.ts';
 import { IPageContextKey } from '@lib/components/IPageContext.ts';
+import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 
 export interface ITodoService {
   addTodo(payload: string): Promise<ITodo>;
-
-  loadTodoList(filter: ITodoFilter): Promise<void>;
 
   getTodoList$(): Observable<ITodo[]>;
 
@@ -27,7 +26,17 @@ export interface ITodoService {
 
 export const ITodoServiceKey = accessor<ITodoService>(Symbol('ITodoService'));
 
-@register(ITodoServiceKey.register, scope(Scope.application))
+const todosSrc$ = (s: IContainer): Observable<ITodo[]> => {
+  const pageContext = IPageContextKey.resolve(s);
+  const todoRepo = ITodoRepoKey.resolve(s);
+
+  return pageContext.pipe(
+    debounceTime(10),
+    switchMap(() => fromPromise(todoRepo.fetchTodos({ status: 'active' }))),
+  );
+};
+
+@register(ITodoServiceKey.register, scope(Scope.page))
 @provider(service, singleton())
 export class TodoService implements IResource, ITodoService {
   resource = 'todo';
@@ -50,8 +59,7 @@ export class TodoService implements IResource, ITodoService {
   @action
   @permission('read')
   @onStart(subscribeOn(isUserLoaded$))
-  async loadTodoList(@inject(pageContextToFilter) filter: Partial<ITodoFilter>): Promise<void> {
-    const todos = await this.todoRepo.fetchTodos(filter);
+  async updateTodoList(@inject(todosSrc$) todos: ITodo[]): Promise<void> {
     this.todoStore.setList(todos);
   }
 
@@ -65,10 +73,3 @@ export class TodoService implements IResource, ITodoService {
     this.todoStore.deleteTodo(id);
   }
 }
-
-const pageContextToFilter = (s: IContainer): Partial<ITodoFilter> => {
-  const pageContext = IPageContextKey.resolve(s);
-  return {
-    status: pageContext.status,
-  };
-};
