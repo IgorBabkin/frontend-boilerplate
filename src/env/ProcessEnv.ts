@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { IEnv, LogLevel } from './IEnv';
+import { IEnv, LogLevel } from './IEnv.ts';
 
 const schema = z.object({
   VITE_API_BASE_URL: z.string().url(),

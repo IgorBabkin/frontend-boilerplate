@@ -1,6 +1,6 @@
-import TodoListWidget from '@widgets/todo/TodoListWidget.tsx';
-import UserInfoWidget from '@widgets/auth/UserInfoWidget.tsx';
-import { page } from '@lib/scope/components.tsx';
+import TodoListWidget from '@widgets/TodoListWidget';
+import UserInfoWidget from '@widgets/UserInfoWidget';
+import { page } from '@framework/scope/components';
 
 const HomePage = page(() => {
   return (
