@@ -1,28 +1,25 @@
 import { IContainer, IContainerModule, Registration as R, singleton } from 'ts-ioc-container';
-import { IErrorBusKey } from '@modules/errors/ErrorBus.ts';
-import { TodoStore } from '@modules/todo/TodoStore.ts';
-import { UserStore } from '@modules/user/UserStore.ts';
-import { Subject } from 'rxjs';
-import { ServiceMediator } from '@framework/components/ServiceMediator.ts';
-import { CheckPermission } from '@widgets/CheckPermission.ts';
-import { ErrorHandler } from '@modules/errors/IErrorHandler.ts';
-import { TodoRepo } from '@modules/todo/TodoRepo.ts';
-import { hasTags, Scope } from '@framework/scope/container.ts';
-import { UserRepo } from '@modules/user/UserRepo.ts';
-import { AuthClient, IAuthClientKey } from '@core/api/AuthClient.ts';
-import { AuthProvider } from '@modules/auth/AuthProvider.ts';
-import { IApiClientKey } from '@core/api/ApiClient.ts';
-import { TodoService } from '@modules/todo/TodoService.ts';
-import { UserService } from '@modules/user/UserService.ts';
-import { ErrorService } from '@modules/errors/ErrorService.ts';
-import { NotificationStore } from '@modules/notifications/NotificationStore.ts';
-import { NotificationService } from '@modules/notifications/NotificationService.ts';
-import { AuthService } from '@modules/auth/AuthService.ts';
+import { TodoStore } from '@modules/todo/TodoStore';
+import { UserStore } from '@modules/user/UserStore';
+import { ServiceMediator } from '@framework/service/ServiceMediator.ts';
+import { CheckPermission } from '@modules/user/CheckPermission';
+import { TodoRepo } from '@modules/todo/TodoRepo';
+import { hasTags, Scope } from '@framework/scope.ts';
+import { UserRepo } from '@modules/user/UserRepo';
+import { AuthClient, IAuthClientKey } from '../lib/api/AuthClient';
+import { AuthProvider } from '@modules/auth/AuthProvider';
+import { IApiClientKey } from '../lib/api/ApiClient';
+import { TodoService } from '@modules/todo/TodoService';
+import { UserService } from '@modules/user/UserService';
+import { ErrorService } from '@framework/errors/ErrorService';
+import { NotificationStore } from '@modules/notifications/NotificationStore';
+import { NotificationService } from '@modules/notifications/NotificationService';
+import { AuthService } from '@modules/auth/AuthService';
 import { ApiClient } from '@ibabkin/backend-template';
 import axios from 'axios';
-import { IEnv } from '@env/IEnv.ts';
-import { ObservableStore } from '@core/observable/ObservableStore.ts';
-import { FavoritesService } from '@modules/todo/FavoritesService.ts';
+import { IEnv } from '@env/IEnv';
+import { ObservableStore } from '../lib/observable/ObservableStore';
+import { FavoritesService } from '@modules/todo/FavoritesService';
 
 export class Common implements IContainerModule {
   private apiClient = new ApiClient(
@@ -38,12 +35,10 @@ export class Common implements IContainerModule {
 
   applyTo(container: IContainer): void {
     container
-      .add(R.fromValue(new Subject()).to(IErrorBusKey.key))
       .add(R.fromClass(TodoStore))
       .add(R.fromClass(UserStore))
       .add(R.fromClass(ServiceMediator))
       .add(R.fromClass(CheckPermission))
-      .add(R.fromClass(ErrorHandler))
       .add(R.fromClass(TodoRepo))
       .add(R.fromClass(UserRepo))
       .add(R.fromClass(AuthProvider))

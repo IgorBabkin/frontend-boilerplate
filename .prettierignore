@@ -5,4 +5,4 @@ coverage
 # Ignore all HTML files:
 **/*.html
 public
-src/assets
+src/views/assets
