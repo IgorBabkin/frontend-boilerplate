@@ -25,7 +25,7 @@
     "paths": {
       "@env/*": ["env/*"],
       "@stages/*": ["stages/*"],
-      "@ui/*": ["views/ui/*"],
+      "@ui/*": ["ui/*"],
       "@widgets/*": ["views/widgets/*"],
       "@pages/*": ["views/pages/*"],
       "@lib/*": ["lib/*"],
