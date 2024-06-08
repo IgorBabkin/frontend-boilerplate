@@ -1,5 +1,4 @@
 import { IContainer, IContainerModule, Registration as R, singleton } from 'ts-ioc-container';
-import { ServiceMediator } from '@framework/service/ServiceMediator.ts';
 import { CheckPermission } from '../operations/CheckPermission.ts';
 import { TodoRepo } from '../services/todo/TodoRepo';
 import { hasTags, Scope } from '@framework/scope.ts';
@@ -17,6 +16,7 @@ import axios from 'axios';
 import { IEnv } from '@env/IEnv';
 import { ObservableStore } from '../lib/observable/ObservableStore';
 import { FavoritesService } from '../services/todo/FavoritesService';
+import { ControllerMediator } from '@framework/controller/ControllerMediator.ts';
 
 export class Common implements IContainerModule {
   private apiClient = new ApiClient(
@@ -32,7 +32,7 @@ export class Common implements IContainerModule {
 
   applyTo(container: IContainer): void {
     container
-      .add(R.fromClass(ServiceMediator))
+      .add(R.fromClass(ControllerMediator))
       .add(R.fromClass(CheckPermission))
       .add(R.fromClass(TodoRepo))
       .add(R.fromClass(UserRepo))

@@ -1,8 +1,8 @@
 import { IContainer, IProvider, ProviderDecorator, ProviderResolveOptions } from 'ts-ioc-container';
 import { initialize } from '@framework/hooks/OnInit.ts';
-import { IServiceMediatorKey } from '@framework/service/ServiceMediator.ts';
 import { getActions, getQuery } from './metadata.ts';
 import { isClassInstance } from '@lib/di/utils.ts';
+import { IControllerMediatorKey } from '@framework/controller/ControllerMediator.ts';
 
 export class ControllerProvider<T> extends ProviderDecorator<T> {
   constructor(private provider: IProvider<T>) {
@@ -19,13 +19,13 @@ export class ControllerProvider<T> extends ProviderDecorator<T> {
       return result;
     }
 
-    throw new Error('Service must be a class instance');
+    throw new Error('Controller must be a class instance');
   }
 
   private proxyService<T extends object>(service: T, scope: IContainer): T {
     const actions = getActions(service);
     const query = getQuery(service);
-    const mediator = IServiceMediatorKey.resolve(scope);
+    const mediator = IControllerMediatorKey.resolve(scope);
 
     return new Proxy(service, {
       get(target, prop) {
