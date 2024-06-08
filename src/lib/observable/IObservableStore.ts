@@ -5,6 +5,8 @@ export interface IObservableStore<T> {
 
   getValue(): T;
 
+  setValue(value: T): void;
+
   asObservable(): Observable<T>;
 
   dispose(): void;

@@ -7,8 +7,10 @@ import { IErrorServiceKey } from '@framework/errors/IErrorService.public';
 export type Unsubscribe = () => void;
 
 const START_KEY = '__start__';
+const START_ASYNC_KEY = '__start_async__';
 const DISPOSE_KEY = '__dispose__';
 export const onStart = (fn: Hook) => hook(START_KEY, fn);
+export const onStartAsync = (fn: Hook) => hook(START_ASYNC_KEY, fn);
 export const onDispose = (fn: Hook) => hook(DISPOSE_KEY, fn);
 
 export function initialize(instance: object, scope: IContainer) {
@@ -18,7 +20,8 @@ export function initialize(instance: object, scope: IContainer) {
   disposeMetadata.setMetadata(instance, () => []);
 
   try {
-    void runHooksAsync(instance, START_KEY, { scope }).catch((e) => {
+    runHooks(instance, START_KEY, { scope });
+    runHooksAsync(instance, START_ASYNC_KEY, { scope }).catch((e) => {
       IErrorServiceKey.resolve(scope).throwError(e);
     });
   } catch (e) {
@@ -57,7 +60,7 @@ export const execute = () => (context: IHookContext) => {
 export const subscribeOn =
   (create$?: (s: IContainer) => Observable<unknown>): Hook =>
   (context) => {
-    const args = context.resolveArgs();
+    const args = context.resolveArgs().map(toObs$);
     const obs$ = create$?.apply(null, [context.scope]);
     const subscription = combineLatest(obs$ ? [obs$, ...args] : args).subscribe({
       next: (deps) => handleResult(context.invokeMethod({ args: obs$ ? deps.slice(1) : deps }), context),
@@ -87,9 +90,9 @@ export const handleResult: HandleResult = (result, context) => {
   }
 
   if (result instanceof Subscription) {
-    disposeMetadata.setMetadata(context.instance, (acc) => {
-      acc.push(() => result.unsubscribe());
-      return acc;
+    disposeMetadata.setMetadata(context.instance, (subscriptions) => {
+      subscriptions.push(() => result.unsubscribe());
+      return subscriptions;
     });
     return;
   }

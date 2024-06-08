@@ -1,11 +1,10 @@
 import { createContext, useMemo } from 'react';
-import { IContainer } from 'ts-ioc-container';
-import { InjectFn } from '@ibabkin/utils';
+import { IContainer, InjectFn } from 'ts-ioc-container';
 import { useContextOrFail } from '@lib/react/context';
 import { dispose, unsubscribeInit } from '@framework/hooks/OnInit';
 
 export const ScopeContext = createContext<IContainer | undefined>(undefined);
-export const useDependency = <T extends object>(fn: InjectFn<IContainer, T>) => {
+export const useDependency = <T extends object>(fn: InjectFn<T>) => {
   const scope = useContextOrFail(ScopeContext);
   return useMemo(() => fn(scope), [scope]);
 };

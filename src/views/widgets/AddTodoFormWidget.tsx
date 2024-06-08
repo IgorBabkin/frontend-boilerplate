@@ -3,23 +3,22 @@ import Button from '@ui/button/Button';
 import TextField from '@ui/textField/TextField';
 import { widget } from '@helpers/scope/components';
 
-import { useDependency } from '@helpers/scope/ScopeContext';
-import { ITodoServiceKey } from '@modules/todo/ITodoService.public';
-
 import { useAsyncEventHandler } from '@helpers/observable';
+import { useDependency } from '@helpers/scope/ScopeContext.ts';
+import { ITodoControllerKey } from '@operations/ITodoController.ts';
 
 const AddTodoFormWidget = widget(() => {
-  const todoService = useDependency(ITodoServiceKey.resolve);
+  const todoController = useDependency(ITodoControllerKey.resolve);
   const [title, setTitle] = useState('');
   const resetForm = useCallback(() => setTitle(''), []);
 
   const submit = useAsyncEventHandler(
     async (e: FormEvent) => {
       e.preventDefault();
-      await todoService.addTodo(title);
+      await todoController.addTodo(title);
       resetForm();
     },
-    [resetForm, title, todoService],
+    [resetForm, title, todoController],
   );
 
   return (

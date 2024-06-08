@@ -1,4 +1,4 @@
-import { DomainError } from '../../context/errors/DomainError';
+import { DomainError } from '@context/errors/DomainError.ts';
 
 export class PermissionError extends DomainError {
   name = 'PermissionError';

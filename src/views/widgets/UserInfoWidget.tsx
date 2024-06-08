@@ -2,11 +2,11 @@ import { useObservable } from '@helpers/observable';
 import { widget } from '@helpers/scope/components';
 
 import { useDependency } from '@helpers/scope/ScopeContext';
-import { IUserServiceKey } from '@modules/user/IUserService.public';
+import { IUserControllerKey } from '@operations/IUserController.ts';
 
 const UserInfoWidget = widget(() => {
-  const userService = useDependency(IUserServiceKey.resolve);
-  const user = useObservable(() => userService.getUser$(), undefined, [userService]);
+  const userController = useDependency(IUserControllerKey.resolve);
+  const user = useObservable(() => userController.getUser$(), undefined, [userController]);
 
   return (
     <>

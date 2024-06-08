@@ -1,21 +1,29 @@
 import { Observable } from 'rxjs';
-import { Accessor } from '../../lib/di/utils';
-import { IEntity } from '../../lib/observable/IEntity';
+import { Accessor } from '@lib/di/utils.ts';
+import { IEntity } from '@lib/observable/IEntity.ts';
 
 export interface ITodo extends IEntity {
   title: string;
 }
 
+export type TodoStatus = 'active' | 'completed';
+
 export interface ITodoFilter {
-  status: 'active' | 'completed';
+  status: TodoStatus;
 }
 
+export type TodoID = string;
+
 export interface ITodoService {
-  addTodo(payload: string): Promise<ITodo>;
+  createTodo(payload: string): Promise<ITodo>;
 
   getTodoList$(): Observable<ITodo[]>;
 
-  deleteTodo(id: string): Promise<void>;
+  deleteTodo(id: TodoID): Promise<void>;
+
+  updateTodoList(todos: ITodo[]): void;
+
+  loadTodoList(filter: Partial<ITodoFilter>): Promise<void>;
 }
 
 export const ITodoServiceKey = new Accessor<ITodoService>('ITodoService');

@@ -1,16 +1,14 @@
 import { Observable } from 'rxjs';
 import { UserPermissions } from '@modules/user/IPermissions';
 import { IUser } from '@modules/user/IUser';
-import { Accessor } from '../../lib/di/utils';
+import { Accessor } from '@lib/di/utils.ts';
 
 export interface IUserService {
-  loadUser(): Promise<void>;
-
-  getPermissions$(): Observable<UserPermissions>;
+  getPermissions(): UserPermissions;
 
   getUser$(): Observable<IUser | undefined>;
 
-  hasUser$(): Observable<IUser>;
+  isUserLoaded(): Promise<IUser>;
 }
 
 export const IUserServiceKey = new Accessor<IUserService>(Symbol('IUserService'));

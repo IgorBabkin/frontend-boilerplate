@@ -1,10 +1,10 @@
 import { provider, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
-import { UserDTO } from '../../lib/api/ApiClient';
+import { UserDTO } from '@lib/api/ApiClient.ts';
 import { IUser } from './IUser';
 import { UserPermissions } from './IPermissions';
-import { sleep } from '../../lib/utils';
-import { Accessor } from '../../lib/di/utils';
+import { sleep } from '@lib/utils.ts';
+import { Accessor } from '@lib/di/utils.ts';
 
 export const IUserRepoKey = new Accessor<UserRepo>('IUserRepo');
 

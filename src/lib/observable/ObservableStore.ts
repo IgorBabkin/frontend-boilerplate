@@ -27,6 +27,10 @@ export class ObservableStore<T> implements IObservableStore<T> {
     return JSON.stringify(this.getValue());
   }
 
+  setValue(value: T): void {
+    this.value$.next(value);
+  }
+
   @onDispose(execute())
   dispose() {
     this.value$.complete();

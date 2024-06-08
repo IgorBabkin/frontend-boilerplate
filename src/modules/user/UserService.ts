@@ -1,41 +1,38 @@
 import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
-import { IUserStoreKey, UserStore } from './UserStore';
 import { IUserRepoKey, UserRepo } from './UserRepo';
-import { filter, Observable, take } from 'rxjs';
+import { filter, lastValueFrom, Observable, take } from 'rxjs';
 import { UserPermissions } from './IPermissions';
 import { IUser } from './IUser';
 import { Scope } from '@framework/scope.ts';
-import { isPresent } from '../../lib/utils';
+import { isPresent } from '@lib/utils.ts';
 import { service } from '@framework/service/ServiceProvider.ts';
 
-import { execute, onStart } from '@framework/hooks/OnInit';
+import { execute, onStartAsync } from '@framework/hooks/OnInit';
 import { IUserService, IUserServiceKey } from './IUserService.public';
-import { action, query } from '@framework/service/metadata.ts';
+import { ObservableStore } from '@lib/observable/ObservableStore.ts';
 
 @register(IUserServiceKey.register, scope(Scope.application))
 @provider(service, singleton())
 export class UserService implements IUserService {
-  constructor(
-    @inject(IUserStoreKey.resolve) private userStore: UserStore,
-    @inject(IUserRepoKey.resolve) private userRepo: UserRepo,
-  ) {}
+  private user$ = new ObservableStore<IUser | undefined>(undefined);
 
-  @action
-  @onStart(execute())
+  constructor(@inject(IUserRepoKey.resolve) private userRepo: UserRepo) {}
+
+  @onStartAsync(execute())
   async loadUser(): Promise<void> {
     const user = await this.userRepo.fetchUser();
-    this.userStore.setUser(user);
+    this.user$.setValue(user);
   }
 
-  @query getPermissions$(): Observable<UserPermissions> {
-    return this.userStore.getPermissions$();
+  getPermissions(): UserPermissions {
+    return this.user$.getValue()?.permissions ?? UserPermissions.default;
   }
 
-  @query getUser$(): Observable<IUser | undefined> {
-    return this.userStore.getUser$();
+  getUser$(): Observable<IUser | undefined> {
+    return this.user$.asObservable();
   }
 
-  @query hasUser$() {
-    return this.userStore.getUser$().pipe(filter(isPresent), take(1));
+  isUserLoaded() {
+    return lastValueFrom(this.user$.asObservable().pipe(filter(isPresent), take(1)));
   }
 }

@@ -12,7 +12,7 @@ export class Accessor<T> {
   }
 }
 
-export const operation =
+export const service =
   <S, R>(accessor: Accessor<S>, fn: (c: S) => R): InjectFn<R> =>
   (c) => {
     return fn(accessor.resolve(c));

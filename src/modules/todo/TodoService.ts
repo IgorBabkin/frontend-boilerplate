@@ -1,65 +1,38 @@
-import { IContainer, inject, provider, register, scope, singleton } from 'ts-ioc-container';
-import { ITodoStoreKey, TodoStore } from './TodoStore';
+import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { ITodoRepoKey, TodoRepo } from './TodoRepo';
-import { debounceTime, Observable, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Scope } from '@framework/scope.ts';
-import { IResource } from '../user/IResource';
-import { permission } from '@modules/user/CheckPermission';
-import { INotificationStoreKey, NotificationStore } from '@modules/notifications/NotificationStore';
-
-import { onStart, subscribeOn } from '@framework/hooks/OnInit';
-import { IPageContextKey } from '@context/IPageContext.ts';
-import { fromPromise } from 'rxjs/internal/observable/innerFrom';
-import { IUserServiceKey } from '../user/IUserService.public';
-import { service } from '@framework/service/ServiceProvider.ts';
-import { ITodo, ITodoService, ITodoServiceKey } from './ITodoService.public';
-import { operation } from '@lib/di/utils.ts';
-import { action, query } from '@framework/service/metadata.ts';
-
-const todosSrc$ = (s: IContainer): Observable<ITodo[]> => {
-  const pageContext = IPageContextKey.resolve(s);
-  const todoRepo = ITodoRepoKey.resolve(s);
-
-  return pageContext.pipe(
-    debounceTime(10),
-    switchMap(() => fromPromise(todoRepo.fetchTodos({ status: 'active' }))),
-  );
-};
+import { ITodo, ITodoFilter, ITodoService, ITodoServiceKey } from './ITodoService.public';
+import { ObservableList } from '@lib/observable/ObservableList.ts';
 
 @register(ITodoServiceKey.register, scope(Scope.page))
-@provider(service, singleton())
-export class TodoService implements IResource, ITodoService {
-  resource = 'todo';
+@provider(singleton())
+export class TodoService implements ITodoService {
+  private todoList$ = new ObservableList<ITodo>([]);
 
-  constructor(
-    @inject(ITodoStoreKey.resolve) private todoStore: TodoStore,
-    @inject(ITodoRepoKey.resolve) private todoRepo: TodoRepo,
-    @inject(INotificationStoreKey.resolve) private notificationStore: NotificationStore,
-  ) {}
+  constructor(@inject(ITodoRepoKey.resolve) private todoRepo: TodoRepo) {}
 
-  @action
-  @permission('write')
-  async addTodo(payload: string): Promise<ITodo> {
+  async createTodo(payload: string): Promise<ITodo> {
     const todo = await this.todoRepo.createTodo({ title: payload, description: '' });
-    this.todoStore.addTodo(todo);
-    this.notificationStore.pushMessage('Todo added');
+    this.todoList$.add(todo);
     return todo;
   }
 
-  @action
-  @permission('read')
-  @onStart(subscribeOn(operation(IUserServiceKey, (s) => s.hasUser$())))
-  async updateTodoList(@inject(todosSrc$) todos: ITodo[]): Promise<void> {
-    this.todoStore.setList(todos);
+  updateTodoList(todos: ITodo[]): void {
+    this.todoList$.setList(todos);
   }
 
-  @query getTodoList$(): Observable<ITodo[]> {
-    return this.todoStore.getList$();
+  getTodoList$(): Observable<ITodo[]> {
+    return this.todoList$.asObservable();
   }
 
-  @action
   async deleteTodo(id: string): Promise<void> {
     await this.todoRepo.deleteTodo(id);
-    this.todoStore.deleteTodo(id);
+    this.todoList$.delete(id);
+  }
+
+  async loadTodoList(filter: Partial<ITodoFilter>): Promise<void> {
+    const todos = await this.todoRepo.fetchTodos(filter);
+    this.todoList$.setList(todos);
   }
 }

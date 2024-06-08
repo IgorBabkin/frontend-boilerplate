@@ -31,6 +31,7 @@
       "@lib/*": ["lib/*"],
       "@framework/*": ["framework/*"],
       "@modules/*": ["modules/*"],
+      "@operations/*": ["operations/*"],
       "@helpers/*": ["views/helpers/*"],
       "@context/*": ["context/*"],
     }

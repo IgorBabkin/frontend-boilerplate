@@ -1,15 +1,14 @@
 import { IGuard } from '@framework/guard/IGuard.ts';
-import { IResource, isResource } from '@modules/user/IResource';
+import { IResource, isResource } from '@modules/user/IResource.ts';
 import { alias, inject, provider, register, scope, singleton } from 'ts-ioc-container';
-import { IUserStoreKey, UserStore } from '@modules/user/UserStore';
 import { CommandAlias, Scope } from '@framework/scope.ts';
-import { getMethodMetadata, setMethodMetadata } from '../../lib/reflection/hook';
-import { Permission } from '@modules/user/IUserService.public';
+import { getMethodMetadata, setMethodMetadata } from '@lib/reflection/hook.ts';
+import { type IUserService, IUserServiceKey, Permission } from '@modules/user/IUserService.public.ts';
 
 @register(scope(Scope.application))
 @provider(singleton(), alias(CommandAlias.onBeforeExecution))
 export class CheckPermission implements IGuard {
-  constructor(@inject(IUserStoreKey.resolve) private userStore: UserStore) {}
+  constructor(@inject(IUserServiceKey.resolve) private userService: IUserService) {}
 
   match(resource: unknown): resource is IResource {
     return isResource(resource);
@@ -20,7 +19,7 @@ export class CheckPermission implements IGuard {
     if (permission === undefined) {
       return;
     }
-    const permissions = this.userStore.getPermissions();
+    const permissions = this.userService.getPermissions();
     permissions.checkPermission(service.resource, permission);
   }
 }
