@@ -1,5 +1,5 @@
-import { sleep } from '../utils';
-import { Accessor } from '../di/utils';
+import { sleep } from '@lib/utils.ts';
+import { Accessor } from '@lib/di/utils.ts';
 
 function randomString(): string {
   return Math.random().toString(36).substring(7);

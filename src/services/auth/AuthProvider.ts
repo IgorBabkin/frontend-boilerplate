@@ -1,4 +1,4 @@
-import { AuthClient, IAuthClientKey } from '../../lib/api/AuthClient';
+import { AuthClient, IAuthClientKey } from './AuthClient.ts';
 import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { mapAuthError } from '../../lib/api/mapApiToDomainError';
 import { Scope } from '@framework/scope.ts';
