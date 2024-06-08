@@ -1,4 +1,4 @@
-import { ITodo } from '../services/todo/ITodoService.public.ts';
+import { ITodo } from '@services/todo/ITodoService.public.ts';
 import { Accessor } from '@lib/di/utils.ts';
 import { Observable } from 'rxjs';
 import { IPageContext } from '@context/IPageService.ts';

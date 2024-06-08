@@ -2,9 +2,9 @@ import { Observable } from 'rxjs';
 import { IFavoriteController, IFavoriteControllerKey } from './IFavoriteController.ts';
 import { inject, register, scope } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
-import { type IFavoritesService, IFavoritesServiceKey } from '../services/todo/IFavoritesService.public.ts';
+import { type IFavoritesService, IFavoritesServiceKey } from '@services/todo/IFavoritesService.public.ts';
 import { action, query } from '@framework/controller/metadata.ts';
-import { IResource } from '../services/user/IResource.ts';
+import { IResource } from '@services/user/IResource.ts';
 import { permission } from './CheckPermission.ts';
 
 @register(IFavoriteControllerKey.register, scope(Scope.page))

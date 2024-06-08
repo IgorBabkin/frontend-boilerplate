@@ -30,7 +30,7 @@
       "@pages/*": ["views/pages/*"],
       "@lib/*": ["lib/*"],
       "@framework/*": ["framework/*"],
-      "@modules/*": ["services/*"],
+      "@services/*": ["services/*"],
       "@operations/*": ["operations/*"],
       "@helpers/*": ["views/helpers/*"],
       "@context/*": ["context/*"],
