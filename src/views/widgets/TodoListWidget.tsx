@@ -2,8 +2,8 @@ import { useAsyncEventHandler, useObservable } from '@helpers/observable';
 import { widget } from '@helpers/scope/components';
 import Button from '@ui/button/Button';
 import { useDependency } from '@helpers/scope/ScopeContext';
-import { ITodoControllerKey } from '@operations/ITodoController.ts';
-import { IFavoriteControllerKey } from '@operations/IFavoriteController.ts';
+import { ITodoControllerKey } from '@operations/todo/ITodoController.ts';
+import { IFavoriteControllerKey } from '@operations/favourites/IFavoriteController.ts';
 
 const TodoListWidget = widget(() => {
   const todoController = useDependency(ITodoControllerKey.resolve);

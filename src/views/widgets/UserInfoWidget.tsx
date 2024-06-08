@@ -2,7 +2,7 @@ import { useObservable } from '@helpers/observable';
 import { widget } from '@helpers/scope/components';
 
 import { useDependency } from '@helpers/scope/ScopeContext';
-import { IUserControllerKey } from '@operations/IUserController.ts';
+import { IUserControllerKey } from '@operations/user/IUserController.ts';
 
 const UserInfoWidget = widget(() => {
   const userController = useDependency(IUserControllerKey.resolve);

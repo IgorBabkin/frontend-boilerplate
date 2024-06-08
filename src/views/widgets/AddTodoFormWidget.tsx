@@ -5,7 +5,7 @@ import { widget } from '@helpers/scope/components';
 
 import { useAsyncEventHandler } from '@helpers/observable';
 import { useDependency } from '@helpers/scope/ScopeContext.ts';
-import { ITodoControllerKey } from '@operations/ITodoController.ts';
+import { ITodoControllerKey } from '@operations/todo/ITodoController.ts';
 
 const AddTodoFormWidget = widget(() => {
   const todoController = useDependency(ITodoControllerKey.resolve);

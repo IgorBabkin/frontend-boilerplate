@@ -2,7 +2,7 @@ import { useObservable } from '@helpers/observable';
 import { widget } from '@helpers/scope/components';
 
 import { useDependency } from '@helpers/scope/ScopeContext';
-import { INotificationControllerKey } from '@operations/INotificationController.ts';
+import { INotificationControllerKey } from '@operations/notifications/INotificationController.ts';
 
 const NotificationsWidget = widget(() => {
   const notificationController = useDependency(INotificationControllerKey.resolve);

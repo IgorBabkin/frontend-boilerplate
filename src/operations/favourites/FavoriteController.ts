@@ -5,7 +5,7 @@ import { Scope } from '@framework/scope.ts';
 import { type IFavoritesService, IFavoritesServiceKey } from '@services/favourites/IFavoritesService.public.ts';
 import { action, query } from '@framework/controller/metadata.ts';
 import { IResource } from '@services/user/IResource.ts';
-import { permission } from './cross/CheckPermission.ts';
+import { permission } from '../cross/CheckPermission.ts';
 
 @register(IFavoriteControllerKey.register, scope(Scope.page))
 export class FavoriteController implements IResource, IFavoriteController {
