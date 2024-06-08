@@ -1,5 +1,5 @@
 import { IContainer, IContainerModule, Registration as R, singleton } from 'ts-ioc-container';
-import { CheckPermission } from '../operations/CheckPermission.ts';
+import { CheckPermission } from '@operations/cross/CheckPermission.ts';
 import { TodoRepo } from '../services/todo/TodoRepo';
 import { hasTags, Scope } from '@framework/scope.ts';
 import { UserRepo } from '../services/user/UserRepo';

@@ -12,7 +12,7 @@ import {
 } from '@services/notifications/INotificationService.public.ts';
 import { controller } from '@framework/controller/ControllerProvider.ts';
 import { service } from '@lib/di/utils.ts';
-import { permission } from './CheckPermission.ts';
+import { permission } from './cross/CheckPermission.ts';
 import { onStartAsync, when } from '@framework/hooks/OnInit.ts';
 import { IUserServiceKey } from '@services/user/IUserService.public.ts';
 import { IResource } from '@services/user/IResource.ts';
