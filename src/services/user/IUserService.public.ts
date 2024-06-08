@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import { UserPermissions } from '@modules/user/IPermissions';
-import { IUser } from '@modules/user/IUser';
+import { UserPermissions } from '../user/IPermissions';
+import { IUser } from '../user/IUser';
 import { Accessor } from '@lib/di/utils.ts';
 
 export interface IUserService {

@@ -3,7 +3,7 @@ import { INotificationController, INotificationControllerKey } from './INotifica
 import {
   type INotificationService,
   INotificationServiceKey,
-} from '@modules/notifications/INotificationService.public.ts';
+} from '../services/notifications/INotificationService.public.ts';
 import { inject, register, scope } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { action, query } from '@framework/controller/metadata.ts';

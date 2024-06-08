@@ -5,17 +5,17 @@ import {
   ITodoServiceKey,
   type TodoID,
   TodoStatus,
-} from '@modules/todo/ITodoService.public.ts';
+} from '../services/todo/ITodoService.public.ts';
 import {
   type INotificationService,
   INotificationServiceKey,
-} from '@modules/notifications/INotificationService.public.ts';
+} from '../services/notifications/INotificationService.public.ts';
 import { controller } from '@framework/controller/ControllerProvider.ts';
 import { service } from '@lib/di/utils.ts';
 import { permission } from './CheckPermission.ts';
 import { onStartAsync, when } from '@framework/hooks/OnInit.ts';
-import { IUserServiceKey } from '@modules/user/IUserService.public.ts';
-import { IResource } from '@modules/user/IResource.ts';
+import { IUserServiceKey } from '../services/user/IUserService.public.ts';
+import { IResource } from '../services/user/IResource.ts';
 import { Observable } from 'rxjs';
 import { ITodoController, ITodoControllerKey } from './ITodoController.ts';
 import { action, query } from '@framework/controller/metadata.ts';
