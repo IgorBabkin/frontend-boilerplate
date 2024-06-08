@@ -1,4 +1,4 @@
-import { Resolvable } from 'ts-ioc-container';
+import { IContainer } from 'ts-ioc-container';
 
 export const IEnvKey = Symbol('IEnv');
 
@@ -19,5 +19,5 @@ export interface IEnv {
 
 export const env =
   <T extends keyof IEnv>(key: T) =>
-  (l: Resolvable) =>
-    l.resolve<IEnv>(IEnvKey)[key];
+  (s: IContainer) =>
+    s.resolve<IEnv>(IEnvKey)[key];
