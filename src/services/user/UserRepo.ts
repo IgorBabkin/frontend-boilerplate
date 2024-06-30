@@ -4,9 +4,9 @@ import { UserDTO } from '@lib/api/ApiClient.ts';
 import { IUser } from './IUser';
 import { UserPermissions } from './IPermissions';
 import { sleep } from '@lib/utils.ts';
-import { Accessor } from '@lib/di/utils.ts';
+import { accessor } from '@lib/di/utils.ts';
 
-export const IUserRepoKey = new Accessor<UserRepo>('IUserRepo');
+export const IUserRepoKey = accessor<UserRepo>('IUserRepo');
 
 @register(IUserRepoKey.register, scope(Scope.application))
 @provider(singleton())

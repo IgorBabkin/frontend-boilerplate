@@ -1,7 +1,7 @@
 import { PropsWithChildren, useContext, useEffect, useMemo } from 'react';
 import { IContainer } from 'ts-ioc-container';
-import { parseTags } from '../../../lib/utils.ts';
-import { ContextNotFoundError } from '../../../lib/react/ContextNotFoundError.ts';
+import { parseTags } from '@lib/utils.ts';
+import { ContextNotFoundError } from '@lib/react/ContextNotFoundError.ts';
 import { disposeScope, ScopeContext } from './ScopeContext.ts';
 
 export type IScopeProps = {

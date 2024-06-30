@@ -1,5 +1,5 @@
 import { ITodo } from '@services/todo/ITodoService.public.ts';
-import { Accessor } from '@lib/di/utils.ts';
+import { accessor } from '@lib/di/utils.ts';
 import { Observable } from 'rxjs';
 import { IPageContext } from '@context/IPageService.ts';
 
@@ -13,4 +13,4 @@ export interface ITodoController {
   deleteTodo(id: string): Promise<void>;
 }
 
-export const ITodoControllerKey = new Accessor<ITodoController>('ITodoController');
+export const ITodoControllerKey = accessor<ITodoController>('ITodoController');

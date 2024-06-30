@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Accessor } from '../../lib/di/utils';
+import { accessor } from '../../lib/di/utils';
 
 export interface INotificationService {
   getMessage$(): Observable<string | undefined>;
@@ -7,4 +7,4 @@ export interface INotificationService {
   showMessage(message: string): void;
 }
 
-export const INotificationServiceKey = new Accessor<INotificationService>('INotificationService');
+export const INotificationServiceKey = accessor<INotificationService>('INotificationService');

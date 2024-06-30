@@ -1,9 +1,9 @@
-import { FC, PropsWithChildren, useCallback, useMemo } from 'react';
+import { FC, PropsWithChildren, useEffect, useMemo } from 'react';
 import Scope, { IScopeProps } from '@helpers/scope/Scope';
-import { IContainer, Provider } from 'ts-ioc-container';
+import { IContainer } from 'ts-ioc-container';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { BehaviorSubject } from 'rxjs';
 import { IPageServiceKey } from '@context/IPageService.ts';
+import { useDependency } from '@helpers/scope/ScopeContext.ts';
 
 const createScope = (parent: IContainer, tags: string[]) => parent.createScope(...tags);
 
@@ -31,11 +31,8 @@ export const page = <Props,>(Component: FC<Props>, ...tags: string[]) => {
   const tagStr = ['page', ...tags].join(',');
   return (props: PropsWithChildren<Props>) => {
     const context = usePageContext();
-    const createScope = useCallback(
-      (parent: IContainer, tags: string[]) =>
-        parent.createScope(...tags).register(IPageServiceKey.key, Provider.fromValue(new BehaviorSubject(context))),
-      [context],
-    );
+    const pageService = useDependency(IPageServiceKey.resolve);
+    useEffect(() => pageService.setContext(context));
     return (
       <Scope tags={tagStr} createScope={createScope}>
         <Component {...props} />

@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Accessor } from '@lib/di/utils.ts';
+import { accessor } from '@lib/di/utils.ts';
 
 export interface IFavoritesService {
   toggleFavorite(id: string): void;
@@ -7,4 +7,4 @@ export interface IFavoritesService {
   getFavorites$(): Observable<string[]>;
 }
 
-export const IFavoritesServiceKey = new Accessor<IFavoritesService>('IFavoritesService');
+export const IFavoritesServiceKey = accessor<IFavoritesService>('IFavoritesService');

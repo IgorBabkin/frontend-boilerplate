@@ -13,8 +13,10 @@ export const onStart = (fn: Hook) => hook(START_KEY, fn);
 export const onStartAsync = (fn: Hook) => hook(START_ASYNC_KEY, fn);
 export const onDispose = (fn: Hook) => hook(DISPOSE_KEY, fn);
 
+const isInitialized = (instance: object) => disposeMetadata.has(instance);
+
 export function initialize(instance: object, scope: IContainer) {
-  if (!disposeMetadata.has(instance)) {
+  if (isInitialized(instance)) {
     return;
   }
   disposeMetadata.setMetadata(instance, () => []);

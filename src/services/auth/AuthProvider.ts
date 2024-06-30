@@ -1,10 +1,10 @@
 import { AuthClient, IAuthClientKey } from './AuthClient.ts';
 import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
-import { mapAuthError } from '../../lib/api/mapApiToDomainError';
+import { mapAuthError } from '@lib/api/mapApiToDomainError.ts';
 import { Scope } from '@framework/scope.ts';
-import { Accessor } from '../../lib/di/utils';
+import { accessor } from '@lib/di/utils.ts';
 
-export const IAuthProviderKey = new Accessor<AuthProvider>('IAuthProvider');
+export const IAuthProviderKey = accessor<AuthProvider>('IAuthProvider');
 
 @register(IAuthProviderKey.register, scope(Scope.application))
 @provider(singleton())

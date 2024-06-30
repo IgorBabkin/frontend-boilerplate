@@ -1,16 +1,24 @@
-import { by, DependencyKey, IContainer, InjectFn, IRegistration, key } from 'ts-ioc-container';
+import { by, DependencyKey, IContainer, InjectFn, IRegistration, key as k } from 'ts-ioc-container';
 
 export class Accessor<T> {
-  constructor(public key: DependencyKey) {}
+  register: (v: IRegistration) => IRegistration;
 
-  register(r: IRegistration) {
-    return key(this.key)(r);
+  constructor(public key: DependencyKey) {
+    this.register = k(this.key);
   }
 
   resolve(c: IContainer) {
     return by.key<T>(this.key)(c);
   }
 }
+
+export const accessor = <T>(key: DependencyKey) => {
+  return {
+    key,
+    resolve: by.key<T>(key),
+    register: k(key),
+  };
+};
 
 export const service =
   <S, R>(accessor: Accessor<S>, fn: (c: S) => R): InjectFn<R> =>

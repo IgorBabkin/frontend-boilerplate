@@ -12,4 +12,8 @@ export class PageService implements IPageService {
   getContext$(): Observable<IPageContext> {
     return this.context$.asObservable();
   }
+
+  setContext(context: IPageContext): void {
+    this.context$.setValue(context);
+  }
 }

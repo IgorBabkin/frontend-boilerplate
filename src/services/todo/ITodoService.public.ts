@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Accessor } from '@lib/di/utils.ts';
+import { accessor } from '@lib/di/utils.ts';
 import { IEntity } from '@lib/observable/IEntity.ts';
 
 export interface ITodo extends IEntity {
@@ -26,4 +26,4 @@ export interface ITodoService {
   loadTodoList(filter: Partial<ITodoFilter>): Promise<void>;
 }
 
-export const ITodoServiceKey = new Accessor<ITodoService>('ITodoService');
+export const ITodoServiceKey = accessor<ITodoService>('ITodoService');

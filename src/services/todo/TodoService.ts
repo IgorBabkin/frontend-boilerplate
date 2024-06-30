@@ -4,10 +4,14 @@ import { Observable } from 'rxjs';
 import { Scope } from '@framework/scope.ts';
 import { ITodo, ITodoFilter, ITodoService, ITodoServiceKey } from './ITodoService.public';
 import { ObservableList } from '@lib/observable/ObservableList.ts';
+import { watch } from '@lib/watch/watch.ts';
+import { onStart } from '@framework/hooks/OnInit.ts';
+import { service } from '@framework/service/ServiceProvider.ts';
 
 @register(ITodoServiceKey.register, scope(Scope.page))
-@provider(singleton())
+@provider(service, singleton())
 export class TodoService implements ITodoService {
+  @onStart(watch)
   private todoList$ = new ObservableList<ITodo>([]);
 
   constructor(@inject(ITodoRepoKey.resolve) private todoRepo: TodoRepo) {}

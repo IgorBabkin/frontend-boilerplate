@@ -6,9 +6,9 @@ import { CommandMethod, CommandMethodKeys, Payload, QueryMethod, Response } from
 import { Observable, Subscription } from 'rxjs';
 import { byCommandAliases } from '@framework/scope.ts';
 import { IGuard, matchPayload } from '@framework/guard/IGuard.ts';
-import { Accessor } from '@lib/di/utils.ts';
+import { accessor } from '@lib/di/utils.ts';
 
-export const IControllerMediatorKey = new Accessor<IMediator>('IControllerMediator');
+export const IControllerMediatorKey = accessor<IMediator>('IControllerMediator');
 
 @register(IControllerMediatorKey.register)
 @provider(singleton())

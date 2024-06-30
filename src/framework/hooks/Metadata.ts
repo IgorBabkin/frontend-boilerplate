@@ -1,17 +1,17 @@
 import { Unsubscribe } from '@framework/hooks/OnInit';
 
-class Metadata<T> {
+export class Metadata<T> {
   constructor(
     private key: string | symbol,
-    private initial: T,
+    private getInitial: () => T,
   ) {}
 
   getMetadata(target: object): T | undefined {
-    return Reflect.getOwnMetadata(target, this.key);
+    return Reflect.getMetadata(this.key, target);
   }
 
   setMetadata(target: object, updateFn: (value: T) => T): void {
-    Reflect.defineMetadata(this.key, updateFn(this.getMetadata(target) ?? this.initial), target);
+    Reflect.defineMetadata(this.key, updateFn(this.getMetadata(target) ?? this.getInitial()), target);
   }
 
   has(instance: object) {
@@ -27,4 +27,8 @@ export const addItemToList = (fn: Unsubscribe) => (items: Unsubscribe[]) => {
   return [...items, fn];
 };
 
-export const disposeMetadata = new Metadata<Unsubscribe[]>('__dispose__', []);
+export const addItemToMap = (propertyName: string, fn: Unsubscribe) => (items: Unsubscribe[]) => {
+  return [...items, fn];
+};
+
+export const disposeMetadata = new Metadata<Unsubscribe[]>('__dispose__', () => []);

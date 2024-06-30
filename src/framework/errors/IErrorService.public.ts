@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Accessor } from '@lib/di/utils.ts';
+import { accessor } from '@lib/di/utils.ts';
 import { DomainError } from '@context/errors/DomainError.ts';
 
 export interface IErrorService {
@@ -7,4 +7,4 @@ export interface IErrorService {
   throwError(e: DomainError): void;
 }
 
-export const IErrorServiceKey = new Accessor<IErrorService>('IErrorService');
+export const IErrorServiceKey = accessor<IErrorService>('IErrorService');
