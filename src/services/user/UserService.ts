@@ -7,13 +7,43 @@ import { Scope } from '@framework/scope.ts';
 import { isPresent } from '@lib/utils.ts';
 import { service } from '@framework/service/ServiceProvider.ts';
 
-import { execute, onStartAsync } from '@framework/hooks/OnInit';
+import { execute, onStart, onStartAsync } from '@framework/hooks/OnInit';
 import { IUserService, IUserServiceKey } from './IUserService.public';
 import { ObservableStore } from '@lib/observable/ObservableStore.ts';
+import { subscriptionMetadata } from '@framework/hooks/Metadata.ts';
+import { WatchStore } from '@lib/timeTravel/observation.ts';
+
+const watchManager = new WatchStore();
 
 @register(IUserServiceKey.register, scope(Scope.application))
 @provider(service, singleton())
 export class UserService implements IUserService {
+  @onStart((context) => {
+    const obs$ = context.instance[context.methodName] as Observable<unknown>;
+    const id = generateID(obs$);
+    const subscription = obs$.subscribe({
+      next: (value) => {
+        watchManager.dispatch({
+          id,
+          type: 'upsert',
+          payload: {
+            value: value,
+            parent: getID(context.instance),
+          },
+        });
+      },
+      complete() {
+        watchManager.dispatch({
+          id,
+          type: 'delete',
+        });
+      },
+    });
+    subscriptionMetadata.setMetadata(context.instance, (subscriptions) => {
+      subscriptions.push(subscription);
+      return subscriptions;
+    });
+  })
   private user$ = new ObservableStore<IUser | undefined>(undefined);
 
   constructor(@inject(IUserRepoKey.resolve) private userRepo: UserRepo) {}

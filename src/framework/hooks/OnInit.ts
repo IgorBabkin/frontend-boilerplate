@@ -1,8 +1,10 @@
 import { hasHooks, Hook, hook, IContainer, IHookContext, runHooks, runHooksAsync } from 'ts-ioc-container';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { toObs$ } from '@lib/observable/utils';
-import { addItemToList, disposeMetadata } from '@framework/hooks/Metadata';
+import { toObs$, toRef } from '@lib/observable/utils';
+import { addItemToList, subscriptionMetadata } from '@framework/hooks/Metadata';
 import { IErrorServiceKey } from '@framework/errors/IErrorService.public';
+import { Ref, watch } from 'vue';
+import { env, PlayMode } from '@env/IEnv.ts';
 
 export type Unsubscribe = () => void;
 
@@ -13,30 +15,25 @@ export const onStart = (fn: Hook) => hook(START_KEY, fn);
 export const onStartAsync = (fn: Hook) => hook(START_ASYNC_KEY, fn);
 export const onDispose = (fn: Hook) => hook(DISPOSE_KEY, fn);
 
-const isInitialized = (instance: object) => disposeMetadata.has(instance);
+const isInitialized = (instance: object) => subscriptionMetadata.has(instance);
 
-export function initialize(instance: object, scope: IContainer) {
+export async function initialize(instance: object, scope: IContainer) {
   if (isInitialized(instance)) {
     return;
   }
-  disposeMetadata.setMetadata(instance, () => []);
+  subscriptionMetadata.setMetadata(instance, () => []);
 
   try {
     runHooks(instance, START_KEY, { scope });
-    runHooksAsync(instance, START_ASYNC_KEY, { scope }).catch((e) => {
-      IErrorServiceKey.resolve(scope).throwError(e);
-    });
+    await runHooksAsync(instance, START_ASYNC_KEY, { scope });
   } catch (e) {
     IErrorServiceKey.resolve(scope).throwError(e as Error);
   }
 }
 
 export function unsubscribeInit(instance: object) {
-  if (!hasHooks(instance, START_KEY)) {
-    return;
-  }
-  (disposeMetadata.getMetadata(instance) ?? []).forEach((fn) => fn());
-  disposeMetadata.delete(instance);
+  (subscriptionMetadata.getMetadata(instance) ?? []).forEach((fn) => fn.unsubscribe());
+  subscriptionMetadata.delete(instance);
 }
 
 export function dispose(instance: object, scope: IContainer) {
@@ -52,29 +49,66 @@ export function dispose(instance: object, scope: IContainer) {
 }
 
 export const execute = () => (context: IHookContext) => {
+  const { scope } = context;
+  const isReplyMode = env('playMode')(scope) === PlayMode.REPLAY;
+  if (isReplyMode) {
+    return;
+  }
+
   try {
     handleResult(context.invokeMethod({ args: context.resolveArgs() }), context);
   } catch (e) {
-    IErrorServiceKey.resolve(context.scope).throwError(e as Error);
+    IErrorServiceKey.resolve(scope).throwError(e as Error);
   }
 };
 
+const defaultErrorHandler = (e: unknown, scope: IContainer) => IErrorServiceKey.resolve(scope).throwError(e as Error);
+
 export const subscribeOn =
-  (create$?: (s: IContainer) => Observable<unknown>): Hook =>
+  ({
+    targets$ = [],
+    onError = defaultErrorHandler,
+  }: {
+    targets$?: ((s: IContainer) => Observable<unknown>)[];
+    onError?: (e: unknown, scope: IContainer) => void;
+  } = {}): Hook =>
   (context) => {
+    const { scope, instance } = context;
+    const isReplyMode = env('playMode')(scope) === PlayMode.REPLAY;
+    if (isReplyMode) {
+      return;
+    }
     const args = context.resolveArgs().map(toObs$);
-    const obs$ = create$?.apply(null, [context.scope]);
-    const subscription = combineLatest(obs$ ? [obs$, ...args] : args).subscribe({
-      next: (deps) => handleResult(context.invokeMethod({ args: obs$ ? deps.slice(1) : deps }), context),
-      error: (e) => IErrorServiceKey.resolve(context.scope).throwError(e),
+    const obs$ = targets$.map((c) => c(scope));
+    const subscription = combineLatest([...obs$, ...args]).subscribe({
+      next: (deps) => handleResult(context.invokeMethod({ args: deps.slice(obs$.length) }), context),
+      error: (e) => onError(e, scope),
+      complete: () => {
+        subscriptionMetadata.setMetadata(instance, (items) => items.filter((s) => s !== subscription));
+      },
     });
-    disposeMetadata.setMetadata(
-      context.instance,
-      addItemToList(() => subscription.unsubscribe()),
-    );
+    subscriptionMetadata.setMetadata(instance, addItemToList(subscription));
   };
 
-export const when = (condition: (s: IContainer) => Promise<unknown>): Hook => subscribeOn((s) => toObs$(condition(s)));
+export const watchOn =
+  (...createList$: ((s: IContainer) => Ref<unknown>)[]): Hook =>
+  (context) => {
+    const { scope, instance } = context;
+    const isReplyMode = env('playMode')(scope) === PlayMode.REPLAY;
+    if (isReplyMode) {
+      return;
+    }
+    const args = context.resolveArgs().map(toRef);
+    const unwatch = watch([...args, ...createList$.map((c) => c(scope))], (deps) => {
+      handleResult(context.invokeMethod({ args: deps.slice(args.length) }), context);
+    });
+    subscriptionMetadata.setMetadata(instance, addItemToList(unwatch));
+  };
+
+export const when = (...conditions: ((s: IContainer) => Promise<unknown>)[]): Hook =>
+  subscribeOn({ targets$: conditions.map((c) => (s) => toObs$(c(s))) });
+export const whenever = (...conditions: ((s: IContainer) => Promise<unknown>)[]): Hook =>
+  watchOn(...conditions.map((c) => (s: IContainer) => toRef(c(s))));
 
 export type HandleResult = (result: unknown, context: IHookContext) => void;
 
@@ -92,8 +126,8 @@ export const handleResult: HandleResult = (result, context) => {
   }
 
   if (result instanceof Subscription) {
-    disposeMetadata.setMetadata(context.instance, (subscriptions) => {
-      subscriptions.push(() => result.unsubscribe());
+    subscriptionMetadata.setMetadata(context.instance, (subscriptions) => {
+      subscriptions.push(result);
       return subscriptions;
     });
     return;

@@ -1,0 +1,21 @@
+@keyframes fadeOut {
+  0% {opacity: 1; transform: translateY(0);}
+  100% {opacity: 0;}
+}
+
+.toast-list__item {
+  -webkit-animation-name: fadeOut;
+  animation-name: fadeOut;
+  animation-duration: 5s;
+}
+
+.toast-list {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 10px;
+}

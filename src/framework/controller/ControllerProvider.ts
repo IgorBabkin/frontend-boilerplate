@@ -1,20 +1,45 @@
-import { IContainer, IProvider, ProviderDecorator, ProviderResolveOptions } from 'ts-ioc-container';
+import {
+  by,
+  DependencyKey,
+  type IContainer,
+  inject,
+  IProvider,
+  ProviderDecorator,
+  ProviderResolveOptions,
+  serializeTagsPath,
+} from 'ts-ioc-container';
 import { initialize } from '@framework/hooks/OnInit.ts';
 import { getActions, getQuery } from './metadata.ts';
 import { accessor, isClassInstance } from '@lib/di/utils.ts';
+import { type IMediator } from '@lib/mediator/IMediator.ts';
+import { CommandLog } from '@lib/timeTravel/CommandLog.ts';
 import { IControllerMediatorKey } from '@framework/controller/ControllerMediator.ts';
-import { IMediator } from '@lib/mediator/IMediator.ts';
-import { OperationLog } from '@lib/timeTravel/OperationLog.ts';
 
 interface IOperationLogger {
-  log: (operation: OperationLog) => void;
+  log: (operation: CommandLog) => void;
 }
 
-const IOperationLoggerKey = accessor<IOperationLogger>(Symbol('IOperationLogger'));
+export const IOperationLoggerKey = accessor<IOperationLogger>('IOperationLogger');
+
+export class CommandLogger implements IOperationLogger {
+  private commands: CommandLog[] = [];
+
+  startTime: Date = new Date();
+
+  log(operation: CommandLog) {
+    this.commands.push({
+      ...operation,
+      createdAt: operation.createdAt - this.startTime.getTime(),
+    });
+  }
+
+  stringify() {
+    return JSON.stringify(this.commands);
+  }
+}
 
 export class ControllerProvider<T> extends ProviderDecorator<T> {
   private isReplayingEnabled: boolean = false;
-  qwer = 1;§
   constructor(private provider: IProvider<T>) {
     super(provider);
   }
@@ -23,7 +48,7 @@ export class ControllerProvider<T> extends ProviderDecorator<T> {
     let instance: T = this.provider.resolve(container, options);
     if (isClassInstance(instance)) {
       const proxyBuilder = container.resolve(ProxyBuilder);
-      instance = proxyBuilder.build(instance) as any;
+      instance = proxyBuilder.build(instance, this.provider.key ?? 'NO KEY') as any;
 
       if (!this.isReplayingEnabled) {
         initialize(instance as object, container);
@@ -36,19 +61,15 @@ export class ControllerProvider<T> extends ProviderDecorator<T> {
   }
 }
 
-const getKeyByInstance = (scope: IContainer) => (service: object) => {
-  return scope.getKey(service);
-};
-
 class ProxyBuilder {
   constructor(
-    private scope: IContainer,
-    private logger: IOperationLogger,
-    private mediator: IMediator,
-    private getKeyByInstance: (service: object) => string,
+    @inject(by.scope.current) private scope: IContainer,
+    @inject(IOperationLoggerKey.resolve) private logger: IOperationLogger,
+    @inject(IControllerMediatorKey.resolve) private mediator: IMediator,
   ) {}
 
-  build(service: object): object {
+  build(service: object, key: DependencyKey): object {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const actions = getActions(service);
     const query = getQuery(service);
@@ -59,19 +80,20 @@ class ProxyBuilder {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return (payload: any) => {
               self.logger.log({
-                key: self.getKeyByInstance(service),
+                key: key.toString(),
                 methodName: prop as string,
-                path: self.scope.getPath(),
-                payload: JSON.stringify([payload]),
+                path: serializeTagsPath(self.scope.getPath()),
+                payload: [payload],
                 createdAt: Date.now(),
               });
-              return self.mediator.send(target, prop as any, payload);
+              // eslint-disable-next-line
+              return self.mediator.send(target, prop as any as never, payload);
             };
           }
 
           if (query.has(prop)) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            return (payload: any) => self.mediator.send$(target, prop as any, payload);
+            return (payload: any) => self.mediator.send$(target, prop as any as never, payload);
           }
         }
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

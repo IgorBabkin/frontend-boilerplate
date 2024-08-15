@@ -36,7 +36,10 @@ export class TodoController implements IResource, ITodoController {
   @permission('write')
   async addTodo(payload: string) {
     await this.todoService.createTodo(payload);
-    this.notificationService.showMessage('Todo added');
+    this.notificationService.showMessage({
+      type: 'info',
+      body: 'Todo is created',
+    });
   }
 
   @action
@@ -54,6 +57,9 @@ export class TodoController implements IResource, ITodoController {
   @permission('write')
   async deleteTodo(id: TodoID): Promise<void> {
     await this.todoService.deleteTodo(id);
-    this.notificationService.showMessage('Todo is deleted');
+    this.notificationService.showMessage({
+      type: 'info',
+      body: 'Todo is deleted',
+    });
   }
 }

@@ -8,12 +8,11 @@ const UserInfoWidget = widget(() => {
   const userController = useDependency(IUserControllerKey.resolve);
   const user = useObservable(() => userController.getUser$(), undefined, [userController]);
 
-  return (
-    <>
-      {user && <h3>Hello {user?.nickname}</h3>}
-      {!user && <h4>Loading...</h4>}
-    </>
-  );
+  if (!user) {
+    return <h4>Loading...</h4>;
+  }
+
+  return <h3>Hello {user?.nickname}</h3>;
 }, 'UserInfoWidget');
 
 export default UserInfoWidget;

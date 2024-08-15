@@ -15,6 +15,17 @@ export const useObservable = <T>(fn: () => Observable<T>, initial: T, deps: unkn
   return value;
 };
 
+export const useObs$ = <T>(obs$: Observable<T>, initial: T): T => {
+  const [value, next] = useState(initial);
+  const errorService = useDependency(IErrorServiceKey.resolve);
+  const error = useCallback((err: Error) => errorService.throwError(err), [errorService]);
+  useEffect(() => {
+    const sub = obs$.subscribe({ next, error });
+    return () => sub.unsubscribe();
+  }, [obs$, error]);
+  return value;
+};
+
 export const useAsyncEffect = (fn: () => Promise<void>, deps: unknown[]) => {
   const errorService = useDependency(IErrorServiceKey.resolve);
   useEffect(() => {

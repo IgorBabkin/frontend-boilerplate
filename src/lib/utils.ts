@@ -11,3 +11,5 @@ export const isPresent = <T>(value: T | undefined): value is T => value !== unde
 export function toggleElement<T>(list: T[], id: T) {
   return list.includes(id) ? list.filter((it) => it !== id) : [...list, id];
 }
+
+export const generateID = () => Math.random().toString(36).slice(5, 15);

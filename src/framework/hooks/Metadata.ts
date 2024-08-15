@@ -1,4 +1,4 @@
-import { Unsubscribe } from '@framework/hooks/OnInit';
+import { Subscription } from 'rxjs';
 
 export class Metadata<T> {
   constructor(
@@ -23,12 +23,8 @@ export class Metadata<T> {
   }
 }
 
-export const addItemToList = (fn: Unsubscribe) => (items: Unsubscribe[]) => {
+export const addItemToList = (fn: Subscription) => (items: Subscription[]) => {
   return [...items, fn];
 };
 
-export const addItemToMap = (propertyName: string, fn: Unsubscribe) => (items: Unsubscribe[]) => {
-  return [...items, fn];
-};
-
-export const disposeMetadata = new Metadata<Unsubscribe[]>('__dispose__', () => []);
+export const subscriptionMetadata = new Metadata<Subscription[]>('__dispose__', () => []);

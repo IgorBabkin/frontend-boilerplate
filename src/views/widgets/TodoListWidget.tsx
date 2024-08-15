@@ -1,4 +1,4 @@
-import { useAsyncEventHandler, useObservable } from '@helpers/observable';
+import { useObservable } from '@helpers/observable';
 import { widget } from '@helpers/scope/components';
 import Button from '@ui/button/Button';
 import { useDependency } from '@helpers/scope/ScopeContext';
@@ -10,7 +10,6 @@ const TodoListWidget = widget(() => {
   const favoriteController = useDependency(IFavoriteControllerKey.resolve);
 
   const list = useObservable(() => todoController.getTodoList$(), [], [todoController]);
-  const deleteTodo = useAsyncEventHandler((id: string) => todoController.deleteTodo(id), [todoController]);
   const favorites = useObservable(() => favoriteController.getFavorites$(), [], [favoriteController]);
 
   return (
@@ -18,7 +17,7 @@ const TodoListWidget = widget(() => {
       {list.map((it) => (
         <li key={it.id}>
           {it.title} - {favorites.includes(it.id) ? 'Favorite' : 'Not favorite'}
-          <Button type="button" onClick={() => deleteTodo(it.id)}>
+          <Button type="button" onClick={() => todoController.deleteTodo(it.id)}>
             Delete
           </Button>
           <Button type="button" onClick={() => favoriteController.toggleFavorite(it.id)}>

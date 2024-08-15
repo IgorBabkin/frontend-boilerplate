@@ -1,34 +1,20 @@
 import { provider, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
-import { filter, Observable, switchMap, timer } from 'rxjs';
-import { isPresent } from '@lib/utils.ts';
-
-import { execute, onStartAsync } from '@framework/hooks/OnInit';
+import { Observable, Subject } from 'rxjs';
 import { INotificationService, INotificationServiceKey } from './INotificationService.public';
 import { service } from '@framework/service/ServiceProvider.ts';
-import { ObservableStore } from '@lib/observable/ObservableStore.ts';
+import { NotificationMessage } from '@operations/notifications/INotificationController.ts';
 
 @register(INotificationServiceKey.register, scope(Scope.application))
 @provider(service, singleton())
 export class NotificationService implements INotificationService {
-  private messages$ = new ObservableStore<string | undefined>(undefined);
+  private messages$ = new Subject<NotificationMessage>();
 
-  showMessage(message: string) {
-    this.messages$.setValue(message);
+  showMessage(message: NotificationMessage) {
+    this.messages$.next(message);
   }
 
-  getMessage$(): Observable<string | undefined> {
+  getMessage$(): Observable<NotificationMessage> {
     return this.messages$.asObservable();
-  }
-
-  @onStartAsync(execute())
-  hideMessageOnTimeout() {
-    return this.messages$
-      .asObservable()
-      .pipe(
-        filter(isPresent),
-        switchMap(() => timer(5000)),
-      )
-      .subscribe(() => this.messages$.setValue(undefined));
   }
 }

@@ -12,9 +12,15 @@ export enum LogLevel {
   silly = 'silly',
 }
 
+export enum PlayMode {
+  RECORD = 'record',
+  REPLAY = 'replay',
+}
+
 export interface IEnv {
   logLevel: LogLevel;
   apiBaseUrl: string;
+  playMode: PlayMode;
 }
 
 export const env =
