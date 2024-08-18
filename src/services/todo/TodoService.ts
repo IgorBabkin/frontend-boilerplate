@@ -5,14 +5,17 @@ import { Scope } from '@framework/scope.ts';
 import { ITodo, ITodoFilter, ITodoService, ITodoServiceKey } from './ITodoService.public';
 import { ObservableList } from '@lib/observable/ObservableList.ts';
 import { watch } from '@lib/watch/watch.ts';
+import { Service } from '@framework/service/Service.ts';
 
 @register(ITodoServiceKey.register, scope(Scope.page))
 @provider(singleton())
-export class TodoService implements ITodoService {
+export class TodoService extends Service implements ITodoService {
   @watch
   private todoList$ = new ObservableList<ITodo>([]);
 
-  constructor(@inject(ITodoRepoKey.resolve) private todoRepo: TodoRepo) {}
+  constructor(@inject(ITodoRepoKey.resolve) private todoRepo: TodoRepo) {
+    super();
+  }
 
   async createTodo(payload: string): Promise<ITodo> {
     const todo = await this.todoRepo.createTodo({ title: payload, description: '' });

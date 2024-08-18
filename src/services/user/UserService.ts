@@ -10,16 +10,19 @@ import { ObservableStore } from '@lib/observable/ObservableStore.ts';
 import { type IAuthService, IAuthServiceKey } from '@services/auth/IAuthService.public.ts';
 import { IProfileRepoKey } from '@services/user/IProfileRepo.ts';
 import { execute, onInitAsync } from '@framework/hooks/OnInit.ts';
+import { Service } from '@framework/service/Service.ts';
 
 @provider(singleton())
 @register(IUserServiceKey.register, scope(Scope.application))
-export class UserService implements IUserService {
+export class UserService extends Service implements IUserService {
   private user$ = new ObservableStore<IUser | undefined>(undefined);
 
   constructor(
     @inject(IProfileRepoKey.resolve) private userRepo: ProfileRepo,
     @inject(IAuthServiceKey.resolve) private authService: IAuthService,
-  ) {}
+  ) {
+    super();
+  }
 
   @onInitAsync(execute())
   async loadUser(): Promise<void> {

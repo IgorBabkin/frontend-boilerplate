@@ -6,10 +6,11 @@ import { Observable } from 'rxjs';
 import { fromLocalStorage, saveToLocalStorage } from '@lib/LocalStorage.ts';
 import { toggleElement } from '@lib/utils.ts';
 import { IFavoritesService, IFavoritesServiceKey } from './IFavoritesService.public.ts';
+import { Service } from '@framework/service/Service.ts';
 
 @register(IFavoritesServiceKey.register, scope(Scope.page))
 @provider(singleton())
-export class FavoritesService implements IFavoritesService {
+export class FavoritesService extends Service implements IFavoritesService {
   @onInit(injectProp(fromLocalStorage('favorites', [])))
   @onDispose(saveToLocalStorage('favorites'))
   private favorites!: ObservableStore<string[]>;
