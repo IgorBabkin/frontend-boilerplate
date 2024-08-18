@@ -42,3 +42,17 @@ export const useAsyncEventHandler = <T>(fn: (e: T) => Promise<void>, deps: unkno
     [errorService, ...deps],
   );
 };
+
+export const useErrorHandler = () => {
+  const errorService = useDependency(IErrorServiceKey.resolve);
+  return useCallback(
+    (fn: () => void) => () => {
+      try {
+        fn();
+      } catch (e) {
+        errorService.throwError(e as Error);
+      }
+    },
+    [errorService],
+  );
+};

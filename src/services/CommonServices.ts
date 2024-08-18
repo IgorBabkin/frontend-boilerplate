@@ -10,6 +10,7 @@ import { AuthService } from '@services/auth/AuthService.ts';
 import { AuthProvider } from '@services/auth/AuthProvider.ts';
 import { AuthClient, IAuthClientKey } from '@services/auth/AuthClient.ts';
 import { hasTags } from '@framework/scope.ts';
+import { TabsChannel } from '@services/tabs/ITabsChannel.ts';
 
 export class CommonServices implements IContainerModule {
   applyTo(container: IContainer): void {
@@ -28,6 +29,9 @@ export class CommonServices implements IContainerModule {
 
       // Errors
       .add(R.fromClass(ErrorService))
+
+      // MultiTabs
+      .add(R.fromClass(TabsChannel))
 
       // Auth
       .add(R.fromClass(AuthService))

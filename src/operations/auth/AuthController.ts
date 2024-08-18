@@ -1,23 +1,24 @@
 import { Controller } from '@framework/controller/Controller.ts';
-import { alias, type IContainer, inject, provider, register, scope, singleton } from 'ts-ioc-container';
+import { alias, by, type IContainer, inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { IErrorServiceKey } from '@framework/errors/IErrorService.public.ts';
 import { type IAuthService } from '@services/auth/IAuthService.public.ts';
 import { controller } from '@framework/controller/ControllerProvider.ts';
 import { Scope } from '@framework/scope.ts';
-import { accessor } from '@lib/di/utils.ts';
+import { accessor, service } from '@lib/di/utils.ts';
 import { execute, onInit, onInitAsync, subscribeOn } from '@framework/hooks/OnInit.ts';
-import { filter, Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { InvalidAccessTokenError } from '@framework/errors/InvalidAccessTokenError.ts';
 import { EmptyTokenError } from '@services/auth/EmptyTokenError.ts';
 import { skipWhileBusy } from '@lib/observable/utils.ts';
-import { SessionClosedError } from '@operations/auth/SessionClosedError.ts';
+import { LogoutError, type LogoutReason } from '@context/errors/DomainError.ts';
+import { logoutMessage, type ITabsChannel, ITabsChannelKey } from '@services/tabs/ITabsChannel.ts';
 
 export interface IAuthController {
   isLoginDialogVisible$: Observable<boolean>;
 
   login(login: string, password: string): Promise<void>;
 
-  logout(locallyOnly?: boolean): Promise<void>;
+  logout(reason: LogoutReason): Promise<void>;
 }
 
 export const IAuthControllerKey = accessor<IAuthController>('IAuthController');
@@ -28,11 +29,12 @@ export class AuthController extends Controller implements IAuthController {
   isLoginDialogVisible$: Observable<boolean>;
 
   constructor(
-    scope: IContainer,
+    @inject(by.scope.current) scope: IContainer,
     @inject(IErrorServiceKey.resolve) private authService: IAuthService,
+    @inject(ITabsChannelKey.resolve) private tabsChannel: ITabsChannel,
   ) {
     super(scope);
-    this.isLoginDialogVisible$ = authService.isLoginVisible$;
+    this.isLoginDialogVisible$ = authService.isAuthDialogVisible$;
   }
 
   @onInitAsync(execute())
@@ -55,16 +57,21 @@ export class AuthController extends Controller implements IAuthController {
     await this.authService.login(login, password);
   }
 
-  async logout(): Promise<void> {
-    await this.authService.logout();
-  }
-
-  @onInit(
-    subscribeOn({
-      targets$: [(s) => IErrorServiceKey.resolve(s).error$.pipe(filter((i) => i instanceof SessionClosedError))],
-    }),
-  )
-  showAuthDialog(): void {
-    this.authService.showAuthDialog();
+  @onInit(subscribeOn())
+  async logout(
+    @inject(
+      service(IErrorServiceKey, (s) =>
+        s.error$.pipe(
+          filter(LogoutError.match),
+          map((e) => e.logoutReason),
+        ),
+      ),
+    )
+    reason: LogoutReason,
+  ): Promise<void> {
+    await this.authService.logout(reason);
+    if (reason.closeSession) {
+      this.tabsChannel.dispatch(logoutMessage(reason));
+    }
   }
 }

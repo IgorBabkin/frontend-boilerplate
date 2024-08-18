@@ -4,6 +4,7 @@ import { FavoriteController } from '@operations/favourites/FavoriteController.ts
 import { UserInfoController } from '@operations/user/UserInfoController.ts';
 import { TodoController } from '@operations/todo/TodoController.ts';
 import { NotificationController } from '@operations/notifications/NotificationController.ts';
+import { ModalDialogController } from '@operations/modal/ModalDialogController.ts';
 
 export class CommonOperations implements IContainerModule {
   applyTo(container: IContainer): void {
@@ -11,6 +12,7 @@ export class CommonOperations implements IContainerModule {
       .add(R.fromClass(CheckPermission))
       .add(R.fromClass(FavoriteController))
       .add(R.fromClass(UserInfoController))
+      .add(R.fromClass(ModalDialogController))
       .add(R.fromClass(NotificationController))
       .add(R.fromClass(TodoController));
   }

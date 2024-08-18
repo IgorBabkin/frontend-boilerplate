@@ -13,14 +13,13 @@ import { IAuthServiceKey } from '@services/auth/IAuthService.public.ts';
 import { NoPermissionError } from '@framework/errors/NoPermissionError.ts';
 import { type IErrorService, IErrorServiceKey } from '@framework/errors/IErrorService.public.ts';
 import { IMiddleware, matchMiddleware } from '@framework/guard/IMiddleware.ts';
-import { mediator } from '@framework/controller/MediatorProvider.ts';
 import { Controller } from '@framework/controller/Controller.ts';
 import { promisify } from 'ts-ioc-container/typings/utils';
 
 export const IControllerMediatorKey = accessor<IMediator<Controller>>('IControllerMediator');
 
 @register(IControllerMediatorKey.register)
-@provider(mediator, singleton(), alias('required'))
+@provider(singleton(), alias('required'))
 export class ControllerMediator implements IMediator<Controller> {
   private mediator: SimpleMediator<Controller>;
   private failedCommands: FailedCommand<Controller>[] = [];

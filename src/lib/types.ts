@@ -7,3 +7,5 @@ export type Identifier = { id: ID };
 export type Entity<T = {}> = T & Identifier;
 
 export const createEntity = <T>(payload: T): Entity<T> => ({ ...payload, id: generateID() });
+
+export type TimeoutID = ReturnType<typeof setTimeout>;

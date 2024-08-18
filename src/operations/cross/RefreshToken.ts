@@ -4,13 +4,14 @@ import { type IAuthService, IAuthServiceKey } from '@services/auth/IAuthService.
 import { IMiddleware } from '@framework/guard/IMiddleware.ts';
 import { middleware } from '@framework/middleware/MiddlewareProvider.ts';
 import { getMethodMetadata } from 'ts-ioc-container/typings/metadata';
+import { Controller } from '@framework/controller/Controller.ts';
 
 @register(scope(Scope.application))
 @provider(middleware, singleton(), alias(CommandAlias.onAfterExecution))
-export class RefreshToken implements IMiddleware {
+export class RefreshToken implements IMiddleware<Controller> {
   constructor(@inject(IAuthServiceKey.resolve) private authService: IAuthService) {}
 
-  match(resource: object, method: string): boolean {
+  match(resource: Controller, method: string): boolean {
     return getMethodMetadata('refreshToken', resource, method) !== undefined;
   }
 

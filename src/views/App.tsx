@@ -3,18 +3,21 @@ import { Outlet } from 'react-router-dom';
 import NotificationsWidget from '@widgets/notification/NotificationsWidget.tsx';
 import { application } from '@helpers/scope/components';
 import NavigationWidget from '@widgets/NavigationWidget';
-import { useOnPageLeave } from '../lib/react/eventHooks';
-import { useContextOrFail } from '../lib/react/context';
-import { disposeScope, ScopeContext } from '@helpers/scope/ScopeContext';
+import { useIdleTimer, useOnPageLeave } from '../lib/react/eventHooks';
+import { disposeScope, useScope } from '@helpers/scope/ScopeContext';
 import { createScope } from '../container.ts';
 import { useEffect } from 'react';
 import { LogPlayer } from '@lib/timeTravel/LogPlayer.ts';
 import { CommandExecuter } from '@lib/timeTravel/CommandLog.ts';
 import ModalWidget from '@widgets/modal/ModalWidget.tsx';
+import { UserInActivityError } from '@framework/errors/UserInActivityError.ts';
 
 const App = application(() => {
-  const scope = useContextOrFail(ScopeContext);
+  const scope = useScope();
   useOnPageLeave(() => disposeScope(scope), [scope]);
+  useIdleTimer(() => {
+    throw new UserInActivityError();
+  }, 5000);
 
   useEffect(() => {
     const player = new LogPlayer(new CommandExecuter(scope));

@@ -27,6 +27,7 @@
     "@ibabkin/backend-template": "^1.2.3",
     "@ibabkin/utils": "^0.1.0",
     "axios": "^1.6.8",
+    "broadcast-channel": "^7.0.0",
     "classnames": "^2.5.1",
     "cors": "^2.8.5",
     "react": "^18.2.0",

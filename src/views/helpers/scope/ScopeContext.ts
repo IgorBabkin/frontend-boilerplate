@@ -5,6 +5,9 @@ import { dispose, initialize, unsubscribeInit } from '@framework/hooks/OnInit';
 import { IErrorServiceKey } from '@framework/errors/IErrorService.public.ts';
 
 export const ScopeContext = createContext<IContainer | undefined>(undefined);
+
+export const useScope = () => useContextOrFail(ScopeContext);
+
 export const useDependency = <T extends object>(fn: InjectFn<T>) => {
   const scope = useContextOrFail(ScopeContext);
   const errorService = IErrorServiceKey.resolve(scope);

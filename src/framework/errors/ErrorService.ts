@@ -16,4 +16,14 @@ export class ErrorService implements IErrorService {
   filter$<E>(predicate: (e: unknown) => e is E): Observable<E> {
     return this.error$.pipe(filter(predicate));
   }
+
+  wrapByErrorHandling<A>(handler: (a: A) => void): (e: A) => void {
+    return (e: A) => {
+      try {
+        handler(e);
+      } catch (e) {
+        this.error$.next(e as DomainError);
+      }
+    };
+  }
 }

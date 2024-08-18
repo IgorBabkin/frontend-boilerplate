@@ -1,5 +1,5 @@
 import { hasHooks, Hook, hook, IContainer, IHookContext, runHooks, runHooksAsync } from 'ts-ioc-container';
-import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { toObs$ } from '@lib/observable/utils';
 import { addItemToList, subscriptionMetadata } from '@framework/hooks/Metadata';
 import { IErrorServiceKey } from '@framework/errors/IErrorService.public';
@@ -147,3 +147,8 @@ export const sourceEvents =
       return subscriptions;
     });
   };
+
+export const completeObservable: Hook = (context) => {
+  const state$ = context.getProperty() as Subject<unknown>;
+  state$.complete();
+};

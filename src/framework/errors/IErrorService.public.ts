@@ -6,6 +6,7 @@ export interface IErrorService {
   error$: Observable<DomainError>;
   filter$<E>(predicate: (e: unknown) => e is E): Observable<E>;
   throwError(e: DomainError): void;
+  wrapByErrorHandling<A>(handler: (a: A) => void): (e: A) => void;
 }
 
 export const IErrorServiceKey = accessor<IErrorService>('IErrorService');

@@ -10,13 +10,12 @@ import { IAuthServiceKey } from '@services/auth/IAuthService.public.ts';
 import { NoPermissionError } from '@framework/errors/NoPermissionError.ts';
 import { type IErrorService, IErrorServiceKey } from '@framework/errors/IErrorService.public.ts';
 import { IMiddleware } from '@framework/guard/IMiddleware.ts';
-import { mediator } from '@framework/controller/MediatorProvider.ts';
 import { Controller } from '@framework/controller/Controller.ts';
 
 export const IMiddlewareMediatorKey = accessor<IMediator<IMiddleware>>('IMiddlewareMediator');
 
 @register(IMiddlewareMediatorKey.register)
-@provider(mediator, singleton(), alias('required'))
+@provider(singleton(), alias('required'))
 export class MiddlewareMediator implements IMediator<IMiddleware> {
   private mediator: SimpleMediator<IMiddleware>;
   private failedCommands: FailedCommand<IMiddleware>[] = [];

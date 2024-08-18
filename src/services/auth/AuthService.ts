@@ -5,11 +5,12 @@ import { BehaviorSubject } from 'rxjs';
 import { AccessToken, type IAuthProvider, IAuthProviderKey } from '@services/auth/IAuthProvider.ts';
 import { EmptyTokenError } from '@services/auth/EmptyTokenError.ts';
 import { Service } from '@framework/service/Service.ts';
+import { type LogoutReason } from '@context/errors/DomainError.ts';
 
 @provider(singleton())
 @register(IAuthServiceKey.register, scope(Scope.application))
 export class AuthService extends Service implements IAuthService {
-  isLoginVisible$ = new BehaviorSubject<boolean>(true);
+  isAuthDialogVisible$ = new BehaviorSubject<boolean>(true);
   accessToken$ = new BehaviorSubject<string | undefined>(undefined);
 
   constructor(@inject(IAuthProviderKey.resolve) private authProvider: IAuthProvider) {
@@ -19,19 +20,24 @@ export class AuthService extends Service implements IAuthService {
   async login(login: string, password: string): Promise<void> {
     const token = await this.authProvider.authenticate(login, password);
     this.accessToken$.next(token);
-    this.isLoginVisible$.next(false);
+    this.isAuthDialogVisible$.next(false);
   }
 
-  async logout(server?: boolean): Promise<void> {
+  async logout(reason: LogoutReason): Promise<void> {
+    if (this.accessToken$.getValue() === undefined) {
+      return;
+    }
+
     this.accessToken$.next(undefined);
-    this.isLoginVisible$.next(true);
-    if (server) {
+    this.isAuthDialogVisible$.next(true);
+
+    if (reason.closeSession) {
       await this.authProvider.closeSession();
     }
   }
 
   closeAuthDialog(): void {
-    this.isLoginVisible$.next(false);
+    this.isAuthDialogVisible$.next(false);
   }
 
   refreshToken(): Promise<AccessToken> {
@@ -48,9 +54,5 @@ export class AuthService extends Service implements IAuthService {
       throw new EmptyTokenError('Token is not present');
     }
     return token;
-  }
-
-  showAuthDialog() {
-    this.isLoginVisible$.next(true);
   }
 }

@@ -1,15 +1,16 @@
 import { accessor } from '@lib/di/utils.ts';
 import { Observable } from 'rxjs';
 import { AccessToken } from '@services/auth/IAuthProvider.ts';
+import { LogoutReason } from '@context/errors/DomainError.ts';
 
 export interface IAuthService {
-  isLoginVisible$: Observable<boolean>;
+  isAuthDialogVisible$: Observable<boolean>;
 
   closeAuthDialog(): void;
 
   login(login: string, password: string): Promise<void>;
 
-  logout(closeSession?: boolean): Promise<void>;
+  logout(reason: LogoutReason): Promise<void>;
 
   refreshToken(): Promise<AccessToken>;
 
@@ -18,8 +19,6 @@ export interface IAuthService {
   getTokenOrFail(): string;
 
   setToken(token: string): void;
-
-  showAuthDialog(): void;
 }
 
 export const IAuthServiceKey = accessor<IAuthService>('IAuthService');
