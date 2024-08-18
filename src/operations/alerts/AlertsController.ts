@@ -29,7 +29,7 @@ const errorToAlert$ = (s: IErrorService): Observable<AlertMessage> =>
   );
 
 @register(IModalControllerKey.register, scope(Scope.application))
-export class ModalDialogController implements IModalDialogController {
+export class AlertsController implements IModalDialogController {
   alerts$: Observable<Entity<AlertMessage>[]>;
 
   constructor(@inject(INotificationServiceKey.resolve) private alertService: IAlertService) {

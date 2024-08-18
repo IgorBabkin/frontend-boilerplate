@@ -6,7 +6,7 @@ import { ModalDialog } from '@ui/dialog/ModalDialog.tsx';
 import './modalWidget.scss';
 import { useObs$ } from '@helpers/observable.ts';
 import { AlertMessage } from '@services/alert/IAlertService.ts';
-import { IModalControllerKey } from '@operations/modal/ModalDialogController.ts';
+import { IModalControllerKey } from '@operations/alerts/AlertsController.ts';
 import { Entity } from '@lib/types.ts';
 
 const ModalWidget = widget(() => {

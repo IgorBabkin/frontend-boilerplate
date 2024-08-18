@@ -6,6 +6,7 @@ import { controller } from '@framework/controller/ControllerProvider.ts';
 import { type IAuthService, IAuthServiceKey } from '@services/auth/IAuthService.public.ts';
 import { onInit, subscribeOn } from '@framework/hooks/OnInit.ts';
 import { ITabsChannelKey, type WindowPostMessage } from '@services/tabs/ITabsChannel.ts';
+import { action } from '@framework/controller/metadata.ts';
 
 export interface IWindowSyncController {}
 
@@ -22,6 +23,7 @@ export class WindowSyncController extends Controller implements IWindowSyncContr
   }
 
   @onInit(subscribeOn())
+  @action
   async handleMessage(@inject(service(ITabsChannelKey, (s) => s.message$)) message: WindowPostMessage): Promise<void> {
     switch (message.type) {
       case 'logout':
