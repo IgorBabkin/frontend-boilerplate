@@ -5,20 +5,19 @@ import { type IAuthService } from '@services/auth/IAuthService.public.ts';
 import { controller } from '@framework/controller/ControllerProvider.ts';
 import { Scope } from '@framework/scope.ts';
 import { accessor, service } from '@lib/di/utils.ts';
-import { execute, onInit, onInitAsync, subscribeOn } from '@framework/hooks/OnInit.ts';
-import { filter, map, Observable } from 'rxjs';
-import { InvalidAccessTokenError } from '@framework/errors/InvalidAccessTokenError.ts';
-import { EmptyTokenError } from '@services/auth/EmptyTokenError.ts';
+import { onInit, onInitAsync, subscribeOn } from '@framework/hooks/OnInit.ts';
+import { filter, map } from 'rxjs';
 import { skipWhileBusy } from '@lib/observable/utils.ts';
-import { LogoutError, type LogoutReason } from '@context/errors/DomainError.ts';
-import { logoutMessage, type ITabsChannel, ITabsChannelKey } from '@services/tabs/ITabsChannel.ts';
+import { type ITabsChannel, ITabsChannelKey, logoutMessage } from '@services/tabs/ITabsChannel.ts';
+import { LogoutError, type LogoutReason } from '@context/errors/LogoutError.ts';
+import { TokenError } from '@framework/errors/TokenError.ts';
+import { action } from '@framework/controller/metadata.ts';
+import { type IAlertService, IAlertServiceKey } from '@services/alert/IAlertService.ts';
 
 export interface IAuthController {
-  isLoginDialogVisible$: Observable<boolean>;
-
   login(login: string, password: string): Promise<void>;
 
-  logout(reason: LogoutReason): Promise<void>;
+  logout(): Promise<void>;
 }
 
 export const IAuthControllerKey = accessor<IAuthController>('IAuthController');
@@ -26,26 +25,18 @@ export const IAuthControllerKey = accessor<IAuthController>('IAuthController');
 @provider(controller, singleton(), alias('required'))
 @register(IAuthControllerKey.register, scope(Scope.application))
 export class AuthController extends Controller implements IAuthController {
-  isLoginDialogVisible$: Observable<boolean>;
-
   constructor(
     @inject(by.scope.current) scope: IContainer,
     @inject(IErrorServiceKey.resolve) private authService: IAuthService,
     @inject(ITabsChannelKey.resolve) private tabsChannel: ITabsChannel,
+    @inject(IAlertServiceKey.resolve) private alertService: IAlertService,
   ) {
     super(scope);
-    this.isLoginDialogVisible$ = authService.isAuthDialogVisible$;
   }
 
-  @onInitAsync(execute())
   @onInitAsync(
     subscribeOn({
-      targets$: [
-        (s) =>
-          IErrorServiceKey.resolve(s).error$.pipe(
-            filter((e) => e instanceof EmptyTokenError || e instanceof InvalidAccessTokenError),
-          ),
-      ],
+      targets$: [(s) => IErrorServiceKey.resolve(s).error$.pipe(filter(TokenError.match))],
     }),
   )
   @skipWhileBusy
@@ -53,12 +44,14 @@ export class AuthController extends Controller implements IAuthController {
     await this.authService.refreshToken();
   }
 
+  @action
   async login(login: string, password: string): Promise<void> {
     await this.authService.login(login, password);
   }
 
+  @action
   @onInit(subscribeOn())
-  async logout(
+  async autologout(
     @inject(
       service(IErrorServiceKey, (s) =>
         s.error$.pipe(
@@ -69,9 +62,22 @@ export class AuthController extends Controller implements IAuthController {
     )
     reason: LogoutReason,
   ): Promise<void> {
-    await this.authService.logout(reason);
-    if (reason.closeSession) {
-      this.tabsChannel.dispatch(logoutMessage(reason));
+    await this.authService.logout(reason.isSessionAlreadyClosed);
+    if (reason.isSessionAlreadyClosed) {
+      this.tabsChannel.dispatch(logoutMessage());
     }
+
+    this.alertService.addAlert({
+      title: 'Error',
+      type: 'error',
+      body: reason.message,
+      showLoginButton: reason.showLoginButton,
+    });
+  }
+
+  @action
+  async logout(): Promise<void> {
+    await this.authService.logout();
+    this.tabsChannel.dispatch(logoutMessage());
   }
 }

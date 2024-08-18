@@ -1,15 +1,15 @@
 import { widget } from '@helpers/scope/components.tsx';
 
 import { useDependency } from '@helpers/scope/ScopeContext.ts';
-import { INotificationControllerKey } from '@operations/notifications/INotificationController.ts';
 import { useCallback } from 'react';
 import { Toast } from '@ui/toast/Toast.tsx';
 import './notificationWidget.scss';
 import { useObs$ } from '@helpers/observable.ts';
+import { INotificationControllerKey } from '@operations/notifications/NotificationController.ts';
 
 const NotificationsWidget = widget(() => {
   const controller = useDependency(INotificationControllerKey.resolve);
-  const notifications = useObs$(controller.notifications$, []);
+  const [notifications] = useObs$(controller.notifications$, []);
   const deleteMessage = useCallback((id: string) => () => controller.deleteMessage(id), [controller]);
 
   return (

@@ -1,4 +1,6 @@
-export class EmptyTokenError extends Error {
+import { TokenError } from '@framework/errors/TokenError.ts';
+
+export class EmptyTokenError extends TokenError {
   name = 'EmptyTokenError';
 
   static match(err: Error): err is EmptyTokenError {

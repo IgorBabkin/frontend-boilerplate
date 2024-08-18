@@ -11,16 +11,16 @@ export type Unsubscribe = () => void;
 
 const INIT_KEY = '__init__';
 const INIT_ASYNC_KEY = '__init_async__';
-export const onInit = (fn: Hook) => hook(INIT_KEY, fn);
-export const onInitAsync = (fn: Hook) => hook(INIT_ASYNC_KEY, fn);
+export const onInit = (...fn: Hook[]) => hook(INIT_KEY, ...fn);
+export const onInitAsync = (...fn: Hook[]) => hook(INIT_ASYNC_KEY, ...fn);
 
 const CONSTRUCT_KEY = '__construct__';
 const CONSTRUCT_ASYNC_KEY = '__construct_async__';
-export const onConstruct = (fn: Hook) => hook(CONSTRUCT_KEY, fn);
-export const onConstructAsync = (fn: Hook) => hook(CONSTRUCT_ASYNC_KEY, fn);
+export const onConstruct = (...fn: Hook[]) => hook(CONSTRUCT_KEY, ...fn);
+export const onConstructAsync = (...fn: Hook[]) => hook(CONSTRUCT_ASYNC_KEY, ...fn);
 
 const DISPOSE_KEY = '__dispose__';
-export const onDispose = (fn: Hook) => hook(DISPOSE_KEY, fn);
+export const onDispose = (...fn: Hook[]) => hook(DISPOSE_KEY, ...fn);
 
 export const isInitialized = (instance: object) => subscriptionMetadata.has(instance);
 

@@ -11,6 +11,7 @@ import { LogPlayer } from '@lib/timeTravel/LogPlayer.ts';
 import { CommandExecuter } from '@lib/timeTravel/CommandLog.ts';
 import ModalWidget from '@widgets/modal/ModalWidget.tsx';
 import { UserInActivityError } from '@framework/errors/UserInActivityError.ts';
+import { AuthDialogWidget } from '@widgets/AuthDialogWidget.tsx';
 
 const App = application(() => {
   const scope = useScope();
@@ -28,6 +29,7 @@ const App = application(() => {
     <div>
       <NotificationsWidget />
       <ModalWidget />
+      <AuthDialogWidget />
       <h1>App</h1>
       <NavigationWidget />
       <Outlet />

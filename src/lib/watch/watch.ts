@@ -23,7 +23,7 @@ export const disposeMetadata = new Metadata<Map<string, Unsubscribe[]>>('__dispo
 
 // export function unwatch(instance: object) {
 //   (disposeMetadata.getMetadata(instance) ?? new Map()).forEach((fn) => fn());
-//   disposeMetadata.delete(instance);
+//   disposeMetadata.remove(instance);
 // }
 
 // const watchProxy = (target: Watchable) => {

@@ -1,7 +1,8 @@
-import { DomainError } from '@context/errors/DomainError.ts';
+import { TokenError } from '@framework/errors/TokenError.ts';
 
-export class InvalidAccessTokenError extends DomainError {
+export class InvalidAccessTokenError extends TokenError {
   name = 'InvalidAccessTokenError';
+
   constructor(message: string) {
     super(message);
 

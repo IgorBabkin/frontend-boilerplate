@@ -6,7 +6,7 @@ import { accessor } from '@lib/di/utils.ts';
 export interface IUserService {
   getPermissions(): UserPermissions;
 
-  getUser$(): Observable<IUser | undefined>;
+  user$: Observable<IUser | null>;
 
   isUserLoaded(): Promise<IUser>;
 

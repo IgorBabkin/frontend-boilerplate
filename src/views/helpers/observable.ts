@@ -1,5 +1,5 @@
 import { Observable, Subscribable } from 'rxjs';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDependency } from '@helpers/scope/ScopeContext';
 import { IErrorServiceKey } from '@framework/errors/IErrorService.public';
 
@@ -15,7 +15,7 @@ export const useObservable = <T>(fn: () => Observable<T>, initial: T, deps: unkn
   return value;
 };
 
-export const useObs$ = <T>(obs$: Subscribable<T>, initial: T): T => {
+export const useObs$ = <T>(obs$: Subscribable<T>, initial: T): [T, Dispatch<SetStateAction<T>>] => {
   const [value, next] = useState(initial);
   const errorService = useDependency(IErrorServiceKey.resolve);
   const error = useCallback((err: Error) => errorService.throwError(err), [errorService]);
@@ -23,7 +23,7 @@ export const useObs$ = <T>(obs$: Subscribable<T>, initial: T): T => {
     const sub = obs$.subscribe({ next, error });
     return () => sub.unsubscribe();
   }, [obs$, error]);
-  return value;
+  return [value, next];
 };
 
 export const useAsyncEffect = (fn: () => Promise<void>, deps: unknown[]) => {

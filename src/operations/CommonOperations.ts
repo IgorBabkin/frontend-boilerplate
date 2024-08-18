@@ -5,6 +5,7 @@ import { UserInfoController } from '@operations/user/UserInfoController.ts';
 import { TodoController } from '@operations/todo/TodoController.ts';
 import { NotificationController } from '@operations/notifications/NotificationController.ts';
 import { ModalDialogController } from '@operations/modal/ModalDialogController.ts';
+import { WindowSyncController } from '@operations/window/WindowSyncController.ts';
 
 export class CommonOperations implements IContainerModule {
   applyTo(container: IContainer): void {
@@ -14,6 +15,7 @@ export class CommonOperations implements IContainerModule {
       .add(R.fromClass(UserInfoController))
       .add(R.fromClass(ModalDialogController))
       .add(R.fromClass(NotificationController))
+      .add(R.fromClass(WindowSyncController))
       .add(R.fromClass(TodoController));
   }
 }
