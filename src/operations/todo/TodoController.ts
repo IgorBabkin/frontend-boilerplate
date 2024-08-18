@@ -12,7 +12,7 @@ import {
 } from '@services/notifications/INotificationService.public.ts';
 import { controller } from '@framework/controller/ControllerProvider.ts';
 import { service } from '@lib/di/utils.ts';
-import { permission } from '@operations/permissions/CheckPermission.ts';
+import { permission } from '@operations/permissions/CheckPermissionGuard.ts';
 import { onInitAsync, when } from '@framework/hooks/OnInit.ts';
 import { IUserServiceKey } from '@services/user/IUserService.public.ts';
 import { IResource } from '@services/user/IResource.ts';
@@ -21,7 +21,7 @@ import { ITodoController, ITodoControllerKey } from './ITodoController.ts';
 import { action } from '@framework/controller/metadata.ts';
 import { Scope } from '@framework/scope.ts';
 import { type IPageContext, IPageServiceKey } from '@context/IPageService.ts';
-import { refreshToken } from '@operations/auth/RefreshToken.ts';
+import { refreshToken } from '@operations/auth/RefreshTokenMiddleware.ts';
 
 @register(ITodoControllerKey.register, scope(Scope.page))
 @provider(controller, singleton())

@@ -8,7 +8,7 @@ import { Controller } from '@framework/controller/Controller.ts';
 
 @register(scope(Scope.application))
 @provider(middleware, singleton(), alias(CommandAlias.onAfterExecution))
-export class RefreshToken implements IMiddleware<Controller> {
+export class RefreshTokenMiddleware implements IMiddleware<Controller> {
   constructor(@inject(IAuthServiceKey.resolve) private authService: IAuthService) {}
 
   match(resource: Controller, method: string): boolean {

@@ -7,7 +7,7 @@ import { type IUserService, IUserServiceKey, Permission } from '@services/user/I
 
 @register(scope(Scope.application))
 @provider(singleton(), alias(CommandAlias.onBeforeExecution))
-export class CheckPermission implements IGuard {
+export class CheckPermissionGuard implements IGuard {
   constructor(@inject(IUserServiceKey.resolve) private userService: IUserService) {}
 
   match(resource: unknown): resource is IResource {
