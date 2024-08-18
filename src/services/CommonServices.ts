@@ -1,6 +1,6 @@
 import { IContainer, IContainerModule, Registration as R, singleton } from 'ts-ioc-container';
 import { TodoRepo } from '@services/todo/TodoRepo.ts';
-import { UserRepo } from '@services/user/UserRepo.ts';
+import { ProfileRepo } from '@services/user/ProfileRepo.ts';
 import { TodoService } from '@services/todo/TodoService.ts';
 import { UserService } from '@services/user/UserService.ts';
 import { FavoritesService } from '@services/favourites/FavoritesService.ts';
@@ -15,7 +15,7 @@ export class CommonServices implements IContainerModule {
   applyTo(container: IContainer): void {
     container
       // User
-      .add(R.fromClass(UserRepo))
+      .add(R.fromClass(ProfileRepo))
       .add(R.fromClass(UserService))
 
       // Todos

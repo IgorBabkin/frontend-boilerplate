@@ -1,15 +1,19 @@
-import { Observable } from 'rxjs';
+import { Observable, Observer, Subscribable, Unsubscribable } from 'rxjs';
 
-export interface IObservableStore<T> {
+export interface IObservableStore<T> extends Subscribable<T> {
   map(fn: (value: T) => T): void;
 
   getValue(): T;
 
-  setValue(value: T): void;
+  next(value: T): void;
 
   asObservable(): Observable<T>;
 
-  dispose(): void;
+  complete(): void;
+
+  error(e: Error): void;
+
+  subscribe(props: Partial<Observer<T>>): Unsubscribable;
 
   serialize(): string;
 }

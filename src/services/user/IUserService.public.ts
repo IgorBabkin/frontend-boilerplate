@@ -9,6 +9,8 @@ export interface IUserService {
   getUser$(): Observable<IUser | undefined>;
 
   isUserLoaded(): Promise<IUser>;
+
+  loadUser(): Promise<void>;
 }
 
 export const IUserServiceKey = accessor<IUserService>(Symbol('IUserService'));

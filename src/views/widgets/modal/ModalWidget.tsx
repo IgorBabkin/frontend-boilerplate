@@ -1,24 +1,25 @@
 import { widget } from '@helpers/scope/components.tsx';
 
 import { useDependency } from '@helpers/scope/ScopeContext.ts';
-import { INotificationControllerKey } from '@operations/notifications/INotificationController.ts';
 import { useCallback } from 'react';
-import { useArrayState } from '@lib/observable/hooks.ts';
-import { createEntity, Entity } from '@lib/types.ts';
 import { ModalDialog } from '@ui/dialog/ModalDialog.tsx';
 import './modalWidget.scss';
+import { useArrayState } from '@lib/observable/hooks.ts';
+import { IModalControllerKey } from '@operations/modal/IModalDialogController.ts';
+import { createEntity, Entity } from '@lib/types.ts';
 
-const mapToArray =
+const appendEntity =
   <T,>(value: T) =>
-  (prev: Entity<T>[]) => [...prev, createEntity(value)];
+  (prevState: Entity<T>[]) => [...prevState, createEntity(value)];
 
 const ModalWidget = widget(() => {
-  const notificationController = useDependency(INotificationControllerKey.resolve);
-  const [notifications, setNotifications] = useArrayState(notificationController.message$, { mapFn: mapToArray });
-  const removeMessage = useCallback(
-    (id: string) => () => setNotifications((prevState) => prevState.filter((v) => v.id !== id)),
-    [setNotifications],
+  const controller = useDependency(IModalControllerKey.resolve);
+  const [notifications, setNotifications] = useArrayState(controller.notifications$, { mapFn: appendEntity });
+  const deleteMessage = useCallback(
+    (id: string) => () => setNotifications(notifications.filter((v) => v.id !== id)),
+    [notifications, setNotifications],
   );
+
   const [m] = notifications;
 
   if (!m) {
@@ -26,7 +27,7 @@ const ModalWidget = widget(() => {
   }
 
   return (
-    <ModalDialog title={m.title} onClose={removeMessage(m.id)}>
+    <ModalDialog title={m.title} onClose={deleteMessage(m.id)}>
       {m.body}
     </ModalDialog>
   );

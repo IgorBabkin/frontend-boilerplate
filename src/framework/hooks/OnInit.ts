@@ -1,34 +1,50 @@
 import { hasHooks, Hook, hook, IContainer, IHookContext, runHooks, runHooksAsync } from 'ts-ioc-container';
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { toObs$, toRef } from '@lib/observable/utils';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
+import { toObs$ } from '@lib/observable/utils';
 import { addItemToList, subscriptionMetadata } from '@framework/hooks/Metadata';
 import { IErrorServiceKey } from '@framework/errors/IErrorService.public';
-import { Ref, watch } from 'vue';
 import { env, PlayMode } from '@env/IEnv.ts';
+import { Identifier } from '@lib/types.ts';
+import { EntityPatch, patchSubject } from '@context/EntityPatch.ts';
 
 export type Unsubscribe = () => void;
 
-const START_KEY = '__start__';
-const START_ASYNC_KEY = '__start_async__';
+const INIT_KEY = '__init__';
+const INIT_ASYNC_KEY = '__init_async__';
+export const onInit = (fn: Hook) => hook(INIT_KEY, fn);
+export const onInitAsync = (fn: Hook) => hook(INIT_ASYNC_KEY, fn);
+
+const CONSTRUCT_KEY = '__construct__';
+const CONSTRUCT_ASYNC_KEY = '__construct_async__';
+export const onConstruct = (fn: Hook) => hook(CONSTRUCT_KEY, fn);
+export const onConstructAsync = (fn: Hook) => hook(CONSTRUCT_ASYNC_KEY, fn);
+
 const DISPOSE_KEY = '__dispose__';
-export const onStart = (fn: Hook) => hook(START_KEY, fn);
-export const onStartAsync = (fn: Hook) => hook(START_ASYNC_KEY, fn);
 export const onDispose = (fn: Hook) => hook(DISPOSE_KEY, fn);
 
-const isInitialized = (instance: object) => subscriptionMetadata.has(instance);
+export const isInitialized = (instance: object) => subscriptionMetadata.has(instance);
 
+/**
+ * It's should be covered to try/catch block
+ * @param instance
+ * @param scope
+ * @throws Error
+ */
 export async function initialize(instance: object, scope: IContainer) {
   if (isInitialized(instance)) {
     return;
   }
   subscriptionMetadata.setMetadata(instance, () => []);
 
-  try {
-    runHooks(instance, START_KEY, { scope });
-    await runHooksAsync(instance, START_ASYNC_KEY, { scope });
-  } catch (e) {
-    IErrorServiceKey.resolve(scope).throwError(e as Error);
+  runHooks(instance, INIT_KEY, { scope });
+  if ('init' in instance) {
+    (instance as { init: () => void }).init();
   }
+
+  await Promise.all([
+    runHooksAsync(instance, INIT_ASYNC_KEY, { scope }),
+    'initAsync' in instance ? (instance as { initAsync: () => void }).initAsync() : Promise.resolve(),
+  ]);
 }
 
 export function unsubscribeInit(instance: object) {
@@ -90,25 +106,8 @@ export const subscribeOn =
     subscriptionMetadata.setMetadata(instance, addItemToList(subscription));
   };
 
-export const watchOn =
-  (...createList$: ((s: IContainer) => Ref<unknown>)[]): Hook =>
-  (context) => {
-    const { scope, instance } = context;
-    const isReplyMode = env('playMode')(scope) === PlayMode.REPLAY;
-    if (isReplyMode) {
-      return;
-    }
-    const args = context.resolveArgs().map(toRef);
-    const unwatch = watch([...args, ...createList$.map((c) => c(scope))], (deps) => {
-      handleResult(context.invokeMethod({ args: deps.slice(args.length) }), context);
-    });
-    subscriptionMetadata.setMetadata(instance, addItemToList(unwatch));
-  };
-
 export const when = (...conditions: ((s: IContainer) => Promise<unknown>)[]): Hook =>
   subscribeOn({ targets$: conditions.map((c) => (s) => toObs$(c(s))) });
-export const whenever = (...conditions: ((s: IContainer) => Promise<unknown>)[]): Hook =>
-  watchOn(...conditions.map((c) => (s: IContainer) => toRef(c(s))));
 
 export type HandleResult = (result: unknown, context: IHookContext) => void;
 
@@ -133,3 +132,18 @@ export const handleResult: HandleResult = (result, context) => {
     return;
   }
 };
+
+export type SourceEventOptions<T extends Identifier> = { src: (s: IContainer) => Observable<EntityPatch<T>> };
+export const sourceEvents =
+  <T extends Identifier>({ src }: SourceEventOptions<T>): Hook =>
+  (context) => {
+    const state$ = context.getProperty() as BehaviorSubject<T[]>;
+    const subscription = src(context.scope).subscribe({
+      next: (current) => patchSubject(state$, current),
+      error: (e) => state$.error(e),
+    });
+    subscriptionMetadata.setMetadata(context.instance, (subscriptions) => {
+      subscriptions.push(subscription);
+      return subscriptions;
+    });
+  };

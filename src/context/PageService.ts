@@ -14,6 +14,6 @@ export class PageService implements IPageService {
   }
 
   setContext(context: IPageContext): void {
-    this.context$.setValue(context);
+    this.context$.next(context);
   }
 }

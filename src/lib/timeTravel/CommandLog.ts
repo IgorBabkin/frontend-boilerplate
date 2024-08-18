@@ -1,4 +1,4 @@
-import { IContainer, serializeTagsPath, TagPath } from 'ts-ioc-container';
+import { IContainer, TagPath } from 'ts-ioc-container';
 
 export type CommandLog = {
   key: string;
@@ -16,7 +16,7 @@ export class CommandExecuter {
       tags.every((t) => scope.hasTag(t)),
     );
     if (!currentScope) {
-      throw new Error(`Cannot find scope with path ${serializeTagsPath(log.tagPath)}`);
+      throw new Error(`Cannot find scope with path ${log.tagPath}`);
     }
     const operation = currentScope.resolve(log.key);
     /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */

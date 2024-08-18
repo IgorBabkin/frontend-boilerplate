@@ -3,7 +3,8 @@ import { accessor } from '@lib/di/utils.ts';
 import { DomainError } from '@context/errors/DomainError.ts';
 
 export interface IErrorService {
-  getError$(): Observable<DomainError>;
+  error$: Observable<DomainError>;
+  filter$<E>(predicate: (e: unknown) => e is E): Observable<E>;
   throwError(e: DomainError): void;
 }
 

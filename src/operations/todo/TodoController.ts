@@ -13,14 +13,15 @@ import {
 import { controller } from '@framework/controller/ControllerProvider.ts';
 import { service } from '@lib/di/utils.ts';
 import { permission } from '../cross/CheckPermission.ts';
-import { onStartAsync, when } from '@framework/hooks/OnInit.ts';
+import { onInitAsync, when } from '@framework/hooks/OnInit.ts';
 import { IUserServiceKey } from '@services/user/IUserService.public.ts';
 import { IResource } from '@services/user/IResource.ts';
 import { Observable } from 'rxjs';
 import { ITodoController, ITodoControllerKey } from './ITodoController.ts';
-import { action, query } from '@framework/controller/metadata.ts';
+import { action } from '@framework/controller/metadata.ts';
 import { Scope } from '@framework/scope.ts';
 import { type IPageContext, IPageServiceKey } from '@context/IPageService.ts';
+import { refreshToken } from '@operations/cross/RefreshToken.ts';
 
 @register(ITodoControllerKey.register, scope(Scope.page))
 @provider(controller, singleton())
@@ -34,22 +35,24 @@ export class TodoController implements IResource, ITodoController {
 
   @action
   @permission('write')
+  @refreshToken
   async addTodo(payload: string) {
     await this.todoService.createTodo(payload);
     this.notificationService.showMessage({
       type: 'info',
+      title: 'Todo',
       body: 'Todo is created',
     });
   }
 
   @action
   @permission('read')
-  @onStartAsync(when(service(IUserServiceKey, (s) => s.isUserLoaded())))
+  @onInitAsync(when(service(IUserServiceKey, (s) => s.isUserLoaded())))
   async loadTodoList(@inject(service(IPageServiceKey, (s) => s.getContext$())) context: IPageContext): Promise<void> {
     await this.todoService.loadTodoList({ status: (context.searchParams.get('status') as TodoStatus) ?? undefined });
   }
 
-  @query getTodoList$(): Observable<ITodo[]> {
+  getTodoList$(): Observable<ITodo[]> {
     return this.todoService.getTodoList$();
   }
 
@@ -59,6 +62,7 @@ export class TodoController implements IResource, ITodoController {
     await this.todoService.deleteTodo(id);
     this.notificationService.showMessage({
       type: 'info',
+      title: 'Todo',
       body: 'Todo is deleted',
     });
   }

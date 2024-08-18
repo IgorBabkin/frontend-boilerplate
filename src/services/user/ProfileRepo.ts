@@ -4,13 +4,11 @@ import { UserDTO } from '@lib/api/ApiClient.ts';
 import { IUser } from './IUser';
 import { UserPermissions } from './IPermissions';
 import { sleep } from '@lib/utils.ts';
-import { accessor } from '@lib/di/utils.ts';
+import { IProfileRepo, IProfileRepoKey } from '@services/user/IProfileRepo.ts';
 
-export const IUserRepoKey = accessor<UserRepo>('IUserRepo');
-
-@register(IUserRepoKey.register, scope(Scope.application))
+@register(IProfileRepoKey.register, scope(Scope.application))
 @provider(singleton())
-export class UserRepo {
+export class ProfileRepo implements IProfileRepo {
   static toDomain(user: UserDTO): IUser {
     return {
       nickname: user.nickname,
@@ -18,9 +16,10 @@ export class UserRepo {
     };
   }
 
-  async fetchUser(): Promise<IUser> {
+  async fetchUser(token: string): Promise<IUser> {
     await sleep(1000);
-    return UserRepo.toDomain({
+    console.log('fetching user', token);
+    return ProfileRepo.toDomain({
       nickname: 'babidze',
       permissions: { todo: ['read', 'write'] },
     });

@@ -8,11 +8,13 @@ export const hasTags = {
 };
 
 export enum CommandAlias {
-  onBeforeExecution = 'onCommandBeforeExecution',
+  onBeforeExecution = 'onBeforeExecution',
+  onAfterExecution = 'onAfterExecution',
 }
 
 export const byCommandAliases = {
   onBeforeExecution: byAliases((aliases) => aliases.has(CommandAlias.onBeforeExecution)),
+  onAfterExecution: byAliases((aliases) => aliases.has(CommandAlias.onAfterExecution)),
 };
 
 export const parentOnly = ({ isParent }: { isParent: boolean }) => isParent;

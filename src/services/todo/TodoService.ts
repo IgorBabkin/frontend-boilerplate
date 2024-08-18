@@ -5,13 +5,11 @@ import { Scope } from '@framework/scope.ts';
 import { ITodo, ITodoFilter, ITodoService, ITodoServiceKey } from './ITodoService.public';
 import { ObservableList } from '@lib/observable/ObservableList.ts';
 import { watch } from '@lib/watch/watch.ts';
-import { onStart } from '@framework/hooks/OnInit.ts';
-import { service } from '@framework/service/ServiceProvider.ts';
 
 @register(ITodoServiceKey.register, scope(Scope.page))
-@provider(service, singleton())
+@provider(singleton())
 export class TodoService implements ITodoService {
-  @onStart(watch)
+  @watch
   private todoList$ = new ObservableList<ITodo>([]);
 
   constructor(@inject(ITodoRepoKey.resolve) private todoRepo: TodoRepo) {}
@@ -23,7 +21,7 @@ export class TodoService implements ITodoService {
   }
 
   updateTodoList(todos: ITodo[]): void {
-    this.todoList$.setList(todos);
+    this.todoList$.next(todos);
   }
 
   getTodoList$(): Observable<ITodo[]> {
@@ -37,6 +35,6 @@ export class TodoService implements ITodoService {
 
   async loadTodoList(filter: Partial<ITodoFilter>): Promise<void> {
     const todos = await this.todoRepo.fetchTodos(filter);
-    this.todoList$.setList(todos);
+    this.todoList$.next(todos);
   }
 }

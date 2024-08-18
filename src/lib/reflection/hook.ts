@@ -6,3 +6,6 @@ export const setMethodMetadata =
 
 export const getMethodMetadata = (key: string, target: object, propertyKey: string): unknown =>
   Reflect.getMetadata(key, target.constructor, propertyKey);
+
+export const hasMethodMetadata = (key: string, target: object, propertyKey: string): boolean =>
+  Reflect.hasMetadata(key, target.constructor, propertyKey);

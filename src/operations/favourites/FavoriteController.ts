@@ -3,7 +3,7 @@ import { IFavoriteController, IFavoriteControllerKey } from './IFavoriteControll
 import { inject, register, scope } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { type IFavoritesService, IFavoritesServiceKey } from '@services/favourites/IFavoritesService.public.ts';
-import { action, query } from '@framework/controller/metadata.ts';
+import { action } from '@framework/controller/metadata.ts';
 import { IResource } from '@services/user/IResource.ts';
 import { permission } from '../cross/CheckPermission.ts';
 
@@ -13,7 +13,7 @@ export class FavoriteController implements IResource, IFavoriteController {
 
   constructor(@inject(IFavoritesServiceKey.resolve) private favoritesService: IFavoritesService) {}
 
-  @query getFavorites$(): Observable<string[]> {
+  getFavorites$(): Observable<string[]> {
     return this.favoritesService.getFavorites$();
   }
 

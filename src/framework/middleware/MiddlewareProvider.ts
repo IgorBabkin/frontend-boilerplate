@@ -7,12 +7,12 @@ import {
   ProviderDecorator,
   ProviderResolveOptions,
 } from 'ts-ioc-container';
-import { getActions } from './metadata.ts';
+import { getActions } from '../controller/metadata.ts';
 import { accessor, isClassInstance } from '@lib/di/utils.ts';
 import { type IMediator } from '@lib/mediator/IMediator.ts';
 import { CommandLog } from '@lib/timeTravel/CommandLog.ts';
-import { IControllerMediatorKey } from '@framework/controller/ControllerMediator.ts';
-import { Controller } from '@framework/controller/Controller.ts';
+import { IMiddlewareMediatorKey } from '@framework/middleware/MiddlewareMediator.ts';
+import { IMiddleware } from '@framework/guard/IMiddleware.ts';
 
 interface IOperationLogger {
   log: (operation: CommandLog) => void;
@@ -20,7 +20,7 @@ interface IOperationLogger {
 
 export const IOperationLoggerKey = accessor<IOperationLogger>('IOperationLogger');
 
-export class ControllerProvider<T> extends ProviderDecorator<T> {
+export class MiddlewareProvider<T> extends ProviderDecorator<T> {
   constructor(private provider: IProvider<T>) {
     super(provider);
   }
@@ -43,7 +43,7 @@ class ProxyBuilder {
   constructor(
     @inject(by.scope.current) private scope: IContainer,
     @inject(IOperationLoggerKey.resolve) private logger: IOperationLogger,
-    @inject(IControllerMediatorKey.resolve) private mediator: IMediator<Controller>,
+    @inject(IMiddlewareMediatorKey.resolve) private mediator: IMediator<IMiddleware>,
   ) {}
 
   build(service: object, key: DependencyKey): object {
@@ -64,7 +64,7 @@ class ProxyBuilder {
                 createdAt: Date.now(),
               });
               // eslint-disable-next-line
-              return self.mediator.send(target as Controller, prop as any as never, payload);
+              return self.mediator.send(target as IMiddleware, prop as any as never, payload);
             };
           }
         }
@@ -76,4 +76,4 @@ class ProxyBuilder {
   }
 }
 
-export const controller = <T>(provider: IProvider<T>) => new ControllerProvider(provider);
+export const middleware = <T>(provider: IProvider<T>) => new MiddlewareProvider(provider);

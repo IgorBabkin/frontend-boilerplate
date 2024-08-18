@@ -1,57 +1,31 @@
 import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
-import { IUserRepoKey, UserRepo } from './UserRepo';
+import { ProfileRepo } from './ProfileRepo.ts';
 import { filter, lastValueFrom, Observable, take } from 'rxjs';
 import { UserPermissions } from './IPermissions';
 import { IUser } from './IUser';
 import { Scope } from '@framework/scope.ts';
 import { isPresent } from '@lib/utils.ts';
-import { service } from '@framework/service/ServiceProvider.ts';
-
-import { execute, onStart, onStartAsync } from '@framework/hooks/OnInit';
 import { IUserService, IUserServiceKey } from './IUserService.public';
 import { ObservableStore } from '@lib/observable/ObservableStore.ts';
-import { subscriptionMetadata } from '@framework/hooks/Metadata.ts';
-import { WatchStore } from '@lib/timeTravel/observation.ts';
+import { type IAuthService, IAuthServiceKey } from '@services/auth/IAuthService.public.ts';
+import { IProfileRepoKey } from '@services/user/IProfileRepo.ts';
+import { execute, onInitAsync } from '@framework/hooks/OnInit.ts';
 
-const watchManager = new WatchStore();
-
+@provider(singleton())
 @register(IUserServiceKey.register, scope(Scope.application))
-@provider(service, singleton())
 export class UserService implements IUserService {
-  @onStart((context) => {
-    const obs$ = context.instance[context.methodName] as Observable<unknown>;
-    const id = generateID(obs$);
-    const subscription = obs$.subscribe({
-      next: (value) => {
-        watchManager.dispatch({
-          id,
-          type: 'upsert',
-          payload: {
-            value: value,
-            parent: getID(context.instance),
-          },
-        });
-      },
-      complete() {
-        watchManager.dispatch({
-          id,
-          type: 'delete',
-        });
-      },
-    });
-    subscriptionMetadata.setMetadata(context.instance, (subscriptions) => {
-      subscriptions.push(subscription);
-      return subscriptions;
-    });
-  })
   private user$ = new ObservableStore<IUser | undefined>(undefined);
 
-  constructor(@inject(IUserRepoKey.resolve) private userRepo: UserRepo) {}
+  constructor(
+    @inject(IProfileRepoKey.resolve) private userRepo: ProfileRepo,
+    @inject(IAuthServiceKey.resolve) private authService: IAuthService,
+  ) {}
 
-  @onStartAsync(execute())
+  @onInitAsync(execute())
   async loadUser(): Promise<void> {
-    const user = await this.userRepo.fetchUser();
-    this.user$.setValue(user);
+    const token = this.authService.getTokenOrFail();
+    const user = await this.userRepo.fetchUser(token);
+    this.user$.next(user);
   }
 
   getPermissions(): UserPermissions {
@@ -63,6 +37,6 @@ export class UserService implements IUserService {
   }
 
   isUserLoaded() {
-    return lastValueFrom(this.user$.asObservable().pipe(filter(isPresent), take(1)));
+    return lastValueFrom(this.user$.pipe(filter(isPresent), take(1)));
   }
 }

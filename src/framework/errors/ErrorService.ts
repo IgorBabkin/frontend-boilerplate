@@ -1,20 +1,19 @@
 import { provider, register, scope, singleton } from 'ts-ioc-container';
-import { Observable, Subject } from 'rxjs';
+import { filter, Observable, Subject } from 'rxjs';
 import { Scope } from '@framework/scope.ts';
-import { service } from '@framework/service/ServiceProvider.ts';
 import { IErrorService, IErrorServiceKey } from './IErrorService.public.ts';
 import { DomainError } from '@context/errors/DomainError.ts';
 
 @register(IErrorServiceKey.register, scope(Scope.application))
-@provider(service, singleton())
+@provider(singleton())
 export class ErrorService implements IErrorService {
-  private errorBus = new Subject<DomainError>();
-
-  getError$(): Observable<DomainError> {
-    return this.errorBus.asObservable();
-  }
+  error$ = new Subject<DomainError>();
 
   throwError(error: DomainError): void {
-    this.errorBus.next(error);
+    this.error$.next(error);
+  }
+
+  filter$<E>(predicate: (e: unknown) => e is E): Observable<E> {
+    return this.error$.pipe(filter(predicate));
   }
 }

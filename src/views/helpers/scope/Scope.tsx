@@ -3,6 +3,8 @@ import { IContainer } from 'ts-ioc-container';
 import { parseTags } from '@lib/utils.ts';
 import { ContextNotFoundError } from '@lib/react/ContextNotFoundError.ts';
 import { disposeScope, ScopeContext } from './ScopeContext.ts';
+import { initialize } from '@framework/hooks/OnInit.ts';
+import { IErrorServiceKey } from '@framework/errors/IErrorService.public.ts';
 
 export type IScopeProps = {
   tags?: string;
@@ -23,6 +25,9 @@ function Scope({ fallback, tags = '', children, createScope }: PropsWithChildren
   }
 
   useEffect(() => {
+    for (const [, instance] of scope.resolveManyByAlias((s) => s.has('required'))) {
+      initialize(instance as object, scope).catch((e) => IErrorServiceKey.resolve(scope).throwError(e as Error));
+    }
     return () => disposeScope(scope);
   }, [scope]);
 

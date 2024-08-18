@@ -8,7 +8,6 @@ import { useContextOrFail } from '../lib/react/context';
 import { disposeScope, ScopeContext } from '@helpers/scope/ScopeContext';
 import { createScope } from '../container.ts';
 import { useEffect } from 'react';
-import { env } from '@env/IEnv.ts';
 import { LogPlayer } from '@lib/timeTravel/LogPlayer.ts';
 import { CommandExecuter } from '@lib/timeTravel/CommandLog.ts';
 import ModalWidget from '@widgets/modal/ModalWidget.tsx';
@@ -19,7 +18,6 @@ const App = application(() => {
 
   useEffect(() => {
     const player = new LogPlayer(new CommandExecuter(scope));
-    player.setLogs(JSON.parse(env('operationLogs')(scope)));
     void player.replay(0);
   }, [scope]);
 

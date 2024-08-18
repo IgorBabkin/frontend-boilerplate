@@ -15,11 +15,14 @@ const withScope = <Props,>(Component: FC<Props>, scopeProps: IScopeProps) => {
   );
 };
 
-export const widget = <Props,>(Component: FC<Props>, ...tags: string[]) =>
-  withScope(Component, {
-    tags: ['widget', ...tags].join(','),
-    createScope,
-  });
+export const widget = <Props,>(Component: FC<Props>, ...tags: string[]) => {
+  const scopeProps = { tags: ['widget', ...tags].join(','), createScope };
+  return (props: PropsWithChildren<Props>) => (
+    <Scope {...scopeProps}>
+      <Component {...props} />
+    </Scope>
+  );
+};
 
 const usePageContext = () => {
   const [searchParams] = useSearchParams();
