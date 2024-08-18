@@ -1,4 +1,4 @@
-import { PermissionError } from './PermissionError';
+import { PermissionError } from '@framework/errors/PermissionError.ts';
 import { IPermissions, Permission } from './IUserService.public';
 
 export class UserPermissions {
