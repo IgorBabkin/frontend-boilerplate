@@ -5,7 +5,7 @@ import { accessor } from '@lib/di/utils.ts';
 import { ApiClient, Todo } from '@ibabkin/backend-template';
 import { repository } from '@framework/repository/RepositoryProvider.ts';
 import { mapNetworkError } from '@lib/api/mapApiToDomainError.ts';
-import { ITodo, ITodoFilter } from './ITodoService.public';
+import { ITodo, ITodoFilter } from './ITodoStore.ts';
 
 export const ITodoRepoKey = accessor<TodoRepo>('ITodoRepo');
 

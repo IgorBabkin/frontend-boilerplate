@@ -5,12 +5,12 @@ import { onDispose, onInit } from '@framework/hooks/OnInit.ts';
 import { Observable } from 'rxjs';
 import { fromLocalStorage, saveToLocalStorage } from '@lib/LocalStorage.ts';
 import { toggleElement } from '@lib/utils.ts';
-import { IFavoritesService, IFavoritesServiceKey } from './IFavoritesService.public.ts';
-import { Service } from '@framework/service/Service.ts';
+import { IFavoritesStore, IFavoritesStoreKey } from './IFavoritesService.public.ts';
+import { Store } from '@framework/service/Store.ts';
 
-@register(IFavoritesServiceKey.register, scope(Scope.page))
+@register(IFavoritesStoreKey.register, scope(Scope.page))
 @provider(singleton())
-export class FavoritesService extends Service implements IFavoritesService {
+export class FavoritesService extends Store implements IFavoritesStore {
   @onInit(injectProp(fromLocalStorage('favorites', [])))
   @onDispose(saveToLocalStorage('favorites'))
   private favorites!: ObservableStore<string[]>;

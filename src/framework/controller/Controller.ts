@@ -1,11 +1,11 @@
 import type { IContainer } from 'ts-ioc-container';
 import { initialize } from '@framework/hooks/OnInit.ts';
 import { IErrorService, IErrorServiceKey } from '@framework/errors/IErrorService.public.ts';
-import { Service } from '@framework/service/Service.ts';
+import { Store } from '@framework/service/Store.ts';
 
 export abstract class Controller {
   private errorService: IErrorService;
-  protected initializables: Service[] = [];
+  protected initializables: Store[] = [];
 
   protected constructor(private scope: IContainer) {
     this.errorService = IErrorServiceKey.resolve(scope);
@@ -14,7 +14,7 @@ export abstract class Controller {
   async initAsync(): Promise<void> {
     await Promise.all(
       Object.values(this)
-        .filter((i: unknown) => i instanceof Service)
+        .filter((i: unknown) => i instanceof Store)
         .concat(this.initializables)
         .map(async (s) => {
           try {

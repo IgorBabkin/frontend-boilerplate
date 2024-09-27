@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import { accessor } from '@lib/di/utils.ts';
 import { IEntity } from '@lib/observable/IEntity.ts';
+import { depKey } from 'ts-ioc-container';
 
 export interface ITodo extends IEntity {
   title: string;
@@ -14,7 +14,7 @@ export interface ITodoFilter {
 
 export type TodoID = string;
 
-export interface ITodoService {
+export interface ITodoStore {
   createTodo(payload: string): Promise<ITodo>;
 
   getTodoList$(): Observable<ITodo[]>;
@@ -26,4 +26,4 @@ export interface ITodoService {
   loadTodoList(filter: Partial<ITodoFilter>): Promise<void>;
 }
 
-export const ITodoServiceKey = accessor<ITodoService>('ITodoService');
+export const ITodoStoreKey = depKey<ITodoStore>('ITodoStore');

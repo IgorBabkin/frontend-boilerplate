@@ -5,10 +5,10 @@ import { widget } from '@helpers/scope/components';
 
 import { useAsyncEventHandler } from '@helpers/observable';
 import { useDependency } from '@helpers/scope/ScopeContext.ts';
-import { ITodoControllerKey } from '@operations/todo/ITodoController.ts';
+import { ITodoServiceKey } from '@operations/todo/ITodoService.ts';
 
 const AddTodoFormWidget = widget(() => {
-  const todoController = useDependency(ITodoControllerKey.resolve);
+  const todoController = useDependency(ITodoServiceKey.resolve);
   const [title, setTitle] = useState('');
   const resetForm = useCallback(() => setTitle(''), []);
 

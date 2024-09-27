@@ -2,13 +2,13 @@ import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { ITodoRepoKey, TodoRepo } from './TodoRepo';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Scope } from '@framework/scope.ts';
-import { ITodo, ITodoFilter, ITodoService, ITodoServiceKey } from './ITodoService.public';
+import { ITodo, ITodoFilter, ITodoStore, ITodoStoreKey } from './ITodoStore.ts';
 import { watch } from '@lib/watch/watch.ts';
-import { Service } from '@framework/service/Service.ts';
+import { Store } from '@framework/service/Store.ts';
 
-@register(ITodoServiceKey.register, scope(Scope.page))
+@register(ITodoStoreKey.register, scope(Scope.page))
 @provider(singleton())
-export class TodoService extends Service implements ITodoService {
+export class TodoStore extends Store implements ITodoStore {
   @watch
   private todoList$ = new BehaviorSubject<ITodo[]>([]);
 

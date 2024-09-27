@@ -1,7 +1,7 @@
 import { accessor } from '@lib/di/utils.ts';
 import { Subscribable } from 'rxjs';
 import { IUser } from '@services/user/IUser.ts';
-import { type IUserService } from '@services/user/IUserService.public.ts';
+import { type IUserStore } from '@services/user/IUserService.public.ts';
 import { by, type IContainer, inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { Controller } from '@framework/controller/Controller.ts';
@@ -20,7 +20,7 @@ export class UserController extends Controller implements IUserController {
 
   constructor(
     @inject(by.scope.current) scope: IContainer,
-    private userService: IUserService,
+    private userService: IUserStore,
   ) {
     super(scope);
     this.user$ = this.userService.user$;

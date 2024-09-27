@@ -5,20 +5,20 @@ import { UserPermissions } from './IPermissions';
 import { IUser } from './IUser';
 import { Scope } from '@framework/scope.ts';
 import { isPresent } from '@lib/utils.ts';
-import { IUserService, IUserServiceKey } from './IUserService.public';
-import { type IAuthService, IAuthServiceKey } from '@services/auth/IAuthService.public.ts';
+import { IUserStore, IUserStoreKey } from './IUserService.public';
+import { type IAuthStore, IAuthStoreKey } from '@services/auth/IAuthStore.ts';
 import { IProfileRepoKey } from '@services/user/IProfileRepo.ts';
 import { execute, onInitAsync } from '@framework/hooks/OnInit.ts';
-import { Service } from '@framework/service/Service.ts';
+import { Store } from '@framework/service/Store.ts';
 
 @provider(singleton())
-@register(IUserServiceKey.register, scope(Scope.application))
-export class UserService extends Service implements IUserService {
+@register(IUserStoreKey.register, scope(Scope.application))
+export class UserService extends Store implements IUserStore {
   user$ = new BehaviorSubject<IUser | null>(null);
 
   constructor(
     @inject(IProfileRepoKey.resolve) private userRepo: ProfileRepo,
-    @inject(IAuthServiceKey.resolve) private authService: IAuthService,
+    @inject(IAuthStoreKey.resolve) private authService: IAuthStore,
   ) {
     super();
   }

@@ -1,5 +1,5 @@
 import cs from 'classnames';
-import { NotificationType } from '@operations/notifications/NotificationController.ts';
+import { NotificationType } from '@operations/notifications/NotificationService.ts';
 
 export const Toast = ({
   children,

@@ -1,6 +1,6 @@
-import { Observable } from 'rxjs';
-import { accessor } from '@lib/di/utils.ts';
+import { Observable, Subject } from 'rxjs';
 import { DomainError } from '@context/errors/DomainError.ts';
+import { depKey } from 'ts-ioc-container';
 
 export interface IErrorService {
   error$: Observable<DomainError>;
@@ -9,4 +9,12 @@ export interface IErrorService {
   wrapByErrorHandling<A>(handler: (a: A) => void): (e: A) => void;
 }
 
-export const IErrorServiceKey = accessor<IErrorService>('IErrorService');
+export const IErrorServiceKey = depKey<IErrorService>('IErrorService');
+
+export const ErrorService = IErrorServiceKey.register((s) => {
+  const error$ = new Subject<DomainError>();
+
+  return {
+    error$,
+  };
+});

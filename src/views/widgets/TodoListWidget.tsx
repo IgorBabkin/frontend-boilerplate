@@ -2,12 +2,12 @@ import { useObservable } from '@helpers/observable';
 import { widget } from '@helpers/scope/components';
 import Button from '@ui/button/Button';
 import { useDependency } from '@helpers/scope/ScopeContext';
-import { ITodoControllerKey } from '@operations/todo/ITodoController.ts';
-import { IFavoriteControllerKey } from '@operations/favourites/IFavoriteController.ts';
+import { ITodoServiceKey } from '@operations/todo/ITodoService.ts';
+import { IFavoriteServiceKey } from '@operations/favourites/IFavoriteService.ts';
 
 const TodoListWidget = widget(() => {
-  const todoController = useDependency(ITodoControllerKey.resolve);
-  const favoriteController = useDependency(IFavoriteControllerKey.resolve);
+  const todoController = useDependency(ITodoServiceKey.resolve);
+  const favoriteController = useDependency(IFavoriteServiceKey.resolve);
 
   const list = useObservable(() => todoController.getTodoList$(), [], [todoController]);
   const favorites = useObservable(() => favoriteController.getFavorites$(), [], [favoriteController]);

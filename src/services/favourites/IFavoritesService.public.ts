@@ -1,10 +1,10 @@
 import { Observable } from 'rxjs';
-import { accessor } from '@lib/di/utils.ts';
+import { depKey } from 'ts-ioc-container';
 
-export interface IFavoritesService {
+export interface IFavoritesStore {
   toggleFavorite(id: string): void;
 
   getFavorites$(): Observable<string[]>;
 }
 
-export const IFavoritesServiceKey = accessor<IFavoritesService>('IFavoritesService');
+export const IFavoritesStoreKey = depKey<IFavoritesStore>('IFavoritesStore');

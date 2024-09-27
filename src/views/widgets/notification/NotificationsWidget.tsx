@@ -5,10 +5,10 @@ import { useCallback } from 'react';
 import { Toast } from '@ui/toast/Toast.tsx';
 import './notificationWidget.scss';
 import { useObs$ } from '@helpers/observable.ts';
-import { INotificationControllerKey } from '@operations/notifications/NotificationController.ts';
+import { INotificationServiceKey } from '@operations/notifications/NotificationService.ts';
 
 const NotificationsWidget = widget(() => {
-  const controller = useDependency(INotificationControllerKey.resolve);
+  const controller = useDependency(INotificationServiceKey.resolve);
   const [notifications] = useObs$(controller.notifications$, []);
   const deleteMessage = useCallback((id: string) => () => controller.deleteMessage(id), [controller]);
 

@@ -1,5 +1,6 @@
-import { Observable } from 'rxjs';
+import { Observable, Unsubscribable } from 'rxjs';
 import { isRef, Ref, ref } from 'vue';
+import { Unsubscribe } from '@framework/hooks/OnInit.ts';
 
 export const toObs$ = (arg: unknown) => {
   if (arg instanceof Observable) {
@@ -114,3 +115,15 @@ export const throttleAsync =
     };
     return;
   };
+
+export const unsubscribeAll = (...subscriptions: (Unsubscribable | Unsubscribe)[]): Unsubscribe => {
+  return () => {
+    for (const s of subscriptions) {
+      if (typeof s === 'function') {
+        s();
+      } else {
+        s.unsubscribe();
+      }
+    }
+  };
+};

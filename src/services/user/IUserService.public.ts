@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
 import { UserPermissions } from '../user/IPermissions';
 import { IUser } from '../user/IUser';
-import { accessor } from '@lib/di/utils.ts';
+import { depKey } from 'ts-ioc-container';
 
-export interface IUserService {
+export interface IUserStore {
   getPermissions(): UserPermissions;
 
   user$: Observable<IUser | null>;
@@ -13,7 +13,7 @@ export interface IUserService {
   loadUser(): Promise<void>;
 }
 
-export const IUserServiceKey = accessor<IUserService>(Symbol('IUserService'));
+export const IUserStoreKey = depKey<IUserStore>('IUserStore');
 
 export type Permission = 'read' | 'write';
 export type IPermissions = Record<string, Permission[]>;

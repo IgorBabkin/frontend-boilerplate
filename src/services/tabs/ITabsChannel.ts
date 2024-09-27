@@ -4,7 +4,7 @@ import { provider, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { Observable, Subject } from 'rxjs';
 import { execute, onDispose, onInit } from '@framework/hooks/OnInit.ts';
-import { Service } from '@framework/service/Service.ts';
+import { Store } from '@framework/service/Store.ts';
 
 type LogoutMessage = { type: 'logout' };
 export type WindowPostMessage = LogoutMessage;
@@ -20,7 +20,7 @@ export const ITabsChannelKey = accessor<ITabsChannel>('ITabsChannel');
 
 @provider(singleton())
 @register(ITabsChannelKey.register, scope(Scope.application))
-export class TabsChannel extends Service implements ITabsChannel {
+export class TabsChannel extends Store implements ITabsChannel {
   message$ = new Subject<WindowPostMessage>();
   private channel = new BroadcastChannel('auth');
 

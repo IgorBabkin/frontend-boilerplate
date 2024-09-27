@@ -27,11 +27,13 @@ export class ControllerProvider<T> extends ProviderDecorator<T> {
 
   resolve(scope: IContainer, options: ProviderResolveOptions): T {
     const instance: T = this.provider.resolve(scope, options);
-    if (isClassInstance(instance)) {
-      return ProxyBuilder.resolve(scope).build(instance, this.provider.key ?? 'NO KEY') as unknown as T;
+
+    if (!isClassInstance(instance)) {
+      throw new Error('Controller must be a class instance');
     }
 
-    throw new Error('Controller must be a class instance');
+    const proxyBuilder = ProxyBuilder.resolve(scope);
+    return proxyBuilder.build(instance, this.provider.key ?? 'NO KEY') as unknown as T;
   }
 }
 

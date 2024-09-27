@@ -1,12 +1,12 @@
 import { IContainer, IContainerModule, Registration as R, singleton } from 'ts-ioc-container';
 import { TodoRepo } from '@services/todo/TodoRepo.ts';
 import { ProfileRepo } from '@services/user/ProfileRepo.ts';
-import { TodoService } from '@services/todo/TodoService.ts';
+import { TodoStore } from '@services/todo/TodoStore.ts';
 import { UserService } from '@services/user/UserService.ts';
 import { FavoritesService } from '@services/favourites/FavoritesService.ts';
-import { NotificationService } from '@services/notifications/NotificationService.ts';
+import { NotificationStore } from '@services/notifications/NotificationStore.ts';
 import { ErrorService } from '@framework/errors/ErrorService.ts';
-import { AuthService } from '@services/auth/AuthService.ts';
+import { AuthStore } from '@services/auth/AuthStore.ts';
 import { AuthProvider } from '@services/auth/AuthProvider.ts';
 import { AuthClient, IAuthClientKey } from '@services/auth/AuthClient.ts';
 import { hasTags } from '@framework/scope.ts';
@@ -23,11 +23,11 @@ export class CommonServices implements IContainerModule {
 
       // Todos
       .add(R.fromClass(TodoRepo))
-      .add(R.fromClass(TodoService))
+      .add(R.fromClass(TodoStore))
 
       // Favorites
       .add(R.fromClass(FavoritesService))
-      .add(R.fromClass(NotificationService))
+      .add(R.fromClass(NotificationStore))
 
       // Errors
       .add(R.fromClass(ErrorService))
@@ -42,7 +42,7 @@ export class CommonServices implements IContainerModule {
       .add(R.fromClass(AlertService))
 
       // Auth
-      .add(R.fromClass(AuthService))
+      .add(R.fromClass(AuthStore))
       .add(R.fromClass(AuthProvider))
       .add(R.fromClass(AuthClient).to(IAuthClientKey.key).pipe(singleton()).when(hasTags.every('application')));
   }

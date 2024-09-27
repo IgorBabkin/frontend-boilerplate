@@ -3,11 +3,11 @@ import { filter, Observable, Subject } from 'rxjs';
 import { Scope } from '@framework/scope.ts';
 import { IErrorService, IErrorServiceKey } from './IErrorService.public.ts';
 import { DomainError } from '@context/errors/DomainError.ts';
-import { Service } from '@framework/service/Service.ts';
+import { Store } from '@framework/service/Store.ts';
 
 @register(IErrorServiceKey.register, scope(Scope.application))
 @provider(singleton())
-export class ErrorService extends Service implements IErrorService {
+export class ErrorService extends Store implements IErrorService {
   error$ = new Subject<DomainError>();
 
   throwError(error: DomainError): void {
@@ -28,3 +28,5 @@ export class ErrorService extends Service implements IErrorService {
     };
   }
 }
+
+export const ErrorService =

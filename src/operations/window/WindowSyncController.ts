@@ -3,7 +3,7 @@ import { accessor, service } from '@lib/di/utils.ts';
 import { alias, by, type IContainer, inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { controller } from '@framework/controller/ControllerProvider.ts';
-import { type IAuthService, IAuthServiceKey } from '@services/auth/IAuthService.public.ts';
+import { type IAuthStore, IAuthStoreKey } from '@services/auth/IAuthStore.ts';
 import { onInit, subscribeOn } from '@framework/hooks/OnInit.ts';
 import { ITabsChannelKey, type WindowPostMessage } from '@services/tabs/ITabsChannel.ts';
 import { action } from '@framework/controller/metadata.ts';
@@ -17,7 +17,7 @@ export const IWindowSyncControllerKey = accessor<IWindowSyncController>('IWindow
 export class WindowSyncController extends Controller implements IWindowSyncController {
   constructor(
     @inject(by.scope.current) scope: IContainer,
-    @inject(IAuthServiceKey.resolve) private authService: IAuthService,
+    @inject(IAuthStoreKey.resolve) private authService: IAuthStore,
   ) {
     super(scope);
   }

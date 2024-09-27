@@ -9,7 +9,7 @@ import { IGuard, matchPayload } from '@framework/guard/IGuard.ts';
 import { accessor } from '@lib/di/utils.ts';
 import { execute, onDispose, onInit, subscribeOn } from '@framework/hooks/OnInit.ts';
 import { InvalidAccessTokenError } from '@framework/errors/InvalidAccessTokenError.ts';
-import { IAuthServiceKey } from '@services/auth/IAuthService.public.ts';
+import { IAuthStoreKey } from '@services/auth/IAuthStore.ts';
 import { NoPermissionError } from '@framework/errors/NoPermissionError.ts';
 import { type IErrorService, IErrorServiceKey } from '@framework/errors/IErrorService.public.ts';
 import { IMiddleware, matchMiddleware } from '@framework/guard/IMiddleware.ts';
@@ -36,7 +36,7 @@ export class ControllerMediator implements IMediator<Controller> {
     return c.error instanceof InvalidAccessTokenError || c.error instanceof NoPermissionError;
   }
 
-  @onInit(subscribeOn({ targets$: [(s) => IAuthServiceKey.resolve(s).accessToken$] }))
+  @onInit(subscribeOn({ targets$: [(s) => IAuthStoreKey.resolve(s).accessToken$] }))
   async retryFailedCommands(): Promise<void> {
     for (const command of this.failedCommands.filter(this.isAccessTokenCommand)) {
       try {

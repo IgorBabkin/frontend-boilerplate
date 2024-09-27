@@ -5,14 +5,13 @@ import { useCallback } from 'react';
 import { ModalDialog } from '@ui/dialog/ModalDialog.tsx';
 import './modalWidget.scss';
 import { useObs$ } from '@helpers/observable.ts';
-import { AlertMessage } from '@services/alert/IAlertService.ts';
-import { IModalControllerKey } from '@operations/alerts/AlertsController.ts';
+import { AlertMessage, IAlertServiceKey } from '@services/alert/IAlertService.ts';
 import { Entity } from '@lib/types.ts';
 
 const ModalWidget = widget(() => {
-  const controller = useDependency(IModalControllerKey.resolve);
-  const deleteMessage = useCallback((id: string) => () => controller.closeAlert(id), [controller]);
-  const [[m]] = useObs$<Entity<AlertMessage>[]>(controller.alerts$, []);
+  const service = useDependency(IAlertServiceKey.resolve);
+  const deleteMessage = useCallback((id: string) => () => service.deleteAlert(id), [controller]);
+  const [[m]] = useObs$<Entity<AlertMessage>[]>(service.messages$, []);
 
   if (!m) {
     return null;

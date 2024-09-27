@@ -2,7 +2,7 @@ import { accessor } from '@lib/di/utils.ts';
 import { Observable } from 'rxjs';
 import { AccessToken } from '@services/auth/IAuthProvider.ts';
 
-export interface IAuthService {
+export interface IAuthStore {
   login(login: string, password: string): Promise<void>;
 
   logout(isSessionAlreadyClosed?: boolean): Promise<void>;
@@ -16,4 +16,4 @@ export interface IAuthService {
   setToken(token: string): void;
 }
 
-export const IAuthServiceKey = accessor<IAuthService>('IAuthService');
+export const IAuthStoreKey = accessor<IAuthStore>('IAuthStore');

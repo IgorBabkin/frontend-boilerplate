@@ -1,14 +1,14 @@
 import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
-import { IAuthService, IAuthServiceKey } from './IAuthService.public';
+import { IAuthStore, IAuthStoreKey } from './IAuthStore.ts';
 import { BehaviorSubject } from 'rxjs';
 import { AccessToken, type IAuthProvider, IAuthProviderKey } from '@services/auth/IAuthProvider.ts';
-import { EmptyTokenError } from '@framework/errors/EmptyTokenError.ts';
-import { Service } from '@framework/service/Service.ts';
+import { MissingTokenError } from '@framework/errors/MissingTokenError.ts';
+import { Store } from '@framework/service/Store.ts';
 
 @provider(singleton())
-@register(IAuthServiceKey.register, scope(Scope.application))
-export class AuthService extends Service implements IAuthService {
+@register(IAuthStoreKey.register, scope(Scope.application))
+export class AuthStore extends Store implements IAuthStore {
   accessToken$ = new BehaviorSubject<string | undefined>(undefined);
 
   constructor(@inject(IAuthProviderKey.resolve) private authProvider: IAuthProvider) {
@@ -42,7 +42,7 @@ export class AuthService extends Service implements IAuthService {
   getTokenOrFail(): string {
     const token = this.accessToken$.getValue();
     if (!token) {
-      throw new EmptyTokenError('Token is not present');
+      throw new MissingTokenError('Token is not present');
     }
     return token;
   }
