@@ -1,21 +1,20 @@
 import { FailedCommand, IMediator } from '@lib/mediator/IMediator.ts';
-import { alias, inject, provider, register, singleton } from 'ts-ioc-container';
+import { depKey, inject, register, singleton } from 'ts-ioc-container';
 
 import { SimpleMediator } from '@lib/mediator/SimpleMediator.ts';
 import { CommandMethod, CommandMethodKeys, Payload } from '@lib/mediator/types.ts';
-import { accessor } from '@lib/di/utils.ts';
-import { execute, onDispose, onInit, subscribeOn } from '@framework/hooks/OnInit.ts';
+import { onDispose, onInit } from '@framework/hooks/OnInit.ts';
 import { InvalidAccessTokenError } from '@framework/errors/InvalidAccessTokenError.ts';
 import { IAuthStoreKey } from '@services/auth/IAuthStore.ts';
 import { NoPermissionError } from '@framework/errors/NoPermissionError.ts';
 import { type IErrorService, IErrorServiceKey } from '@framework/errors/IErrorService.public.ts';
 import { IMiddleware } from '@framework/guard/IMiddleware.ts';
 import { Controller } from '@framework/controller/Controller.ts';
+import { execute, subscribeOn } from '@framework/hooks/initHooks.ts';
 
-export const IMiddlewareMediatorKey = accessor<IMediator<IMiddleware>>('IMiddlewareMediator');
+export const IMiddlewareMediatorKey = depKey<IMediator<IMiddleware>>('IMiddlewareMediator');
 
-@register(IMiddlewareMediatorKey.register)
-@provider(singleton(), alias('required'))
+@register(IMiddlewareMediatorKey, 'required', singleton())
 export class MiddlewareMediator implements IMediator<IMiddleware> {
   private mediator: SimpleMediator<IMiddleware>;
   private failedCommands: FailedCommand<IMiddleware>[] = [];
@@ -28,7 +27,7 @@ export class MiddlewareMediator implements IMediator<IMiddleware> {
     return c.error instanceof InvalidAccessTokenError || c.error instanceof NoPermissionError;
   }
 
-  @onInit(subscribeOn({ targets$: [(s) => IAuthStoreKey.resolve(s).accessToken$] }))
+  @onInit(subscribeOn({ when$: [(s) => IAuthStoreKey.resolve(s).accessToken$] }))
   async retryFailedCommands(): Promise<void> {
     for (const command of this.failedCommands.filter(this.isAccessTokenCommand)) {
       try {

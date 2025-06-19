@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
-import { accessor } from '@lib/di/utils.ts';
 import { Entity } from '@lib/types.ts';
 import { NotificationMessage } from '@operations/notifications/NotificationService.ts';
+import { depKey } from 'ts-ioc-container';
 
 export interface INotificationStore {
   messages$: Observable<Entity<NotificationMessage>[]>;
@@ -13,4 +13,4 @@ export interface INotificationStore {
   deleteMessage(id: string): void;
 }
 
-export const INotificationStoreKey = accessor<INotificationStore>('INotificationStore');
+export const INotificationStoreKey = depKey<INotificationStore>('INotificationStore');

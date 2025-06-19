@@ -1,4 +1,5 @@
 import { IContainer, ProviderResolveOptions, IProvider, ProviderDecorator } from 'ts-ioc-container';
+import { ProviderMapper } from 'ts-ioc-container/typings/provider/IProvider';
 
 export type MapError = (error: unknown, context: { target: string; method: string }) => Error;
 
@@ -40,5 +41,5 @@ export class RepositoryProvider extends ProviderDecorator<object> {
   }
 }
 
-export const repository = (mapError: MapError) => (provider: IProvider) =>
-  new RepositoryProvider(provider as IProvider<object>, mapError);
+export const repository = (mapError: MapError) =>
+  new ProviderMapper([(provider: IProvider) => new RepositoryProvider(provider as IProvider<object>, mapError)]);

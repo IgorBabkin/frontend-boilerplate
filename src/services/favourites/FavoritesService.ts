@@ -1,5 +1,5 @@
 import { ObservableStore } from '@lib/observable/ObservableStore.ts';
-import { injectProp, provider, register, scope, singleton } from 'ts-ioc-container';
+import { injectProp, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { onDispose, onInit } from '@framework/hooks/OnInit.ts';
 import { Observable } from 'rxjs';
@@ -8,8 +8,7 @@ import { toggleElement } from '@lib/utils.ts';
 import { IFavoritesStore, IFavoritesStoreKey } from './IFavoritesService.public.ts';
 import { Store } from '@framework/service/Store.ts';
 
-@register(IFavoritesStoreKey.register, scope(Scope.page))
-@provider(singleton())
+@register(IFavoritesStoreKey, scope(Scope.page), singleton())
 export class FavoritesService extends Store implements IFavoritesStore {
   @onInit(injectProp(fromLocalStorage('favorites', [])))
   @onDispose(saveToLocalStorage('favorites'))

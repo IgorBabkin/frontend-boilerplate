@@ -18,7 +18,7 @@ export class CommonLibs implements IContainerModule {
   constructor(private env: IEnv) {}
   applyTo(container: IContainer): void {
     container
-      .add(R.fromClass(ObservableStore))
-      .add(R.fromValue(this.apiClient).to(IApiClientKey.key).when(Scope.application));
+      .addRegistration(R.fromClass(ObservableStore))
+      .addRegistration(R.fromValue(this.apiClient).assignToKey(IApiClientKey.key).when(Scope.application));
   }
 }

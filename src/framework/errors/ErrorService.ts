@@ -1,12 +1,11 @@
-import { provider, register, scope, singleton } from 'ts-ioc-container';
+import { register, scope, singleton } from 'ts-ioc-container';
 import { filter, Observable, Subject } from 'rxjs';
 import { Scope } from '@framework/scope.ts';
 import { IErrorService, IErrorServiceKey } from './IErrorService.public.ts';
 import { DomainError } from '@context/errors/DomainError.ts';
 import { Store } from '@framework/service/Store.ts';
 
-@register(IErrorServiceKey.register, scope(Scope.application))
-@provider(singleton())
+@register(IErrorServiceKey, scope(Scope.application), singleton())
 export class ErrorService extends Store implements IErrorService {
   error$ = new Subject<DomainError>();
 
@@ -28,5 +27,3 @@ export class ErrorService extends Store implements IErrorService {
     };
   }
 }
-
-export const ErrorService =

@@ -1,4 +1,4 @@
-import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
+import { inject, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { IAuthStore, IAuthStoreKey } from './IAuthStore.ts';
 import { BehaviorSubject } from 'rxjs';
@@ -6,8 +6,7 @@ import { AccessToken, type IAuthProvider, IAuthProviderKey } from '@services/aut
 import { MissingTokenError } from '@framework/errors/MissingTokenError.ts';
 import { Store } from '@framework/service/Store.ts';
 
-@provider(singleton())
-@register(IAuthStoreKey.register, scope(Scope.application))
+@register(IAuthStoreKey, scope(Scope.application), singleton())
 export class AuthStore extends Store implements IAuthStore {
   accessToken$ = new BehaviorSubject<string | undefined>(undefined);
 

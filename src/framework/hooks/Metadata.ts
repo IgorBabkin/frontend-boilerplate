@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs';
+import { Unsubscribable } from 'rxjs';
 
 export class Metadata<T> {
   constructor(
@@ -10,7 +10,7 @@ export class Metadata<T> {
     return Reflect.getMetadata(this.key, target);
   }
 
-  setMetadata(target: object, updateFn: (value: T) => T): void {
+  change(target: object, updateFn: (value: T) => T): void {
     Reflect.defineMetadata(this.key, updateFn(this.getMetadata(target) ?? this.getInitial()), target);
   }
 
@@ -23,8 +23,10 @@ export class Metadata<T> {
   }
 }
 
-export const addItemToList = (fn: Subscription) => (items: Subscription[]) => {
-  return [...items, fn];
+export const Change = {
+  append: (subscription: Unsubscribable) => (subscriptions: Unsubscribable[]) => [...subscriptions, subscription],
+  delete: (subscription: Unsubscribable) => (subscriptions: Unsubscribable[]) =>
+    subscriptions.filter((s) => s !== subscription),
 };
 
-export const subscriptionMetadata = new Metadata<Subscription[]>('__dispose__', () => []);
+export const subscriptionMetadata = new Metadata<Unsubscribable[]>('__dispose__', () => []);

@@ -25,7 +25,7 @@ function Scope({ fallback, tags = '', children, createScope }: PropsWithChildren
   }
 
   useEffect(() => {
-    for (const [, instance] of scope.resolveManyByAlias((s) => s.has('required'))) {
+    for (const instance of scope.resolveMany('required')) {
       initialize(instance as object, scope).catch((e) => IErrorServiceKey.resolve(scope).throwError(e as Error));
     }
     return () => disposeScope(scope);

@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { Params } from 'react-router-dom';
-import { accessor } from '@lib/di/utils.ts';
+import { depKey } from 'ts-ioc-container';
 
 export interface IPageContext {
   searchParams: URLSearchParams;
@@ -13,4 +13,4 @@ export interface IPageService {
   setContext(context: IPageContext): void;
 }
 
-export const IPageServiceKey = accessor<IPageService>('IPageService');
+export const IPageServiceKey = depKey<IPageService>('IPageService');

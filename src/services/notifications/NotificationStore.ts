@@ -1,4 +1,4 @@
-import { provider, register, scope, singleton } from 'ts-ioc-container';
+import { register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { INotificationStore, INotificationStoreKey } from './INotificationService.public';
 import { Store } from '@framework/service/Store.ts';
@@ -7,8 +7,7 @@ import { BehaviorSubject, filter, map } from 'rxjs';
 import { NotificationMessage } from '@operations/notifications/NotificationService.ts';
 import { lastElementOfArray } from '@lib/utils.ts';
 
-@provider(singleton())
-@register(INotificationStoreKey.register, scope(Scope.application))
+@register(INotificationStoreKey, scope(Scope.application), singleton())
 export class NotificationStore extends Store implements INotificationStore {
   messages$ = new BehaviorSubject<Entity<NotificationMessage>[]>([]);
   lastMessage$ = this.messages$.pipe(

@@ -1,12 +1,11 @@
 import { IGuard } from '@framework/guard/IGuard.ts';
 import { IResource, isResource } from '@services/user/IResource.ts';
-import { alias, inject, provider, register, scope, singleton } from 'ts-ioc-container';
+import { inject, register, scope, singleton } from 'ts-ioc-container';
 import { CommandAlias, Scope } from '@framework/scope.ts';
 import { getMethodMetadata, setMethodMetadata } from '@lib/reflection/hook.ts';
 import { type IUserStore, IUserStoreKey, Permission } from '@services/user/IUserService.public.ts';
 
-@register(scope(Scope.application))
-@provider(singleton(), alias(CommandAlias.onBeforeExecution))
+@register(scope(Scope.application), singleton(), CommandAlias.onBeforeExecution)
 export class CheckPermissionGuard implements IGuard {
   constructor(@inject(IUserStoreKey.resolve) private userService: IUserStore) {}
 

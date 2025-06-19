@@ -1,4 +1,4 @@
-import { depKey, IContainer } from 'ts-ioc-container';
+import { IContainer } from 'ts-ioc-container';
 import { ITodoStoreKey, TodoStatus } from '@services/todo/ITodoStore.ts';
 import { INotificationStoreKey } from '@services/notifications/INotificationService.public.ts';
 import { IUserStoreKey } from '@services/user/IUserService.public.ts';
@@ -9,7 +9,7 @@ import { type IPageContext, IPageServiceKey } from '@context/IPageService.ts';
 import { unsubscribeAll } from '@lib/observable/utils.ts';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 
-export const TodoService = depKey(ITodoServiceKey).register((s) => {
+export const TodoService = ITodoServiceKey.register((s: IContainer) => {
   const todoStore = ITodoStoreKey.resolve(s);
   const notificationStore = INotificationStoreKey.resolve(s);
 
@@ -43,7 +43,7 @@ export const TodoService = depKey(ITodoServiceKey).register((s) => {
 
   const loadTodoList = metadata(
     async (context: IPageContext) => {
-      await this.todoService.loadTodoList({ status: (context.searchParams.get('status') as TodoStatus) ?? undefined });
+      await todoStore.loadTodoList({ status: (context.searchParams.get('status') as TodoStatus) ?? undefined });
     },
     { permission: ['read'] },
   );
@@ -58,7 +58,7 @@ export const TodoService = depKey(ITodoServiceKey).register((s) => {
     loadTodoList,
     getTodoList$,
     deleteTodo,
-    initialize,
+    init: initialize,
   };
 });
 

@@ -1,6 +1,7 @@
 import {
   by,
   DependencyKey,
+  depKey,
   type IContainer,
   inject,
   IProvider,
@@ -8,17 +9,18 @@ import {
   ProviderResolveOptions,
 } from 'ts-ioc-container';
 import { getActions } from '../controller/metadata.ts';
-import { accessor, isClassInstance } from '@lib/di/utils.ts';
+import { isClassInstance } from '@lib/di/utils.ts';
 import { type IMediator } from '@lib/mediator/IMediator.ts';
 import { CommandLog } from '@lib/timeTravel/CommandLog.ts';
 import { IMiddlewareMediatorKey } from '@framework/middleware/MiddlewareMediator.ts';
 import { IMiddleware } from '@framework/guard/IMiddleware.ts';
+import { ProviderMapper } from 'ts-ioc-container/typings/provider/IProvider';
 
 interface IOperationLogger {
   log: (operation: CommandLog) => void;
 }
 
-export const IOperationLoggerKey = accessor<IOperationLogger>('IOperationLogger');
+export const IOperationLoggerKey = depKey<IOperationLogger>('IOperationLogger');
 
 export class MiddlewareProvider<T> extends ProviderDecorator<T> {
   constructor(private provider: IProvider<T>) {
@@ -76,4 +78,4 @@ class ProxyBuilder {
   }
 }
 
-export const middleware = <T>(provider: IProvider<T>) => new MiddlewareProvider(provider);
+export const middleware = () => new ProviderMapper([<T>(provider: IProvider<T>) => new MiddlewareProvider(provider)]);

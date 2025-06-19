@@ -1,9 +1,9 @@
 import { IUser } from '@services/user/IUser.ts';
-import { accessor } from '@lib/di/utils.ts';
 import { ProfileRepo } from '@services/user/ProfileRepo.ts';
+import { depKey } from 'ts-ioc-container';
 
 export interface IProfileRepo {
   fetchUser(token: string): Promise<IUser>;
 }
 
-export const IProfileRepoKey = accessor<ProfileRepo>('IProfileRepo');
+export const IProfileRepoKey = depKey<ProfileRepo>('IProfileRepo');

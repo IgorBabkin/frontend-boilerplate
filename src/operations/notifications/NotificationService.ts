@@ -23,7 +23,7 @@ export const INotificationServiceKey = depKey<{
 
   showMessage(message: NotificationMessage): void;
 }>('INotificationService')
-  .pipe(controller, singleton())
+  .pipe(controller(), singleton())
   .when(Scope.application);
 
 const errorToNotification$ = (s: IErrorService) =>

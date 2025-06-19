@@ -1,4 +1,4 @@
-import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
+import { inject, register, scope, singleton } from 'ts-ioc-container';
 import { ProfileRepo } from './ProfileRepo.ts';
 import { BehaviorSubject, filter, lastValueFrom, take } from 'rxjs';
 import { UserPermissions } from './IPermissions';
@@ -8,11 +8,11 @@ import { isPresent } from '@lib/utils.ts';
 import { IUserStore, IUserStoreKey } from './IUserService.public';
 import { type IAuthStore, IAuthStoreKey } from '@services/auth/IAuthStore.ts';
 import { IProfileRepoKey } from '@services/user/IProfileRepo.ts';
-import { execute, onInitAsync } from '@framework/hooks/OnInit.ts';
+import { onInitAsync } from '@framework/hooks/OnInit.ts';
 import { Store } from '@framework/service/Store.ts';
+import { execute } from '@framework/hooks/initHooks.ts';
 
-@provider(singleton())
-@register(IUserStoreKey.register, scope(Scope.application))
+@register(IUserStoreKey, scope(Scope.application), singleton())
 export class UserService extends Store implements IUserStore {
   user$ = new BehaviorSubject<IUser | null>(null);
 

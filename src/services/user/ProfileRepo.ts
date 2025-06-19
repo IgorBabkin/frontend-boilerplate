@@ -1,4 +1,4 @@
-import { provider, register, scope, singleton } from 'ts-ioc-container';
+import { register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { UserDTO } from '@lib/api/ApiClient.ts';
 import { IUser } from './IUser';
@@ -6,8 +6,7 @@ import { UserPermissions } from './IPermissions';
 import { sleep } from '@lib/utils.ts';
 import { IProfileRepo, IProfileRepoKey } from '@services/user/IProfileRepo.ts';
 
-@register(IProfileRepoKey.register, scope(Scope.application))
-@provider(singleton())
+@register(IProfileRepoKey, scope(Scope.application), singleton())
 export class ProfileRepo implements IProfileRepo {
   static toDomain(user: UserDTO): IUser {
     return {

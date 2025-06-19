@@ -17,5 +17,5 @@ export interface IDialogService extends Initializable {
 }
 
 export const IDialogServiceKey = depKey<IDialogService>('IDialogService')
-  .pipe(controller, singleton())
+  .pipe(controller(), singleton())
   .when(Scope.application);

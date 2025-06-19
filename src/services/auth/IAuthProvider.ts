@@ -1,8 +1,8 @@
-import { accessor } from '@lib/di/utils.ts';
 import { AuthProvider } from '@services/auth/AuthProvider.ts';
 import { Branded } from '@lib/types.ts';
+import { depKey } from 'ts-ioc-container';
 
-export const IAuthProviderKey = accessor<AuthProvider>('IAuthProvider');
+export const IAuthProviderKey = depKey<AuthProvider>('IAuthProvider');
 
 export type AccessToken = Branded<string, 'AccessToken'>;
 export type Username = Branded<string, 'Username'>;

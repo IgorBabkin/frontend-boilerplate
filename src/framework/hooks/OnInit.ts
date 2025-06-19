@@ -1,4 +1,4 @@
-import { Hook, hook, IContainer, IHookContext, runHooks, runHooksAsync } from 'ts-ioc-container';
+import { HookFn, hook, IContainer, IHookContext, runHooks, runHooksAsync } from 'ts-ioc-container';
 import { mergeMap, Observable, Subject, Subscription, Unsubscribable } from 'rxjs';
 import { subscriptionMetadata } from '@framework/hooks/Metadata';
 import { IErrorServiceKey } from '@framework/errors/IErrorService.public';
@@ -15,7 +15,7 @@ export const action = <Payload, Result>(
   method: Method<Payload, Result>,
   value: { subscribeOn?: ((c: IContainer) => Observable<unknown>)[] } = {},
 ): Method<Payload, Result> => {
-  Object.defineProperty(method, '__subscribe_on__', value.subscribeOn);
+  Object.defineProperty(method, '__subscribe_on__', value.subscribeOn ?? []);
   return method;
 };
 
@@ -28,11 +28,11 @@ export type Unsubscribe = () => void;
 
 const INIT_KEY = '__init__';
 const INIT_ASYNC_KEY = '__init_async__';
-export const onInit = (...fn: Hook[]) => hook(INIT_KEY, ...fn);
-export const onInitAsync = (...fn: Hook[]) => hook(INIT_ASYNC_KEY, ...fn);
+export const onInit = (...fn: HookFn[]) => hook(INIT_KEY, ...fn);
+export const onInitAsync = (...fn: HookFn[]) => hook(INIT_ASYNC_KEY, ...fn);
 
 const DISPOSE_KEY = '__dispose__';
-export const onDispose = (...fn: Hook[]) => hook(DISPOSE_KEY, ...fn);
+export const onDispose = (...fn: HookFn[]) => hook(DISPOSE_KEY, ...fn);
 
 export const isInitialized = (instance: object) => subscriptionMetadata.has(instance);
 
@@ -53,7 +53,7 @@ export async function initialize(instance: object, scope: IContainer) {
       const subscription = subscribeOn(scope).subscribe({
         next: (v) => method.call(instance, v),
       });
-      subscriptionMetadata.setMetadata(instance, (subscriptions) => subscriptions.concat(subscription));
+      subscriptionMetadata.change(instance, (subscriptions) => subscriptions.concat(subscription));
     }
   }
 
@@ -61,7 +61,7 @@ export async function initialize(instance: object, scope: IContainer) {
   if ('init' in instance) {
     const result = (instance as { init: () => void | Unsubscribable }).init();
     if (result instanceof Subscription) {
-      subscriptionMetadata.setMetadata(instance, (subscriptions) => subscriptions.concat(result));
+      subscriptionMetadata.change(instance, (subscriptions) => subscriptions.concat(result));
     }
   }
 
@@ -92,7 +92,7 @@ export const handleResult: HandleResult = (result, context) => {
   }
 
   if (result instanceof Subscription) {
-    subscriptionMetadata.setMetadata(context.instance, (subscriptions) => {
+    subscriptionMetadata.change(context.instance, (subscriptions) => {
       subscriptions.push(result);
       return subscriptions;
     });

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Hook, IContainer } from 'ts-ioc-container';
+import { HookFn, IContainer } from 'ts-ioc-container';
 import { IObservableStoreKey } from './observable/IObservableStore';
 import { ObservableStore } from './observable/ObservableStore';
 
@@ -11,7 +11,7 @@ export const fromLocalStorage =
   };
 
 export const saveToLocalStorage =
-  (key: string): Hook =>
+  (key: string): HookFn =>
   ({ instance, methodName }) => {
     // @ts-ignore
     const result = instance[methodName];

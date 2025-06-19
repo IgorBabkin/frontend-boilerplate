@@ -4,7 +4,7 @@ import { MiddlewareMediator } from '@framework/middleware/MiddlewareMediator.ts'
 
 export class CommonFramework implements IContainerModule {
   applyTo(container: IContainer): void {
-    container.add(R.fromClass(ControllerMediator));
-    container.add(R.fromClass(MiddlewareMediator));
+    container.addRegistration(R.fromClass(ControllerMediator));
+    container.addRegistration(R.fromClass(MiddlewareMediator));
   }
 }

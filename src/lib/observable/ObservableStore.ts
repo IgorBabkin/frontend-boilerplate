@@ -1,7 +1,8 @@
 import { BehaviorSubject, Observable, Observer, OperatorFunction } from 'rxjs';
-import { execute, onDispose } from '@framework/hooks/OnInit';
+import { onDispose } from '@framework/hooks/OnInit';
 import { IObservableStore, IObservableStoreKey } from '../observable/IObservableStore';
 import { key, register } from 'ts-ioc-container';
+import { execute } from '@framework/hooks/initHooks.ts';
 
 @register(key(IObservableStoreKey))
 export class ObservableStore<T> implements IObservableStore<T> {

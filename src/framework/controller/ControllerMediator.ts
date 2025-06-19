@@ -1,13 +1,12 @@
 import { FailedCommand, IMediator } from '@lib/mediator/IMediator.ts';
-import { alias, inject, provider, register, singleton } from 'ts-ioc-container';
+import { alias, depKey, inject, register, singleton } from 'ts-ioc-container';
 
 import { SimpleMediator } from '@lib/mediator/SimpleMediator.ts';
 import { CommandMethod, CommandMethodKeys, Payload } from '@lib/mediator/types.ts';
 import { Subscription } from 'rxjs';
 import { byCommandAliases } from '@framework/scope.ts';
 import { IGuard, matchPayload } from '@framework/guard/IGuard.ts';
-import { accessor } from '@lib/di/utils.ts';
-import { execute, onDispose, onInit, subscribeOn } from '@framework/hooks/OnInit.ts';
+import { onDispose, onInit } from '@framework/hooks/OnInit.ts';
 import { InvalidAccessTokenError } from '@framework/errors/InvalidAccessTokenError.ts';
 import { IAuthStoreKey } from '@services/auth/IAuthStore.ts';
 import { NoPermissionError } from '@framework/errors/NoPermissionError.ts';
@@ -15,11 +14,11 @@ import { type IErrorService, IErrorServiceKey } from '@framework/errors/IErrorSe
 import { IMiddleware, matchMiddleware } from '@framework/guard/IMiddleware.ts';
 import { Controller } from '@framework/controller/Controller.ts';
 import { promisify } from 'ts-ioc-container/typings/utils';
+import { execute, subscribeOn } from '@framework/hooks/initHooks.ts';
 
-export const IControllerMediatorKey = accessor<IMediator<Controller>>('IControllerMediator');
+export const IControllerMediatorKey = depKey<IMediator<Controller>>('IControllerMediator');
 
-@register(IControllerMediatorKey.register)
-@provider(singleton(), alias('required'))
+@register(IControllerMediatorKey, singleton(), alias('required'))
 export class ControllerMediator implements IMediator<Controller> {
   private mediator: SimpleMediator<Controller>;
   private failedCommands: FailedCommand<Controller>[] = [];
@@ -36,7 +35,7 @@ export class ControllerMediator implements IMediator<Controller> {
     return c.error instanceof InvalidAccessTokenError || c.error instanceof NoPermissionError;
   }
 
-  @onInit(subscribeOn({ targets$: [(s) => IAuthStoreKey.resolve(s).accessToken$] }))
+  @onInit(subscribeOn({ when$: [(s) => IAuthStoreKey.resolve(s).accessToken$] }))
   async retryFailedCommands(): Promise<void> {
     for (const command of this.failedCommands.filter(this.isAccessTokenCommand)) {
       try {

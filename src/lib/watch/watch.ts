@@ -57,8 +57,8 @@ export const getWatching = (instance: object): string[] => {
 // export const subscribeToProperty = (target: Watchable, propertyKey: string) => {
 //   const prop = getProperty(target, propertyKey);
 //   const addSubscription = (fn: Unsubscribe) =>
-//     disposeMetadata.setMetadata(target, (prev) => {
-//       prev.set(propertyKey, addItemToList(fn)(prev.get(propertyKey) ?? []));
+//     disposeMetadata.change(target, (prev) => {
+//       prev.set(propertyKey, appendSubscription(fn)(prev.get(propertyKey) ?? []));
 //       return prev;
 //     });
 //

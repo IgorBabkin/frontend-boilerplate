@@ -1,6 +1,6 @@
-import { accessor } from '@lib/di/utils.ts';
 import { Observable } from 'rxjs';
 import { AccessToken } from '@services/auth/IAuthProvider.ts';
+import { depKey } from 'ts-ioc-container';
 
 export interface IAuthStore {
   login(login: string, password: string): Promise<void>;
@@ -16,4 +16,4 @@ export interface IAuthStore {
   setToken(token: string): void;
 }
 
-export const IAuthStoreKey = accessor<IAuthStore>('IAuthStore');
+export const IAuthStoreKey = depKey<IAuthStore>('IAuthStore');

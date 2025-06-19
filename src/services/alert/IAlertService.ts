@@ -1,11 +1,12 @@
 import { BehaviorSubject, filter, map, Observable } from 'rxjs';
-import { accessor, service } from '@lib/di/utils.ts';
+import { service } from '@lib/di/utils.ts';
 import { createEntity, Entity } from '@lib/types.ts';
-import { inject, register, scope } from 'ts-ioc-container';
+import { depKey, inject, register, scope } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
-import { onInit, subscribeOn } from '@framework/hooks/OnInit.ts';
+import { onInit } from '@framework/hooks/OnInit.ts';
 import { IErrorService, IErrorServiceKey } from '@framework/errors/IErrorService.public.ts';
 import { isPresent } from '@lib/utils.ts';
+import { subscribeOn } from '@framework/hooks/initHooks.ts';
 
 export interface AlertMessage {
   title: string;
@@ -14,7 +15,7 @@ export interface AlertMessage {
   showLoginButton?: boolean;
 }
 
-export const IAlertServiceKey = accessor<IAlertService>('IAlertService');
+export const IAlertServiceKey = depKey<IAlertService>('IAlertService');
 
 export interface IAlertService {
   messages$: Observable<Entity<AlertMessage>[]>;
@@ -35,7 +36,7 @@ const errorToAlert$ = (s: IErrorService): Observable<AlertMessage> =>
     filter(isPresent),
   );
 
-@register(IAlertServiceKey.register, scope(Scope.application))
+@register(IAlertServiceKey, scope(Scope.application))
 export class AlertService implements IAlertService {
   messages$ = new BehaviorSubject<Entity<AlertMessage>[]>([]);
 

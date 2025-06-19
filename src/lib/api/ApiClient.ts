@@ -1,5 +1,5 @@
 import { ApiClient } from '@ibabkin/backend-template';
-import { accessor } from '../di/utils';
+import { depKey } from 'ts-ioc-container';
 
 export interface TodoDTO {
   id: string;
@@ -11,4 +11,4 @@ export interface UserDTO {
   permissions: Record<string, ('read' | 'write')[]>;
 }
 
-export const IApiClientKey = accessor<ApiClient>('IApiClient');
+export const IApiClientKey = depKey<ApiClient>('IApiClient');

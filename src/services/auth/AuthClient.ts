@@ -1,11 +1,11 @@
 import { sleep } from '@lib/utils.ts';
-import { accessor } from '@lib/di/utils.ts';
+import { depKey } from 'ts-ioc-container';
 
 function randomString(): string {
   return Math.random().toString(36).substring(7);
 }
 
-export const IAuthClientKey = accessor<AuthClient>('IAuthClient');
+export const IAuthClientKey = depKey<AuthClient>('IAuthClient');
 
 export class AuthClient {
   async login(username: string, password: string): Promise<string> {

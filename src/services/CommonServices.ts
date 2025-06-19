@@ -18,32 +18,34 @@ export class CommonServices implements IContainerModule {
   applyTo(container: IContainer): void {
     container
       // User
-      .add(R.fromClass(ProfileRepo))
-      .add(R.fromClass(UserService))
+      .addRegistration(R.fromClass(ProfileRepo))
+      .addRegistration(R.fromClass(UserService))
 
       // Todos
-      .add(R.fromClass(TodoRepo))
-      .add(R.fromClass(TodoStore))
+      .addRegistration(R.fromClass(TodoRepo))
+      .addRegistration(R.fromClass(TodoStore))
 
       // Favorites
-      .add(R.fromClass(FavoritesService))
-      .add(R.fromClass(NotificationStore))
+      .addRegistration(R.fromClass(FavoritesService))
+      .addRegistration(R.fromClass(NotificationStore))
 
       // Errors
-      .add(R.fromClass(ErrorService))
+      .addRegistration(R.fromClass(ErrorService))
 
       // MultiTabs
-      .add(R.fromClass(TabsChannel))
+      .addRegistration(R.fromClass(TabsChannel))
 
       // Dialogs
-      .add(R.fromClass(DialogManager))
+      .addRegistration(R.fromClass(DialogManager))
 
       // Alerts
-      .add(R.fromClass(AlertService))
+      .addRegistration(R.fromClass(AlertService))
 
       // Auth
-      .add(R.fromClass(AuthStore))
-      .add(R.fromClass(AuthProvider))
-      .add(R.fromClass(AuthClient).to(IAuthClientKey.key).pipe(singleton()).when(hasTags.every('application')));
+      .addRegistration(R.fromClass(AuthStore))
+      .addRegistration(R.fromClass(AuthProvider))
+      .addRegistration(
+        R.fromClass(AuthClient).assignToKey(IAuthClientKey.key).pipe(singleton()).when(hasTags.every('application')),
+      );
   }
 }

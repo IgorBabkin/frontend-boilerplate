@@ -1,11 +1,10 @@
 import { AuthClient, IAuthClientKey } from './AuthClient.ts';
-import { inject, MethodNotImplementedError, provider, register, scope, singleton } from 'ts-ioc-container';
+import { inject, MethodNotImplementedError, register, scope, singleton } from 'ts-ioc-container';
 import { mapAuthError } from '@lib/api/mapApiToDomainError.ts';
 import { Scope } from '@framework/scope.ts';
 import { AccessToken, AuthCredentials, IAuthProvider, IAuthProviderKey } from '@services/auth/IAuthProvider.ts';
 
-@register(IAuthProviderKey.register, scope(Scope.application))
-@provider(singleton())
+@register(IAuthProviderKey, scope(Scope.application), singleton())
 export class AuthProvider implements IAuthProvider {
   constructor(@inject(IAuthClientKey.resolve) private authClient: AuthClient) {}
 

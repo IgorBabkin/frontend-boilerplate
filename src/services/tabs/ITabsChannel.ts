@@ -1,10 +1,10 @@
-import { accessor } from '@lib/di/utils.ts';
 import { BroadcastChannel } from 'broadcast-channel';
-import { provider, register, scope, singleton } from 'ts-ioc-container';
+import { depKey, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { Observable, Subject } from 'rxjs';
-import { execute, onDispose, onInit } from '@framework/hooks/OnInit.ts';
+import { onDispose, onInit } from '@framework/hooks/OnInit.ts';
 import { Store } from '@framework/service/Store.ts';
+import { execute } from '@framework/hooks/initHooks.ts';
 
 type LogoutMessage = { type: 'logout' };
 export type WindowPostMessage = LogoutMessage;
@@ -16,10 +16,9 @@ export interface ITabsChannel {
 
 export const logoutMessage = (): WindowPostMessage => ({ type: 'logout' });
 
-export const ITabsChannelKey = accessor<ITabsChannel>('ITabsChannel');
+export const ITabsChannelKey = depKey<ITabsChannel>('ITabsChannel');
 
-@provider(singleton())
-@register(ITabsChannelKey.register, scope(Scope.application))
+@register(ITabsChannelKey, scope(Scope.application), singleton())
 export class TabsChannel extends Store implements ITabsChannel {
   message$ = new Subject<WindowPostMessage>();
   private channel = new BroadcastChannel('auth');

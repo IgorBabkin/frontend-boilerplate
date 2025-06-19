@@ -18,7 +18,7 @@ export interface IAuthService {
 }
 
 export const IAuthServiceKey = depKey<IAuthService>('IAuthService')
-  .pipe(controller, singleton(), alias('required'))
+  .pipe(controller(), singleton())
   .when(Scope.application);
 
 export const AuthService = IAuthServiceKey.register((s) => {

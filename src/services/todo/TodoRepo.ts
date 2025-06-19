@@ -1,16 +1,14 @@
-import { inject, provider, register, scope, singleton } from 'ts-ioc-container';
+import { depKey, inject, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { IApiClientKey } from '@lib/api/ApiClient.ts';
-import { accessor } from '@lib/di/utils.ts';
 import { ApiClient, Todo } from '@ibabkin/backend-template';
 import { repository } from '@framework/repository/RepositoryProvider.ts';
 import { mapNetworkError } from '@lib/api/mapApiToDomainError.ts';
 import { ITodo, ITodoFilter } from './ITodoStore.ts';
 
-export const ITodoRepoKey = accessor<TodoRepo>('ITodoRepo');
+export const ITodoRepoKey = depKey<TodoRepo>('ITodoRepo');
 
-@register(ITodoRepoKey.register, scope(Scope.application))
-@provider(repository(mapNetworkError), singleton())
+@register(ITodoRepoKey, scope(Scope.application), repository(mapNetworkError), singleton())
 export class TodoRepo {
   static toDomain(todo: Todo): ITodo {
     return {

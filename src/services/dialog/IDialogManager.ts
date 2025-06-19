@@ -1,4 +1,4 @@
-import { alias, depKey, provider, register, scope, singleton } from 'ts-ioc-container';
+import { depKey, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -16,8 +16,7 @@ export interface IDialogManager {
 
 export const IDialogManagerKey = depKey<IDialogManager>('IDialogManager');
 
-@provider(singleton(), alias('required'))
-@register(IDialogManagerKey.assignTo, scope(Scope.application))
+@register(IDialogManagerKey, scope(Scope.application), singleton(), 'required')
 export class DialogManager implements IDialogManager {
   private isVisibleState = new Map<AppDialogKey, BehaviorSubject<boolean>>();
 

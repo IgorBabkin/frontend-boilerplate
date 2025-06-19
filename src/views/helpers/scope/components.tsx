@@ -1,11 +1,9 @@
-import { FC, PropsWithChildren, useEffect, useMemo } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import Scope, { IScopeProps } from '@helpers/scope/Scope';
 import { IContainer } from 'ts-ioc-container';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { IPageServiceKey } from '@context/IPageService.ts';
-import { useDependency } from '@helpers/scope/ScopeContext.ts';
+import { onInit } from '@framework/hooks/OnInit.ts';
 
-const createScope = (parent: IContainer, tags: string[]) => parent.createScope(...tags);
+const createScope = (parent: IContainer, tags: string[]) => parent.createScope({ tags });
 
 const withScope = <Props,>(Component: FC<Props>, scopeProps: IScopeProps) => {
   return (props: PropsWithChildren<Props>) => (
@@ -16,7 +14,7 @@ const withScope = <Props,>(Component: FC<Props>, scopeProps: IScopeProps) => {
 };
 
 export const widget = <Props,>(Component: FC<Props>, ...tags: string[]) => {
-  const scopeProps = { tags: ['widget', ...tags].join(','), createScope };
+  const scopeProps = { tags: ['widget', ...tags].join(',') };
   return (props: PropsWithChildren<Props>) => (
     <Scope {...scopeProps}>
       <Component {...props} />
@@ -24,18 +22,31 @@ export const widget = <Props,>(Component: FC<Props>, ...tags: string[]) => {
   );
 };
 
-const usePageContext = () => {
-  const [searchParams] = useSearchParams();
-  const urlParams = useParams();
-  return useMemo(() => ({ searchParams, urlParams }), [searchParams, urlParams]);
-};
+class PageContextService {
+  private params: Record<string, string> = {};
+  private searchParams: Record<string, string> = {};
+
+  @onInit()
+  setParams(params: Record<string, string>) {
+    this.params = params;
+  }
+
+  getParams() {
+    return this.params;
+  }
+
+  setSearchParams(searchParams: Record<string, string>) {
+    this.searchParams = searchParams;
+  }
+
+  getSearchParams() {
+    return this.searchParams;
+  }
+}
 
 export const page = <Props,>(Component: FC<Props>, ...tags: string[]) => {
   const tagStr = ['page', ...tags].join(',');
   return (props: PropsWithChildren<Props>) => {
-    const context = usePageContext();
-    const pageService = useDependency(IPageServiceKey.resolve);
-    useEffect(() => pageService.setContext(context));
     return (
       <Scope tags={tagStr} createScope={createScope}>
         <Component {...props} />

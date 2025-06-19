@@ -3,6 +3,6 @@ import { PageService } from '@context/PageService.ts';
 
 export class CommonContext implements IContainerModule {
   applyTo(container: IContainer): void {
-    container.add(R.fromClass(PageService));
+    container.addRegistration(R.fromClass(PageService));
   }
 }

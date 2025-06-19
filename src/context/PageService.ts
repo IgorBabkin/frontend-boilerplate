@@ -1,12 +1,11 @@
 import { Observable } from 'rxjs';
 import { ObservableStore } from '@lib/observable/ObservableStore.ts';
-import { provider, register, scope, singleton } from 'ts-ioc-container';
+import { register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { IPageContext, IPageService, IPageServiceKey } from '@context/IPageService.ts';
 import { Store } from '@framework/service/Store.ts';
 
-@register(IPageServiceKey.register, scope(Scope.application))
-@provider(singleton())
+@register(IPageServiceKey, scope(Scope.application), singleton())
 export class PageService extends Store implements IPageService {
   private context$ = new ObservableStore({ searchParams: new URLSearchParams(), urlParams: {} });
 
