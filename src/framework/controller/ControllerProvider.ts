@@ -1,20 +1,11 @@
-import {
-  by,
-  DependencyKey,
-  depKey,
-  type IContainer,
-  inject,
-  IProvider,
-  ProviderDecorator,
-  ProviderResolveOptions,
-} from 'ts-ioc-container';
+import { by, DependencyKey, depKey, type IContainer, inject, IProvider, ProviderDecorator } from 'ts-ioc-container';
 import { getActions } from './metadata.ts';
 import { isClassInstance } from '@lib/di/utils.ts';
 import { type IMediator } from '@lib/mediator/IMediator.ts';
 import { CommandLog } from '@lib/timeTravel/CommandLog.ts';
 import { IControllerMediatorKey } from '@framework/controller/ControllerMediator.ts';
 import { Controller } from '@framework/controller/Controller.ts';
-import { ProviderMapper } from 'ts-ioc-container/typings/provider/IProvider';
+import { ProviderOptions, registerPipe } from 'ts-ioc-container';
 
 interface IOperationLogger {
   log: (operation: CommandLog) => void;
@@ -27,7 +18,7 @@ export class ControllerProvider<T> extends ProviderDecorator<T> {
     super(provider);
   }
 
-  resolve(scope: IContainer, options: ProviderResolveOptions): T {
+  resolve(scope: IContainer, options: ProviderOptions): T {
     const instance: T = this.provider.resolve(scope, options);
 
     if (!isClassInstance(instance)) {
@@ -80,4 +71,4 @@ class ProxyBuilder {
   }
 }
 
-export const controller = () => new ProviderMapper([<T>(provider: IProvider<T>) => new ControllerProvider(provider)]);
+export const controller = () => registerPipe(<T>(provider: IProvider<T>) => new ControllerProvider(provider));

@@ -8,7 +8,7 @@ import { isPresent } from '@lib/utils.ts';
 import { IUserStore, IUserStoreKey } from './IUserService.public';
 import { type IAuthStore, IAuthStoreKey } from '@services/auth/IAuthStore.ts';
 import { IProfileRepoKey } from '@services/user/IProfileRepo.ts';
-import { onInitAsync } from '@framework/hooks/OnInit.ts';
+import { onViewInit } from '@framework/hooks/OnViewInit.ts';
 import { Store } from '@framework/service/Store.ts';
 import { execute } from '@framework/hooks/initHooks.ts';
 
@@ -23,7 +23,7 @@ export class UserService extends Store implements IUserStore {
     super();
   }
 
-  @onInitAsync(execute())
+  @onViewInit(execute())
   async loadUser(): Promise<void> {
     const token = this.authService.getTokenOrFail();
     const user = await this.userRepo.fetchUser(token);

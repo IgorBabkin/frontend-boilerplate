@@ -1,6 +1,6 @@
 import { Observable, Unsubscribable } from 'rxjs';
 import { isRef, Ref, ref } from 'vue';
-import { Unsubscribe } from '@framework/hooks/OnInit.ts';
+import { Unsubscribe } from '@framework/hooks/OnViewInit.ts';
 
 export const toObs$ = (arg: unknown) => {
   if (arg instanceof Observable) {

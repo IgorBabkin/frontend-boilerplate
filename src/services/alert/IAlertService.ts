@@ -3,7 +3,7 @@ import { service } from '@lib/di/utils.ts';
 import { createEntity, Entity } from '@lib/types.ts';
 import { depKey, inject, register, scope } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
-import { onInit } from '@framework/hooks/OnInit.ts';
+import { onViewInit } from '@framework/hooks/OnViewInit.ts';
 import { IErrorService, IErrorServiceKey } from '@framework/errors/IErrorService.public.ts';
 import { isPresent } from '@lib/utils.ts';
 import { subscribeOn } from '@framework/hooks/initHooks.ts';
@@ -40,7 +40,7 @@ const errorToAlert$ = (s: IErrorService): Observable<AlertMessage> =>
 export class AlertService implements IAlertService {
   messages$ = new BehaviorSubject<Entity<AlertMessage>[]>([]);
 
-  @onInit(subscribeOn())
+  @onViewInit(subscribeOn())
   addAlert(@inject(service(IErrorServiceKey, errorToAlert$)) message: AlertMessage): void {
     this.messages$.next([...this.messages$.value, createEntity(message)]);
   }

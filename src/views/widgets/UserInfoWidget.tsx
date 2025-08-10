@@ -1,11 +1,11 @@
 import { useObs$ } from '@helpers/observable';
 import { widget } from '@helpers/scope/components';
 
-import { useDependency } from '@helpers/scope/ScopeContext';
+import { useDep } from '@helpers/scope/ScopeContext';
 import { IUserControllerKey } from '@operations/user/IUserController.ts';
 
 const UserInfoWidget = widget(() => {
-  const controller = useDependency(IUserControllerKey.resolve);
+  const controller = useDep(IUserControllerKey);
   const [user] = useObs$(controller.user$, null);
 
   if (!user) {

@@ -1,29 +1,31 @@
-import { register, scope, singleton } from 'ts-ioc-container';
-import { filter, Observable, Subject } from 'rxjs';
+import { by, inject, register, scope } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { IErrorService, IErrorServiceKey } from './IErrorService.public.ts';
-import { DomainError } from '@context/errors/DomainError.ts';
-import { Store } from '@framework/service/Store.ts';
+import { Exception } from '@helpers/exception.ts';
+import { toPromise } from '@lib/utils.ts';
+import { IExceptionHandler, IExceptionHandlerKey } from '@framework/errors/IExceptionHandler.ts';
 
-@register(IErrorServiceKey, scope(Scope.application), singleton())
-export class ErrorService extends Store implements IErrorService {
-  error$ = new Subject<DomainError>();
+@register(IErrorServiceKey.asKey, scope(Scope.application))
+export class ErrorService implements IErrorService {
+  constructor(@inject(by.many(IExceptionHandlerKey)) private handlers: IExceptionHandler[]) {}
 
-  throwError(error: DomainError): void {
-    this.error$.next(error);
-  }
+  async handleError(error: unknown): Promise<void> {
+    if (!(error instanceof Exception)) {
+      throw error;
+    }
 
-  filter$<E>(predicate: (e: unknown) => e is E): Observable<E> {
-    return this.error$.pipe(filter(predicate));
-  }
-
-  wrapByErrorHandling<A>(handler: (a: A) => void): (e: A) => void {
-    return (e: A) => {
+    let handlers = [...this.handlers];
+    while (handlers.length) {
+      const h = handlers.shift()!;
       try {
-        handler(e);
+        await toPromise(h.handle(error as Exception));
       } catch (e) {
-        this.error$.next(e as DomainError);
+        if (!(e instanceof Exception)) {
+          throw e;
+        }
+        error = e;
+        handlers = [...this.handlers];
       }
-    };
+    }
   }
 }

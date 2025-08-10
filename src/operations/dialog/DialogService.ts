@@ -1,4 +1,4 @@
-import { action, Unsubscribe } from '@framework/hooks/OnInit.ts';
+import { action, Unsubscribe } from '@framework/hooks/OnViewInit.ts';
 import { IErrorServiceKey } from '@framework/errors/IErrorService.public.ts';
 import { UserIsNotLoggedInError } from '@framework/errors/UserIsNotLoggedInError.ts';
 import { AppDialogKey, IDialogManagerKey } from '@services/dialog/IDialogManager.ts';

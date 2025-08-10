@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren } from 'react';
 import Scope, { IScopeProps } from '@helpers/scope/Scope';
 import { IContainer } from 'ts-ioc-container';
-import { onInit } from '@framework/hooks/OnInit.ts';
+import { onViewInit } from '@framework/hooks/OnViewInit.ts';
 
 const createScope = (parent: IContainer, tags: string[]) => parent.createScope({ tags });
 
@@ -26,7 +26,7 @@ class PageContextService {
   private params: Record<string, string> = {};
   private searchParams: Record<string, string> = {};
 
-  @onInit()
+  @onViewInit()
   setParams(params: Record<string, string>) {
     this.params = params;
   }

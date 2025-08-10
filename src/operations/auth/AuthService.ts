@@ -9,7 +9,7 @@ import { LogoutError, type LogoutReason } from '@context/errors/LogoutError.ts';
 import { TokenError } from '@framework/errors/TokenError.ts';
 import { AccessToken, AuthCredentials, IAuthProviderKey } from '@services/auth/IAuthProvider.ts';
 import { ObservableStore } from '@lib/observable/ObservableStore.ts';
-import { action } from '@framework/hooks/OnInit.ts';
+import { action } from '@framework/hooks/OnViewInit.ts';
 
 export interface IAuthService {
   login(credentials: AuthCredentials): Promise<void>;

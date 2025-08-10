@@ -1,4 +1,4 @@
-import { Unsubscribe } from '@framework/hooks/OnInit.ts';
+import { Unsubscribe } from '@framework/hooks/OnViewInit.ts';
 
 export interface Initializable {
   init(): void | Unsubscribe;

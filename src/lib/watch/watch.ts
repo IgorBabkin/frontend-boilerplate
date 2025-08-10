@@ -1,5 +1,5 @@
 import { Metadata } from '@framework/hooks/Metadata.ts';
-import { Unsubscribe } from '@framework/hooks/OnInit.ts';
+import { Unsubscribe } from '@framework/hooks/OnViewInit.ts';
 
 // type Watchable = {
 //   key: string;

@@ -6,7 +6,7 @@ import { IErrorService, IErrorServiceKey } from '@framework/errors/IErrorService
 import { Entity } from '@lib/types.ts';
 import { controller } from '@framework/controller/ControllerProvider.ts';
 import { unsubscribeAll } from '@lib/observable/utils.ts';
-import { Unsubscribe } from '@framework/hooks/OnInit.ts';
+import { Unsubscribe } from '@framework/hooks/OnViewInit.ts';
 
 export type NotificationType = 'info' | 'error' | 'warning' | 'success';
 

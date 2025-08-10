@@ -2,7 +2,7 @@ import { BroadcastChannel } from 'broadcast-channel';
 import { depKey, register, scope, singleton } from 'ts-ioc-container';
 import { Scope } from '@framework/scope.ts';
 import { Observable, Subject } from 'rxjs';
-import { onDispose, onInit } from '@framework/hooks/OnInit.ts';
+import { onDispose, onViewInit } from '@framework/hooks/OnViewInit.ts';
 import { Store } from '@framework/service/Store.ts';
 import { execute } from '@framework/hooks/initHooks.ts';
 
@@ -27,7 +27,7 @@ export class TabsChannel extends Store implements ITabsChannel {
     await this.channel.postMessage(message);
   }
 
-  @onInit(execute())
+  @onViewInit(execute())
   subscribeToMessages(): void {
     this.channel.onmessage = ({ data: msg }) => {
       this.message$.next(msg);

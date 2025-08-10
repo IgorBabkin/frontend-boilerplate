@@ -1,6 +1,6 @@
 import { widget } from '@helpers/scope/components.tsx';
 
-import { useDependency } from '@helpers/scope/ScopeContext.ts';
+import { useDep } from '@helpers/scope/ScopeContext.ts';
 import { useCallback } from 'react';
 import { ModalDialog } from '@ui/dialog/ModalDialog.tsx';
 import './modalWidget.scss';
@@ -9,7 +9,7 @@ import { AlertMessage, IAlertServiceKey } from '@services/alert/IAlertService.ts
 import { Entity } from '@lib/types.ts';
 
 const ModalWidget = widget(() => {
-  const service = useDependency(IAlertServiceKey.resolve);
+  const service = useDep(IAlertServiceKey.resolve);
   const deleteMessage = useCallback((id: string) => () => service.deleteAlert(id), [controller]);
   const [[m]] = useObs$<Entity<AlertMessage>[]>(service.messages$, []);
 

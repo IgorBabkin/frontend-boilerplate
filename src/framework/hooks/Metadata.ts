@@ -1,25 +1,25 @@
 import { Unsubscribable } from 'rxjs';
 
 export class Metadata<T> {
-  constructor(
-    private key: string | symbol,
-    private getInitial: () => T,
-  ) {}
+  private readonly store = new WeakMap<object, T>();
+
+  constructor(private getInitial: () => T) {}
 
   getMetadata(target: object): T | undefined {
-    return Reflect.getMetadata(this.key, target);
+    return this.store.get(target);
   }
 
   change(target: object, updateFn: (value: T) => T): void {
-    Reflect.defineMetadata(this.key, updateFn(this.getMetadata(target) ?? this.getInitial()), target);
+    const current = this.store.get(target) ?? this.getInitial();
+    this.store.set(target, updateFn(current));
   }
 
   has(instance: object) {
-    return Reflect.hasMetadata(this.key, instance);
+    return !!this.store.has(instance);
   }
 
   delete(instance: object) {
-    Reflect.deleteMetadata(this.key, instance);
+    this.store.delete(instance);
   }
 }
 
@@ -29,4 +29,27 @@ export const Change = {
     subscriptions.filter((s) => s !== subscription),
 };
 
-export const subscriptionMetadata = new Metadata<Unsubscribable[]>('__dispose__', () => []);
+class UnsubscribableMetadata {
+  private readonly data = new WeakMap<object, Unsubscribable[]>();
+
+  has(instance: object) {
+    return this.data.has(instance);
+  }
+
+  set(instance: object, data: Unsubscribable[]) {
+    this.data.set(instance, data);
+  }
+
+  getSubscriptions(instance: object): Unsubscribable[] {
+    return this.data.get(instance) ?? [];
+  }
+
+  destroy(instance: object) {
+    for (const it of this.data.get(instance)!) {
+      it.unsubscribe();
+    }
+    this.data.delete(instance);
+  }
+}
+
+export const SUBSCRIPTIONS = new UnsubscribableMetadata();

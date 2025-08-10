@@ -44,9 +44,19 @@ export const toObs$ = (arg: unknown) => {
   });
 };
 
-export const toPromise = <T = unknown>(value: T | Promise<T>): Promise<T> => {
+export const toPromise = <T = unknown>(value: T | Promise<T> | Observable<T>): Promise<T> => {
   if (value instanceof Promise) {
     return value;
   }
+
+  if (value instanceof Observable) {
+    return new Promise((resolve, reject) => {
+      value.subscribe({
+        next: resolve,
+        error: reject,
+      });
+    });
+  }
+
   return Promise.resolve(value);
 };

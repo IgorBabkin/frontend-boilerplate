@@ -1,4 +1,4 @@
-import { Unsubscribe } from '@framework/hooks/OnInit.ts';
+import { Unsubscribe } from '@framework/hooks/OnViewInit.ts';
 import { AppDialogKey } from '@services/dialog/IDialogManager.ts';
 import { Subscribable } from 'rxjs';
 import { depKey, singleton } from 'ts-ioc-container';

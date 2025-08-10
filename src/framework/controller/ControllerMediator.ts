@@ -6,7 +6,7 @@ import { CommandMethod, CommandMethodKeys, Payload } from '@lib/mediator/types.t
 import { Subscription } from 'rxjs';
 import { byCommandAliases } from '@framework/scope.ts';
 import { IGuard, matchPayload } from '@framework/guard/IGuard.ts';
-import { onDispose, onInit } from '@framework/hooks/OnInit.ts';
+import { onDispose, onViewInit } from '@framework/hooks/OnViewInit.ts';
 import { InvalidAccessTokenError } from '@framework/errors/InvalidAccessTokenError.ts';
 import { IAuthStoreKey } from '@services/auth/IAuthStore.ts';
 import { NoPermissionError } from '@framework/errors/NoPermissionError.ts';
@@ -35,7 +35,7 @@ export class ControllerMediator implements IMediator<Controller> {
     return c.error instanceof InvalidAccessTokenError || c.error instanceof NoPermissionError;
   }
 
-  @onInit(subscribeOn({ when$: [(s) => IAuthStoreKey.resolve(s).accessToken$] }))
+  @onViewInit(subscribeOn({ when$: [(s) => IAuthStoreKey.resolve(s).accessToken$] }))
   async retryFailedCommands(): Promise<void> {
     for (const command of this.failedCommands.filter(this.isAccessTokenCommand)) {
       try {

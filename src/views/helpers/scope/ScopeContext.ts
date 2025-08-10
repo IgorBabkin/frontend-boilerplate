@@ -1,31 +1,21 @@
-import { createContext, useEffect, useMemo } from 'react';
-import { IContainer, InjectFn } from 'ts-ioc-container';
+import { createContext, useMemo } from 'react';
+import { by, DepKey, IContainer } from 'ts-ioc-container';
 import { useContextOrFail } from '@lib/react/context';
-import { dispose, initialize } from '@framework/hooks/OnInit';
-import { IErrorServiceKey } from '@framework/errors/IErrorService.public.ts';
+import { SUBSCRIPTIONS } from '@framework/hooks/Metadata.ts';
+import { constructor } from 'ts-ioc-container/typings/utils';
 
 export const ScopeContext = createContext<IContainer | undefined>(undefined);
 
 export const useScope = () => useContextOrFail(ScopeContext);
 
-export const useDependency = <T extends object>(fn: InjectFn<T>) => {
+export const useDep = <T>(fn: DepKey<T> | constructor<T>) => {
   const scope = useContextOrFail(ScopeContext);
-  const errorService = IErrorServiceKey.resolve(scope);
-  const output = useMemo(() => fn(scope), [fn, scope]);
-  useEffect(() => {
-    initialize(output, scope).catch((e) => errorService.throwError(e as Error));
-  }, [errorService, output, scope]);
-  return output;
+  return useMemo(() => by.one(fn).resolve(scope), [fn, scope]);
 };
 
 export const disposeScope = (scope: IContainer) => {
-  try {
-    for (const instance of scope.getInstances() as object[]) {
-      dispose(instance);
-    }
-  } catch (e) {
-    IErrorServiceKey.resolve(scope).throwError(e as Error);
-  } finally {
-    scope.dispose();
+  for (const instance of scope.getInstances() as object[]) {
+    SUBSCRIPTIONS.destroy(instance);
   }
+  scope.dispose();
 };

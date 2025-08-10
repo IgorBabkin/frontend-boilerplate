@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable, Observer, OperatorFunction } from 'rxjs';
-import { onDispose } from '@framework/hooks/OnInit';
+import { onDispose } from '@framework/hooks/OnViewInit.ts';
 import { IObservableStore, IObservableStoreKey } from '../observable/IObservableStore';
 import { key, register } from 'ts-ioc-container';
 import { execute } from '@framework/hooks/initHooks.ts';

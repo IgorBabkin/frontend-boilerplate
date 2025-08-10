@@ -4,11 +4,11 @@ import TextField from '@ui/textField/TextField';
 import { widget } from '@helpers/scope/components';
 
 import { useAsyncEventHandler } from '@helpers/observable';
-import { useDependency } from '@helpers/scope/ScopeContext.ts';
+import { useDep } from '@helpers/scope/ScopeContext.ts';
 import { ITodoServiceKey } from '@operations/todo/ITodoService.ts';
 
 const AddTodoFormWidget = widget(() => {
-  const todoController = useDependency(ITodoServiceKey.resolve);
+  const todoController = useDep(ITodoServiceKey.resolve);
   const [title, setTitle] = useState('');
   const resetForm = useCallback(() => setTitle(''), []);
 
